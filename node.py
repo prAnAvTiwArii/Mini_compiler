@@ -1,6 +1,5 @@
 import json
 
-
 class Node:
     def __init__(self, node_type, sourcepos=None):
         self.type = node_type
@@ -84,12 +83,12 @@ class Node:
         if self.info is not None:
             d["info"] = self.info
 
-        # if hasattr(self, 'custom_id') and self.custom_id is not None:
-        #     d["custom_id"] = self.custom_id
-        # if hasattr(self, 'label') and self.label is not None:
-        #     d["label"] = self.label
-        # if hasattr(self, 'checked') and self.checked is not None:
-        #     d["checked"] = self.checked
+        if hasattr(self, 'custom_id') and self.custom_id is not None:
+            d["custom_id"] = self.custom_id
+        if hasattr(self, 'label') and self.label is not None:
+            d["label"] = self.label
+        if hasattr(self, 'checked') and self.checked is not None:
+            d["checked"] = self.checked
 
         children = []
         child = self.first_child

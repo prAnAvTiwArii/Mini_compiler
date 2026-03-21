@@ -33,7 +33,7 @@ def main():
     
     print("Step 3: Generating HTML tags...")
     renderer = HtmlRenderer()
-    body_html = renderer.render_json_ir(ir_data)
+    body_html = renderer.render(ir_data)
     
     try:
         template_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "template.html")

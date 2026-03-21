@@ -4,6 +4,7 @@
     {
       "type": "heading",
       "level": 1,
+      "custom_id": "custom-heading-id",
       "children": [
         {
           "type": "text",
@@ -267,7 +268,8 @@
               "type": "paragraph",
               "children": [
                 {
-                  "type": "task_checkbox"
+                  "type": "task_checkbox",
+                  "checked": true
                 },
                 {
                   "type": "text",
@@ -288,12 +290,7 @@
               ]
             }
           ]
-        }
-      ]
-    },
-    {
-      "type": "list",
-      "children": [
+        },
         {
           "type": "item",
           "children": [
@@ -301,7 +298,8 @@
               "type": "paragraph",
               "children": [
                 {
-                  "type": "task_checkbox"
+                  "type": "task_checkbox",
+                  "checked": false
                 },
                 {
                   "type": "text",
@@ -320,63 +318,6 @@
                   "literal": "task"
                 }
               ]
-            },
-            {
-              "type": "paragraph",
-              "children": [
-                {
-                  "type": "text",
-                  "literal": "Here"
-                },
-                {
-                  "type": "text",
-                  "literal": " "
-                },
-                {
-                  "type": "text",
-                  "literal": "is"
-                },
-                {
-                  "type": "text",
-                  "literal": " "
-                },
-                {
-                  "type": "text",
-                  "literal": "some"
-                },
-                {
-                  "type": "text",
-                  "literal": " "
-                },
-                {
-                  "type": "text",
-                  "literal": "inline"
-                },
-                {
-                  "type": "text",
-                  "literal": " "
-                },
-                {
-                  "type": "text",
-                  "literal": "math"
-                },
-                {
-                  "type": "emoji",
-                  "literal": ":"
-                },
-                {
-                  "type": "text",
-                  "literal": " "
-                },
-                {
-                  "type": "math_inline",
-                  "literal": "E=mc^2"
-                },
-                {
-                  "type": "text",
-                  "literal": "."
-                }
-              ]
             }
           ]
         }
@@ -389,6 +330,63 @@
         {
           "type": "text",
           "literal": "Mathematics"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "children": [
+        {
+          "type": "text",
+          "literal": "Here"
+        },
+        {
+          "type": "text",
+          "literal": " "
+        },
+        {
+          "type": "text",
+          "literal": "is"
+        },
+        {
+          "type": "text",
+          "literal": " "
+        },
+        {
+          "type": "text",
+          "literal": "some"
+        },
+        {
+          "type": "text",
+          "literal": " "
+        },
+        {
+          "type": "text",
+          "literal": "inline"
+        },
+        {
+          "type": "text",
+          "literal": " "
+        },
+        {
+          "type": "text",
+          "literal": "math"
+        },
+        {
+          "type": "emoji",
+          "literal": ":"
+        },
+        {
+          "type": "text",
+          "literal": " "
+        },
+        {
+          "type": "math_inline",
+          "literal": "E=mc^2"
+        },
+        {
+          "type": "text",
+          "literal": "."
         }
       ]
     },
@@ -473,11 +471,6 @@
       "info": "mermaid"
     },
     {
-      "type": "code_block",
-      "literal": "\n",
-      "info": ""
-    },
-    {
       "type": "mermaid_block",
       "literal": "sequenceDiagram\n    Alice->>Bob: Hello Bob, how are you?\n    Bob-->>Alice: Fine, thanks!\n"
     },
@@ -547,12 +540,14 @@
           "literal": "footnote."
         },
         {
-          "type": "footnote_ref"
+          "type": "footnote_ref",
+          "label": "1"
         }
       ]
     },
     {
       "type": "footnote_def",
+      "label": "1",
       "children": [
         {
           "type": "paragraph",

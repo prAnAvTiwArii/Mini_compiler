@@ -11,7 +11,7 @@ class HtmlRenderer:
         text = text.replace("'", "&#x27;")
         return text
         
-    def render_json_ir(self, ir_dict):
+    def render(self, ir_dict):
         self.buffer = []
         self._render_node(ir_dict)
         return "".join(self.buffer)
@@ -76,7 +76,6 @@ class HtmlRenderer:
             self.buffer.append("</code>")
             
         elif node_type == "link":
-            # XSS Protection
             dest = self.escape(node.get("destination", ""))
             if dest.startswith("javascript:"):
                 dest = ""
@@ -86,7 +85,6 @@ class HtmlRenderer:
             self.buffer.append("</a>")
             
         elif node_type == "list":
-            # For simplicity matching the minimal parser
             tag = "ul" if node.get("list_type") == "bullet" else "ol"
             self.buffer.append(f"<{tag}>\n")
             for child in node.get("children", []):
@@ -154,9 +152,21 @@ class HtmlRenderer:
         elif node_type == "footnote_def":
             label = self.escape(node.get("label", ""))
             self.buffer.append(f"<div class=\"footnote\" id=\"fn:{label}\">\n")
-            self.buffer.append(f"<strong>[{label}]:</strong> ")
-            for child in node.get("children", []):
-                self._render_node(child)
+            
+            children = node.get("children", [])
+            if children and children[0].get("type") == "paragraph":
+                self.buffer.append("<p>")
+                self.buffer.append(f"<strong>[{label}]:</strong> ")
+                for inline_child in children[0].get("children", []):
+                    self._render_node(inline_child)
+                self.buffer.append("</p>\n")
+                for child in children[1:]:
+                    self._render_node(child)
+            else:
+                self.buffer.append(f"<strong>[{label}]:</strong> ")
+                for child in children:
+                    self._render_node(child)
+                    
             self.buffer.append("</div>\n")
             
         elif node_type == "def_list":
@@ -206,6 +216,9 @@ class HtmlRenderer:
             self.buffer.append(f"<input type=\"checkbox\" disabled{checked}>")
             
         elif node_type == "hardbreak":
+            self.buffer.append("<br />\n")
+            
+        elif node_type == "softbreak":
             self.buffer.append("<br />\n")
             
         elif node_type == "html_block":

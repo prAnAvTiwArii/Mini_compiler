@@ -226,16 +226,17 @@ class Parser:
         if self.tip and getattr(self.tip, 'is_open', False):
             if self.tip.type in ('code_block', 'math_block', 'mermaid_block'):
                 # Check for closing fence
-                if self.tip.type == 'code_block' and getattr(self.tip, 'is_fenced', False):
+                if getattr(self.tip, 'is_fenced', False):
                     if block_group == 'code_fence' and block_match.group('code_fence')[0] == self.tip.fence_char and len(block_match.group('code_fence')) >= self.tip.fence_length:
                         self.tip.is_open = False
                         self.tip = self.tip.parent
                         return
-                elif self.tip.type == 'math_block' and block_group == 'math_fence':
+                
+                if self.tip.type == 'math_block' and block_group == 'math_fence':
                     self.tip.is_open = False
                     self.tip = self.tip.parent
                     return
-                elif self.tip.type == 'mermaid_block' and block_group == 'mermaid_close':
+                elif self.tip.type == 'mermaid_block' and block_group == 'mermaid_close' and not getattr(self.tip, 'is_fenced', False):
                     self.tip.is_open = False
                     self.tip = self.tip.parent
                     return

@@ -56,16 +56,15 @@
 </head>
 
 <body>
-  <h1>Kitchen Sink Document</h1>
+  <h1 id="custom-heading-id">Kitchen Sink Document</h1>
 <p>Here is a paragraph with a <sup>superscript</sup>, a <sub>subscript</sub>, and some <mark>highlighted text</mark>.Don&#x27;t forget <u>underlines</u> and <del>strikethrough</del>.Also emojis: :smile: :rocket:</p>
 <h2>Task Lists</h2>
 <ol>
-<li><input type="checkbox" disabled> Completed task</li>
-</ol>
-<ol>
-<li><input type="checkbox" disabled> Incomplete taskHere is some inline math: <span class="math math-inline">E=mc^2</span>.</li>
+<li><input type="checkbox" disabled checked> Completed task</li>
+<li><input type="checkbox" disabled> Incomplete task</li>
 </ol>
 <h2>Mathematics</h2>
+<p>Here is some inline math: <span class="math math-inline">E=mc^2</span>.</p>
 <p>And here is a math block:</p>
 <div class="math math-display">
 \int_0^\infty \mathrm{e}^{-x}\,\mathrm{d}x
@@ -84,9 +83,9 @@ sequenceDiagram
     Bob--&gt;&gt;Alice: Fine, thanks!
 </div>
 <h2>Footnotes</h2>
-<p>Here is a reference to a footnote.<sup><a href="#fn:">^</a></sup></p>
-<div class="footnote" id="fn:">
-<strong>[]:</strong> <p>This is the text of the footnote.</p>
+<p>Here is a reference to a footnote.<sup><a href="#fn:1">^1</a></sup></p>
+<div class="footnote" id="fn:1">
+<p><strong>[1]:</strong> This is the text of the footnote.</p>
 </div>
 <h2>Definition Lists</h2>
 <dl>
