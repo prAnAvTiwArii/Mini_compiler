@@ -63,6 +63,13 @@ class HtmlRenderer:
                 self._render_node(child)
             self.buffer.append("</em>")
             
+        elif node_type == "code_block":
+            info = node.get("info", "")
+            class_attr = f' class="language-{self.escape(info)}"' if info else ""
+            self.buffer.append(f"<pre><code{class_attr}>\n")
+            self.buffer.append(self.escape(node.get("literal", "")))
+            self.buffer.append("</code></pre>\n")
+            
         elif node_type == "code":
             self.buffer.append("<code>")
             self.buffer.append(self.escape(node.get("literal", "")))

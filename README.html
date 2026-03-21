@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>README</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      line-height: 1.6;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 2rem;
+      color: #333;
+    }
+
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      margin-bottom: 1rem;
+    }
+
+    th,
+    td {
+      padding: 8px;
+      border: 1px solid #ddd;
+      text-align: left;
+    }
+
+    th {
+      background-color: #f4f4f4;
+    }
+
+    pre {
+      background: #f4f4f4;
+      padding: 1rem;
+      overflow-x: auto;
+    }
+
+    code {
+      font-family: Consolas, Monaco, "Andale Mono", "Ubuntu Mono", monospace;
+      background: #f4f4f4;
+      padding: 2px 4px;
+      border-radius: 4px;
+    }
+
+    blockquote {
+      border-left: 4px solid #ccc;
+      margin-left: 0;
+      padding-left: 1rem;
+      color: #666;
+    }
+  </style>
+</head>
+
+<body>
+  <h1>Markdown to HTML Compiler</h1>
+<p>A Python-based Markdown compiler that parses Markdown syntax into an Abstract Syntax Tree (AST), converts it to JSON intermediate representation (IR), and renders it to HTML with extensive formatting support.</p>
+<h2>Project Overview</h2>
+<p>This project implements a <strong>top-down recursive descent parser</strong> that processes Markdown files with extensions and converts them into styled HTML output. It uses regex-based lexical analysis combined with an iterative state machine to build the parse tree.</p>
+<h2>Architecture</h2>
+<h2>Features</h2>
+<h3>Block-Level Elements</h3>
+<ol>
+<li><strong>Headings</strong> (ATX style: <code># H1</code> to <code>###### H6</code>) with custom IDs (<code>{#custom-id}</code>)</li>
+<li><strong>Paragraphs</strong></li>
+<li><strong>Blockquotes</strong> (<code>&gt; text</code>)</li>
+<li><strong>Code Blocks</strong> (fenced with <code></code> or <del></del><sub></sub> with language info)</li>
+<li><strong>Thematic Breaks</strong> (<code>***</code>, <code>---</code>, <code>___</code>)</li>
+<li><strong>Lists</strong> (bullet and ordered)</li>
+<li><strong>HTML Blocks</strong> (raw HTML passthrough)</li>
+<li><strong>Footnote Definitions</strong> (<code>[^label]: content</code>)</li>
+<li><strong>Definition Lists</strong> (<code>:  definition</code>)</li>
+<li><strong>Math Blocks</strong> (<code>$$..$$</code>)</li>
+<li><strong>Mermaid Diagrams</strong> (<code>::: mermaid</code>)</li>
+<li><strong>Text Formatting</strong><ol>
+<li>Bold: <code>**text**</code> or <code>__text__</code></li>
+<li>Italic: <code>*text*</code> or <code>_text_</code></li>
+<li>Strikethrough: <code>~~text~~</code></li>
+<li>Underline: <code>++text++</code></li>
+<li>Mark/Highlight: <code>==text==</code></li>
+<li>Subscript: <code>~text~</code></li>
+<li>Superscript: <code>^text^</code></li>
+</ol>
+</li>
+<li><strong>Links &amp; Images</strong><ol>
+<li>Links: <code>[label](url)</code></li>
+<li>Images: <code>![alt](url)</code></li>
+<li>Email autolinks: <code>&lt;user@example.com&gt;</code></li>
+<li>URL autolinks: <code>&lt;https://example.com&gt;</code></li>
+</ol>
+</li>
+<li><strong>Code &amp; Math</strong><ol>
+<li>Inline code: <code></code>code<code>`</code></li>
+<li>Inline math: <code>$equation$</code></li>
+</ol>
+</li>
+<li><strong>Other</strong><ol>
+<li>Footnote references: <code>[^label]</code></li>
+<li>Emoji shortcuts: <code>:emoji_name:</code></li>
+<li>Task checkboxes: <code>[x]</code> or <code>[ ]</code></li>
+<li>HTML entities: <code>&amp;amp;</code></li>
+<li>Hard breaks: two spaces + newline</li>
+<li>Soft breaks: newline</li>
+<li>Escaped characters: <code>\*</code></li>
+</ol>
+</li>
+<li><strong>`parser.py`</strong> - Main parsing logic<ol>
+<li><code>Parser</code> class: Block-level parsing with two-phase approach (Phase 1: blocks, Phase 2: inlines)</li>
+<li><code>InlineParser</code> class: Processes inline tokens using regex patterns</li>
+</ol>
+</li>
+<li><strong>`node.py`</strong> - AST node representation<ol>
+<li><code>Node</code> class: Tree structure with parent-child relationships, JSON serialization</li>
+</ol>
+</li>
+<li><strong>`html_renderer.py`</strong> - HTML output generation<ol>
+<li><code>HtmlRenderer</code> class: Converts JSON IR to styled HTML with proper escaping</li>
+</ol>
+</li>
+<li><strong>`regex_rules.py`</strong> - Pattern definitions<ol>
+<li>Block-level token patterns</li>
+<li>Inline token patterns</li>
+<li>HTML block detection rules</li>
+<li>Special regex patterns (heading IDs, line endings)</li>
+</ol>
+</li>
+<li><strong>`compiler.py`</strong> - Entry point<ol>
+<li>Orchestrates parsing, JSON generation, and HTML rendering</li>
+<li>Arguments: input markdown file</li>
+<li>Outputs: <code>.html</code> and <code>.json</code> files</li>
+</ol>
+</li>
+<li><strong>`template.html`</strong> - HTML template<ol>
+<li>Base template with styling</li>
+<li>Placeholders: <code>__TITLE__</code> and <code>__BODY_HTML__</code></li>
+<li>Includes KaTeX CDN for math rendering</li>
+</ol>
+</li>
+</ol>
+<h3>Inline Elements</h3>
+<h2>File Structure</h2>
+<h3>Core Modules</h3>
+<h2>Usage</h2>
+<p><strong>Output:</strong></p>
+<ol>
+<li><code>input.html</code> - Rendered HTML file</li>
+<li><code>input.json</code> - JSON intermediate representation (for debugging/inspection)</li>
+</ol>
+<h3>Example</h3>
+<p><strong>Input (`example.md`):</strong></p>
+<h1>Hello World</h1>
+<p>def hello():print(&quot;world&quot;)</p>
+<p><strong>Output:</strong></p>
+<ol>
+<li><code>example.html</code> - Beautiful styled webpage</li>
+<li><code>example.json</code> - AST representation for analysis</li>
+</ol>
+<h2>Parser Type Details</h2>
+<p>This is a <strong>top-down recursive descent parser</strong> with the following characteristics:</p>
+<ol>
+<li><strong>Single-pass, line-by-line processing</strong>: Processes input sequentially</li>
+<li><strong>Two-phase parsing</strong>:<ol>
+<li>Block structure parsing to create document hierarchy</li>
+<li>Inline element parsing within blocks</li>
+</ol>
+</li>
+<li><strong>Regex-based pattern matching</strong>: Uses combined regex with named groups</li>
+<li><strong>State machine approach</strong>: Maintains parsing state across line processing</li>
+<li><strong>AST generation</strong>: Builds Abstract Syntax Tree before rendering</li>
+<li>Python 3.6+</li>
+<li>No external packages required (uses only standard library: <code>re</code>, <code>json</code>, <code>sys</code>, <code>os</code>, <code>html</code>, <code>urllib.parse</code>)</li>
+</ol>
+<h2>Dependencies</h2>
+<h2>JSON Intermediate Representation</h2>
+<p>The JSON output contains the complete AST structure:</p>
+<p>This JSON can be:</p>
+<ol>
+<li>Inspected for debugging</li>
+<li>Used by external tools</li>
+<li>Transformed into different output formats</li>
+</ol>
+<h2>Styling</h2>
+<p>The HTML output includes:</p>
+<ol>
+<li>Responsive design (max-width: 800px)</li>
+<li>Professional typography with system fonts</li>
+<li>Table styling with borders</li>
+<li>Code block syntax (ready for highlighting integration)</li>
+<li>Math rendering support via KaTeX</li>
+<li><strong>Custom heading IDs</strong>: <code># Heading {#custom-id}</code></li>
+<li><strong>Task lists</strong>: <code>[x] Completed task</code></li>
+<li><strong>Footnotes</strong>: <code>[^1]</code> with definitions <code>[^1]: Footnote content</code></li>
+<li><strong>Definition lists</strong>: Terms with <code>: definition</code> entries</li>
+<li><strong>Math blocks</strong>: <code>$$formula$$</code></li>
+<li><strong>Mermaid diagrams</strong>: <code>::: mermaid ... :::</code></li>
+<li>Focus on block and inline structure parsing</li>
+<li>HTML escaping for security</li>
+<li>No external plugins/extensions framework</li>
+<li>Designed for educational purposes in compiler lab</li>
+<li>Syntax highlighting for code blocks</li>
+<li>Smart typography (typographical quotes, em-dashes)</li>
+<li>Table of contents generation</li>
+<li>Citation/bibliography support</li>
+<li>Custom rendering backends beyond HTML</li>
+</ol>
+<h2>Extensions Supported</h2>
+<h2>Limitations &amp; Notes</h2>
+<h2>Future Enhancements</h2>
+<h2>Author</h2>
+<p>Pranav - Compiler Lab Project</p>
+
+  <script type="module">
+    import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+    mermaid.initialize({startOnLoad: true});
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js" onload="renderMathInElement(document.body, {
+            delimiters: [
+                {left: '$$', right: '$$', display: true},
+                {left: '$', right: '$', display: false},
+                {left: '\\[', right: '\\]', display: true},
+                {left: '\\(', right: '\\)', display: false}
+            ]
+        });"></script>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      if (typeof katex === 'undefined') return;
+      var mathElements = document.getElementsByClassName("math");
+      for (var i = 0; i < mathElements.length; i++) {
+        var texText = mathElements[i].textContent;
+        var isDisplay = mathElements[i].classList.contains('math-display');
+        try {
+          katex.render(texText, mathElements[i], {
+            displayMode: isDisplay,
+            throwOnError: false
+          });
+        } catch (e) {console.error('KaTeX render error:', e);}
+      }
+    });
+  </script>
+</body>
+
+</html>

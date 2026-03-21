@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LLM_CONTEXT</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      line-height: 1.6;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 2rem;
+      color: #333;
+    }
+
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      margin-bottom: 1rem;
+    }
+
+    th,
+    td {
+      padding: 8px;
+      border: 1px solid #ddd;
+      text-align: left;
+    }
+
+    th {
+      background-color: #f4f4f4;
+    }
+
+    pre {
+      background: #f4f4f4;
+      padding: 1rem;
+      overflow-x: auto;
+    }
+
+    code {
+      font-family: Consolas, Monaco, "Andale Mono", "Ubuntu Mono", monospace;
+      background: #f4f4f4;
+      padding: 2px 4px;
+      border-radius: 4px;
+    }
+
+    blockquote {
+      border-left: 4px solid #ccc;
+      margin-left: 0;
+      padding-left: 1rem;
+      color: #666;
+    }
+  </style>
+</head>
+
+<body>
+  <h1>LLM Context: Markdown to HTML Compiler Project</h1>
+<h2>Quick Summary</h2>
+<p>This is a <strong>Markdown-to-HTML compiler</strong> implemented in Python. It parses Markdown with extensions (footnotes, math, definition lists, etc.) using a <strong>top-down recursive descent parser</strong>, converts it to an AST via Node objects, serializes to JSON, and renders to formatted HTML.</p>
+<p><strong>Entry point:</strong> <code>python3 compiler.py &lt;markdown_file&gt;</code></p>
+<h2>Parsing Pipeline</h2>
+<pre><code>
+Input Markdown String
+          ↓
+   Parser.parse(text)
+     (2-phase process)
+          ↓
+Phase 1: Block Parsing (Parser.incorporate_line)
+- Line-by-line processing with regex pattern matching
+- Detects: headings, code blocks, lists, blockquotes, math, footnotes, definitions
+- Builds hierarchical block structure
+- Stores inline content as string_content for Phase 2
+          ↓
+Phase 2: Inline Parsing (InlineParser.parse_inlines)
+- Processes stored inline content with regex tokenization
+- Creates nodes for: emphasis, strong, links, images, code, math, HTML, entities
+- Populates AST with semantic meaning
+          ↓
+   Node Tree (AST)
+          ↓
+  node.to_json()
+          ↓
+  JSON IR (Intermediate Representation)
+          ↓
+ HtmlRenderer.render_json_ir()
+          ↓
+   Final HTML Output
+</code></pre>
+<h2>Key Classes &amp; Responsibilities</h2>
+<h3>Parser (<code>parser.py</code>)</h3>
+<ol>
+<li><strong>`__init__`</strong>: Initializes document node and inline parser</li>
+<li><strong>`parse(text)`</strong>: Main entry point - orchestrates two-phase parsing</li>
+<li><strong>`incorporate_line(line)`</strong>: Phase 1 - identifies block types and builds structure<ol>
+<li>Uses <code>block_token_pattern</code> regex with named groups</li>
+<li>Creates and manages node hierarchy</li>
+<li>Handles block state (open/closed)</li>
+</ol>
+</li>
+<li><strong>`process_inlines(node)`</strong>: Triggers Phase 2 inline parsing</li>
+<li><strong>`_close_tip_if_paragraph()`</strong>: Utility to close paragraph nodes</li>
+</ol>
+<p><strong>State Variables:</strong></p>
+<ol>
+<li><code>doc</code>: Root Node (document type)</li>
+<li><code>tip</code>: Current open node being populated</li>
+<li><code>current_line</code>: Line being processed</li>
+<li><code>indent</code>: Indentation level</li>
+<li><code>blank</code>: Whether line is empty</li>
+<li><code>line_number</code>: For debugging/tracking</li>
+<li><strong>`parse(block_node)`</strong>: Entry for inline processing</li>
+<li><strong>`parse_inlines(block)`</strong>: Tokenizes block.string<em>content using `inline</em>token<em></em>pattern<code></code></li>
+<li><strong>`peek()`</strong>: Peek at current character</li>
+<li><strong>`match(pattern)`</strong>: Match regex at current position</li>
+<li>Creates child nodes for all inline elements (text, strong, emph, links, etc.)</li>
+</ol>
+<h3>InlineParser (<code>parser.py</code>)</h3>
+<p><strong>Supported Inline Nodes:</strong></p>
+<ol>
+<li><code>text</code> (plain text)</li>
+<li><code>strong</code>, <code>emph</code> (emphasis variants)</li>
+<li><code>link</code>, <code>image</code> (with destination property)</li>
+<li><code>code</code> (inline code)</li>
+<li><code>mark</code>, <code>u</code>, <code>del</code>, <code>sub</code>, <code>sup</code> (formatting)</li>
+<li><code>math_inline</code> (LaTeX equations)</li>
+<li><code>footnote_ref</code> (references to footnotes)</li>
+<li><code>emoji</code> (emoji shortcodes)</li>
+<li><code>task_checkbox</code> (with checked property)</li>
+<li><code>html_inline</code> (raw HTML)</li>
+<li><code>hardbreak</code>, <code>softbreak</code> (line breaks)</li>
+<li><strong>Tree structure</strong>: parent, first<em>child, last</em>child, prev, next (doubly-linked)</li>
+<li><strong>Properties:</strong><ol>
+<li><code>type</code>: node category (heading, paragraph, etc.)</li>
+<li><code>string_content</code>: raw text for block nodes (processed in Phase 2)</li>
+<li><code>literal</code>: text content for leaf nodes</li>
+<li><code>level</code>: heading level (1-6)</li>
+<li><code>destination</code>: link/image URL</li>
+<li><code>title</code>: link/image alt text</li>
+<li><code>custom_id</code>: heading ID from {#id}</li>
+<li><code>is_open</code>: whether block accepts new children</li>
+</ol>
+</li>
+<li><strong>Methods:</strong><ol>
+<li><code>append_child(child)</code>: Add child node</li>
+<li><code>unlink()</code>: Remove from tree</li>
+<li><code>insert_after(sibling)</code>: Structural manipulation</li>
+<li><code>to_json()</code>: Serializes to JSON string or dict</li>
+</ol>
+</li>
+<li><strong>Processes JSON IR</strong> (from node.to<em></em>json())</li>
+<li><strong>`render_json_ir(ir_dict)`</strong>: Main entry</li>
+<li><strong>`_render_node(node, tight=False)`</strong>: Recursive rendering</li>
+<li><strong>`escape(text)`</strong>: HTML entity escaping (prevents XSS)</li>
+<li>Handles all node types with proper HTML tags:<ol>
+<li>Block: <code>&lt;h1-6&gt;</code>, <code>&lt;p&gt;</code>, <code>&lt;blockquote&gt;</code>, <code>&lt;ul&gt;</code>, <code>&lt;ol&gt;</code>, <code>&lt;div&gt;</code>, etc.</li>
+<li>Inline: <code>&lt;strong&gt;</code>, <code>&lt;em&gt;</code>, <code>&lt;code&gt;</code>, <code>&lt;a&gt;</code>, <code>&lt;img&gt;</code>, etc.</li>
+<li>Special: Math via KaTeX, footnotes, custom IDs</li>
+</ol>
+</li>
+</ol>
+<h3>Node (<code>node.py</code>)</h3>
+<h3>HtmlRenderer (<code>html_renderer.py</code>)</h3>
+<h2>Regex Patterns (<code>regex_rules.py</code>)</h2>
+<h3>Block Token Pattern</h3>
+<p>Combined regex with named groups detecting:</p>
+<ol>
+<li><code>thematic_break</code>: <code>***</code> or <code>---</code> or <code>___</code></li>
+<li><code>bullet_list</code>: <code>*</code>, <code>+</code>, <code>-</code> items</li>
+<li><code>ordered_list</code>: <code>1.</code> numbered items</li>
+<li><code>atx_heading</code>: <code>#</code> to <code>######</code> headings</li>
+<li><code>code_fence</code>: <code></code> or <del></del><sub></sub> (3+ characters)</li>
+<li><code>math_fence</code>: <code>$$</code></li>
+<li><code>mermaid_fence</code>: <code>::: mermaid</code></li>
+<li><code>mermaid_close</code>: <code>:::</code></li>
+<li><code>footnote_def</code>: <code>[^label]: content</code></li>
+<li><code>def_list_marker</code>: <code>: definition</code>Matches (in order of precedence):</li>
+</ol>
+<h3>Inline Token Pattern</h3>
+<ol>
+<li>Images: <code>![alt](url)</code></li>
+<li>Links: <code>[label](url)</code></li>
+<li>Strong: <code>**text**</code> or <code>__text__</code></li>
+<li>Emphasis: <code>*text*</code> or <code>_text_</code></li>
+<li>Highlight: <code>==text==</code></li>
+<li>Underline: <code>++text++</code></li>
+<li>Strikethrough: <code>~~text~~</code></li>
+<li>Subscript: <code>~text~</code></li>
+<li>Superscript: <code>^text^</code></li>
+<li>Code: <code></code>code<code>`</code></li>
+<li>Math: <code>$equation$</code></li>
+<li>Footnote refs: <code>[^label]</code></li>
+<li>Emojis: <code>:name:</code></li>
+<li>Task checkboxes: <code>[x]</code> or <code>[ ]</code></li>
+<li>HTML tags: <code>&lt;tag&gt;</code></li>
+<li>Email autolinks: <code>&lt;email@example.com&gt;</code></li>
+<li>URL autolinks: <code>&lt;https://url&gt;</code></li>
+<li>HTML entities: <code>&amp;amp;</code></li>
+<li>Hard breaks: two spaces + newline</li>
+<li>Escaped chars: <code>\*</code></li>
+<li>Plain text and single special chars</li>
+</ol>
+<h3>Special Patterns</h3>
+<ol>
+<li><code>reHeadingID</code>: <code>{#custom-id}</code> in headings</li>
+<li><code>reLineEnding</code>: <code>\r\n</code>, <code>\n</code>, or <code>\r</code> normalization</li>
+<li><code>reHtmlBlockOpen</code>: 7 rules for HTML block detection</li>
+</ol>
+<h2>Compiler Entry Point (<code>compiler.py</code>)</h2>
+<pre><code class="language-python">
+def main():
+    # 1. Read markdown file from argv[1]
+    # 2. Parser().parse(text) → AST
+    # 3. ast.to_json() → JSON IR
+    # 4. HtmlRenderer().render_json_ir(ir) → HTML body
+    # 5. Load template.html
+    # 6. Replace __TITLE__ and __BODY_HTML__
+    # 7. Write output.&lt;md&gt;.html and output.&lt;md&gt;.json
+</code></pre>
+<p><strong>Output Files:</strong></p>
+<ol>
+<li><code>&lt;name&gt;.html</code>: Final rendered HTML (from template)</li>
+<li><code>&lt;name&gt;.json</code>: JSON IR for inspection/debugging</li>
+<li>Standard HTML5 structure</li>
+<li>Placeholders: <code>__TITLE__</code> (from filename) and <code>__BODY_HTML__</code> (from renderer)</li>
+<li>Includes KaTeX CDN for math rendering</li>
+<li>CSS styling for body, tables, code blocks, etc.</li>
+<li>Responsive design (max-width: 800px)</li>
+</ol>
+<h2>Template System (<code>template.html</code>)</h2>
+<h2>Block Parsing Logic (Key Algorithm)</h2>
+<p>For each line:</p>
+<ol>
+<li><strong>Strip leading whitespace</strong> → measure indent</li>
+<li><strong>Match against `block_token_pattern`</strong> → determine block type</li>
+<li><strong>Handle block-specific rules:</strong><ol>
+<li>Blockquote: <code>&gt;</code> prefix → create/append to bq node</li>
+<li>Heading: <code>#</code> prefix → create heading, close paragraph</li>
+<li>Code fence: <code></code> → open code block in state, wait for closing fence</li>
+<li>List item: <code>*</code> or <code>1.</code> → create list item</li>
+<li>Footnote: <code>[^label]:</code> → create footnote<em></em>def node</li>
+<li>Definition: <code>:</code> → convert previous paragraph to def term</li>
+</ol>
+</li>
+<li><strong>Manage node state:</strong><ol>
+<li>Update <code>self.tip</code> (current open node)</li>
+<li>Set <code>is_open = True</code> for blocks accepting children</li>
+<li>Close blocks when new block starts at same or lower indent</li>
+</ol>
+</li>
+</ol>
+<h2>Inline Parsing Logic</h2>
+<p>For each block with <code>string_content</code>:</p>
+<ol>
+<li><strong>Tokenize</strong> using <code>inline_token_pattern.finditer()</code></li>
+<li><strong>For each token</strong>, check type by pattern:<ol>
+<li>Images/links: extract label and URL, create node</li>
+<li>Formatting: check delimiters, extract content</li>
+<li>Code: count backticks, strip matching count</li>
+<li>Autolinks: detect email vs URL, add mailto: prefix</li>
+<li>Special nodes: math, emoji, footnote refs</li>
+<li>Fallback: plain text node</li>
+</ol>
+</li>
+<li><strong>Append nodes</strong> to parent block node</li>
+<li><strong>Two-phase parsing</strong>: Separates structural parsing from content parsing</li>
+<li><strong>String deferral</strong>: Block parsing stores inline content as string<em></em>content, processed later</li>
+<li><strong>Regex-based lexing</strong>: No traditional tokenizer; patterns handle tokenization</li>
+<li><strong>Single regex per phase</strong>: Combined patterns for efficiency</li>
+<li><strong>Named groups</strong>: Used to identify token type without secondary matching</li>
+<li><strong>Node tree first</strong>: JSON and HTML generated from validated AST</li>
+<li><strong>JSON intermediate</strong>: Enables non-HTML backends and inspection</li>
+<li>Add pattern to <code>block_token_pattern</code> in <code>regex_rules.py</code></li>
+<li>Add condition in <code>Parser.incorporate_line()</code></li>
+<li>Create node with appropriate properties</li>
+<li>Add rendering logic to <code>HtmlRenderer._render_node()</code></li>
+<li>Add pattern to <code>inline_token_pattern</code> in <code>regex_rules.py</code></li>
+<li>Add condition in <code>InlineParser.parse_inlines()</code></li>
+<li>Extract content and create node</li>
+<li>Add rendering case in <code>HtmlRenderer._render_node()</code></li>
+<li>Modify <code>HtmlRenderer._render_node()</code> for specific node type</li>
+<li>Adjust <code>template.html</code> styling</li>
+</ol>
+<h2>Important Design Decisions</h2>
+<h2>Common Modifications</h2>
+<h3>Add a new block type:</h3>
+<h3>Add a new inline element:</h3>
+<h3>Change HTML output:</h3>
+<h2>Debugging Tips</h2>
+<ol>
+<li>Check <code>output.json</code> to see AST structure</li>
+<li>Verify <code>block_token_pattern.match()</code> output for parsing issues</li>
+<li>Use <code>node.to_json(as_dict=True)</code> to inspect node properties</li>
+<li>Add print statements in <code>incorporate_line()</code> or <code>parse_inlines()</code> to trace execution</li>
+</ol>
+<h2>Testing Files</h2>
+<p>The workspace includes:</p>
+<ol>
+<li><code>test.md</code>: Sample markdown input</li>
+<li><code>test.html</code>: Expected HTML output</li>
+<li><code>test.json</code>: Expected JSON IR</li>
+<li>Linear time complexity: O(n) where n = input length</li>
+<li>Single-pass block parsing</li>
+<li>Regex overhead for pattern matching (acceptable for markdown-sized inputs)</li>
+<li>No heavy dependencies (pure Python stdlib)</li>
+</ol>
+<h2>Performance Notes</h2>
+<p><strong>Last Updated:</strong> March 2026<strong>Project Type:</strong> Compiler Lab - Educational Markdown Compiler</p>
+
+  <script type="module">
+    import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+    mermaid.initialize({startOnLoad: true});
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js" onload="renderMathInElement(document.body, {
+            delimiters: [
+                {left: '$$', right: '$$', display: true},
+                {left: '$', right: '$', display: false},
+                {left: '\\[', right: '\\]', display: true},
+                {left: '\\(', right: '\\)', display: false}
+            ]
+        });"></script>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      if (typeof katex === 'undefined') return;
+      var mathElements = document.getElementsByClassName("math");
+      for (var i = 0; i < mathElements.length; i++) {
+        var texText = mathElements[i].textContent;
+        var isDisplay = mathElements[i].classList.contains('math-display');
+        try {
+          katex.render(texText, mathElements[i], {
+            displayMode: isDisplay,
+            throwOnError: false
+          });
+        } catch (e) {console.error('KaTeX render error:', e);}
+      }
+    });
+  </script>
+</body>
+
+</html>

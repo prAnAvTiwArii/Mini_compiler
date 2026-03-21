@@ -221,6 +221,36 @@ class Parser:
         # Test block rules with a single combined regex using named groups
         block_match = block_token_pattern.match(stripped_line)
         block_group = block_match.lastgroup if block_match else None
+        
+        # 0. Check for open Raw Blocks Continuation (HTML / Code / Math / Mermaid)
+        if self.tip and getattr(self.tip, 'is_open', False):
+            if self.tip.type in ('code_block', 'math_block', 'mermaid_block'):
+                # Check for closing fence
+                if self.tip.type == 'code_block' and getattr(self.tip, 'is_fenced', False):
+                    if block_group == 'code_fence' and block_match.group('code_fence')[0] == self.tip.fence_char and len(block_match.group('code_fence')) >= self.tip.fence_length:
+                        self.tip.is_open = False
+                        self.tip = self.tip.parent
+                        return
+                elif self.tip.type == 'math_block' and block_group == 'math_fence':
+                    self.tip.is_open = False
+                    self.tip = self.tip.parent
+                    return
+                elif self.tip.type == 'mermaid_block' and block_group == 'mermaid_close':
+                    self.tip.is_open = False
+                    self.tip = self.tip.parent
+                    return
+                
+                # If not closing, it's content
+                self.tip.string_content += line + '\n'
+                return
+                
+            elif self.tip.type == 'html_block':
+                if self.blank:
+                    self.tip.is_open = False
+                    self.tip = self.tip.parent
+                else:
+                    self.tip.literal += '\n' + line
+                return
 
         # 1. Blockquote
         if stripped_line.startswith('>'):
@@ -262,12 +292,16 @@ class Parser:
             # Extract the actual groups matched within the footnote_def named group
             # We have to re-evaluate the capturing groups since lastgroup only gives the name
             fn_match = re.match(r'^\[\^([^\]]+)\]:[ \t]*(.*)', stripped_line)
-            fn.label = fn_match.group(1)
+            if fn_match:
+                fn.label = fn_match.group(1)
+                content = fn_match.group(2)
+            else:
+                fn.label = "unknown"
+                content = ""
             self.doc.append_child(fn)
             self._close_tip_if_paragraph()
             self.tip = fn
             
-            content = fn_match.group(2)
             if content:
                 p = Node('paragraph')
                 p.string_content = content
@@ -321,36 +355,6 @@ class Parser:
             self.doc.append_child(tbreak)
             self._close_tip_if_paragraph()
             return
-            
-        # 3a. Open HTML Block Continuation
-        if self.tip and self.tip.type == 'html_block' and getattr(self.tip, 'is_open', False):
-            if self.blank:
-                self.tip.is_open = False
-                self.tip = self.tip.parent
-            else:
-                self.tip.literal += '\n' + line
-            return
-            
-        # 4. Fenced Code Block / Math / Mermaid
-        # Check if we are inside an open block that requires a specific closing fence
-        if self.tip:
-            if self.tip.type == 'code_block' and getattr(self.tip, 'is_fenced', False) and getattr(self.tip, 'is_open', False):
-                if block_group == 'code_fence' and block_match.group('code_fence')[0] == self.tip.fence_char and len(block_match.group('code_fence')) >= self.tip.fence_length:
-                    self.tip.is_open = False
-                    self.tip = self.tip.parent
-                    return
-            
-            if self.tip.type == 'math_block' and getattr(self.tip, 'is_open', False):
-                if block_group == 'math_fence':
-                    self.tip.is_open = False
-                    self.tip = self.tip.parent
-                    return
-                    
-            if self.tip.type == 'mermaid_block' and getattr(self.tip, 'is_open', False):
-                if block_group == 'mermaid_close':
-                    self.tip.is_open = False
-                    self.tip = self.tip.parent
-                    return
 
         # Attempt to open new fences
         if block_group == 'code_fence':
@@ -386,11 +390,6 @@ class Parser:
             self.tip = mm
             return
 
-        # Handle contents of an open code/math/mermaid block
-        if self.tip and self.tip.type in ('code_block', 'math_block', 'mermaid_block') and getattr(self.tip, 'is_open', False):
-            self.tip.string_content += line + '\n'
-            return
-
         # 5. Lists (Bullet and Ordered)
         is_list_item = False
         list_type = None
@@ -404,17 +403,68 @@ class Parser:
         elif block_group == 'ordered_list':
             is_list_item = True
             list_type = 'ordered'
-            list_start = int(block_match.group(block_match.lastindex)) # The number group
+            list_start = int(re.search(r'\d+', block_match.group('ordered_list')).group()) # The number group
             content = stripped_line[len(block_match.group('ordered_list')):]
             
         if is_list_item:
             self._close_tip_if_paragraph()
-            # Find open list or append new one
-            if not self.tip or self.tip.type != 'list' or not getattr(self.tip, 'is_open', False):
+            
+            # Find the nearest open list and check its indentation
+            current = self.tip
+            target_list = None
+            
+            while current:
+                if current.type == 'list' and getattr(current, 'is_open', False):
+                    list_indent = getattr(current, 'indent', 0)
+                    if self.indent < list_indent:
+                        current.is_open = False
+                    elif self.indent >= list_indent:
+                        target_list = current
+                        break
+                current = current.parent
+                
+            if target_list is not None:
+                target_indent = getattr(target_list, 'indent', 0)
+                if self.indent > target_indent and target_list.last_child and target_list.last_child.type == 'item':
+                    # Nesting: create a new list inside the last item
+                    lst = Node('list')
+                    lst.list_type = list_type
+                    lst.list_start = list_start
+                    lst.is_open = True
+                    lst.indent = self.indent
+                    target_list.last_child.append_child(lst)
+                    self.tip = lst
+                else:
+                    # Same level list
+                    if target_list.list_type == list_type:
+                        self.tip = target_list
+                    else:
+                        target_list.is_open = False
+                        lst = Node('list')
+                        lst.list_type = list_type
+                        lst.list_start = list_start
+                        lst.is_open = True
+                        lst.indent = self.indent
+                        if target_list.parent:
+                            target_list.parent.append_child(lst)
+                        else:
+                            self.doc.append_child(lst)
+                        self.tip = lst
+            else:
+                # No open list found, create a new one
                 lst = Node('list')
                 lst.list_type = list_type
                 lst.list_start = list_start
-                self.doc.append_child(lst)
+                lst.is_open = True
+                lst.indent = self.indent
+                
+                # Append to tip if tip can hold a list
+                if self.tip and getattr(self.tip, 'is_open', False) and self.tip.type in ('document', 'block_quote', 'item'):
+                    self.tip.append_child(lst)
+                elif self.tip and self.tip.parent:
+                    self.tip.parent.append_child(lst)
+                else:
+                    self.doc.append_child(lst)
                 self.tip = lst
                 
             item = Node('item')
@@ -423,7 +473,7 @@ class Parser:
             p = Node('paragraph')
             p.string_content = content
             item.append_child(p)
-            self.tip = p # tip is the paragraph inside the list item
+            self.tip = p
             return
 
         # 6. Simple Tables

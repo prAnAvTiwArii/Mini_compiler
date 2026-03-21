@@ -1,0 +1,5452 @@
+{
+  "type": "document",
+  "children": [
+    {
+      "type": "heading",
+      "level": 1,
+      "children": [
+        {
+          "type": "text",
+          "literal": "Markdown"
+        },
+        {
+          "type": "text",
+          "literal": " "
+        },
+        {
+          "type": "text",
+          "literal": "to"
+        },
+        {
+          "type": "text",
+          "literal": " "
+        },
+        {
+          "type": "text",
+          "literal": "HTML"
+        },
+        {
+          "type": "text",
+          "literal": " "
+        },
+        {
+          "type": "text",
+          "literal": "Compiler"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "children": [
+        {
+          "type": "text",
+          "literal": "A"
+        },
+        {
+          "type": "text",
+          "literal": " "
+        },
+        {
+          "type": "text",
+          "literal": "Python-based"
+        },
+        {
+          "type": "text",
+          "literal": " "
+        },
+        {
+          "type": "text",
+          "literal": "Markdown"
+        },
+        {
+          "type": "text",
+          "literal": " "
+        },
+        {
+          "type": "text",
+          "literal": "compiler"
+        },
+        {
+          "type": "text",
+          "literal": " "
+        },
+        {
+          "type": "text",
+          "literal": "that"
+        },
+        {
+          "type": "text",
+          "literal": " "
+        },
+        {
+          "type": "text",
+          "literal": "parses"
+        },
+        {
+          "type": "text",
+          "literal": " "
+        },
+        {
+          "type": "text",
+          "literal": "Markdown"
+        },
+        {
+          "type": "text",
+          "literal": " "
+        },
+        {
+          "type": "text",
+          "literal": "syntax"
+        },
+        {
+          "type": "text",
+          "literal": " "
+        },
+        {
+          "type": "text",
+          "literal": "into"
+        },
+        {
+          "type": "text",
+          "literal": " "
+        },
+        {
+          "type": "text",
+          "literal": "an"
+        },
+        {
+          "type": "text",
+          "literal": " "
+        },
+        {
+          "type": "text",
+          "literal": "Abstract"
+        },
+        {
+          "type": "text",
+          "literal": " "
+        },
+        {
+          "type": "text",
+          "literal": "Syntax"
+        },
+        {
+          "type": "text",
+          "literal": " "
+        },
+        {
+          "type": "text",
+          "literal": "Tree"
+        },
+        {
+          "type": "text",
+          "literal": " "
+        },
+        {
+          "type": "text",
+          "literal": "(AST),"
+        },
+        {
+          "type": "text",
+          "literal": " "
+        },
+        {
+          "type": "text",
+          "literal": "converts"
+        },
+        {
+          "type": "text",
+          "literal": " "
+        },
+        {
+          "type": "text",
+          "literal": "it"
+        },
+        {
+          "type": "text",
+          "literal": " "
+        },
+        {
+          "type": "text",
+          "literal": "to"
+        },
+        {
+          "type": "text",
+          "literal": " "
+        },
+        {
+          "type": "text",
+          "literal": "JSON"
+        },
+        {
+          "type": "text",
+          "literal": " "
+        },
+        {
+          "type": "text",
+          "literal": "intermediate"
+        },
+        {
+          "type": "text",
+          "literal": " "
+        },
+        {
+          "type": "text",
+          "literal": "representation"
+        },
+        {
+          "type": "text",
+          "literal": " "
+        },
+        {
+          "type": "text",
+          "literal": "(IR),"
+        },
+        {
+          "type": "text",
+          "literal": " "
+        },
+        {
+          "type": "text",
+          "literal": "and"
+        },
+        {
+          "type": "text",
+          "literal": " "
+        },
+        {
+          "type": "text",
+          "literal": "renders"
+        },
+        {
+          "type": "text",
+          "literal": " "
+        },
+        {
+          "type": "text",
+          "literal": "it"
+        },
+        {
+          "type": "text",
+          "literal": " "
+        },
+        {
+          "type": "text",
+          "literal": "to"
+        },
+        {
+          "type": "text",
+          "literal": " "
+        },
+        {
+          "type": "text",
+          "literal": "HTML"
+        },
+        {
+          "type": "text",
+          "literal": " "
+        },
+        {
+          "type": "text",
+          "literal": "with"
+        },
+        {
+          "type": "text",
+          "literal": " "
+        },
+        {
+          "type": "text",
+          "literal": "extensive"
+        },
+        {
+          "type": "text",
+          "literal": " "
+        },
+        {
+          "type": "text",
+          "literal": "formatting"
+        },
+        {
+          "type": "text",
+          "literal": " "
+        },
+        {
+          "type": "text",
+          "literal": "support."
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "children": [
+        {
+          "type": "text",
+          "literal": "Project"
+        },
+        {
+          "type": "text",
+          "literal": " "
+        },
+        {
+          "type": "text",
+          "literal": "Overview"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "children": [
+        {
+          "type": "text",
+          "literal": "This"
+        },
+        {
+          "type": "text",
+          "literal": " "
+        },
+        {
+          "type": "text",
+          "literal": "project"
+        },
+        {
+          "type": "text",
+          "literal": " "
+        },
+        {
+          "type": "text",
+          "literal": "implements"
+        },
+        {
+          "type": "text",
+          "literal": " "
+        },
+        {
+          "type": "text",
+          "literal": "a"
+        },
+        {
+          "type": "text",
+          "literal": " "
+        },
+        {
+          "type": "strong",
+          "children": [
+            {
+              "type": "text",
+              "literal": "top-down recursive descent parser"
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "literal": " "
+        },
+        {
+          "type": "text",
+          "literal": "that"
+        },
+        {
+          "type": "text",
+          "literal": " "
+        },
+        {
+          "type": "text",
+          "literal": "processes"
+        },
+        {
+          "type": "text",
+          "literal": " "
+        },
+        {
+          "type": "text",
+          "literal": "Markdown"
+        },
+        {
+          "type": "text",
+          "literal": " "
+        },
+        {
+          "type": "text",
+          "literal": "files"
+        },
+        {
+          "type": "text",
+          "literal": " "
+        },
+        {
+          "type": "text",
+          "literal": "with"
+        },
+        {
+          "type": "text",
+          "literal": " "
+        },
+        {
+          "type": "text",
+          "literal": "extensions"
+        },
+        {
+          "type": "text",
+          "literal": " "
+        },
+        {
+          "type": "text",
+          "literal": "and"
+        },
+        {
+          "type": "text",
+          "literal": " "
+        },
+        {
+          "type": "text",
+          "literal": "converts"
+        },
+        {
+          "type": "text",
+          "literal": " "
+        },
+        {
+          "type": "text",
+          "literal": "them"
+        },
+        {
+          "type": "text",
+          "literal": " "
+        },
+        {
+          "type": "text",
+          "literal": "into"
+        },
+        {
+          "type": "text",
+          "literal": " "
+        },
+        {
+          "type": "text",
+          "literal": "styled"
+        },
+        {
+          "type": "text",
+          "literal": " "
+        },
+        {
+          "type": "text",
+          "literal": "HTML"
+        },
+        {
+          "type": "text",
+          "literal": " "
+        },
+        {
+          "type": "text",
+          "literal": "output."
+        },
+        {
+          "type": "text",
+          "literal": " "
+        },
+        {
+          "type": "text",
+          "literal": "It"
+        },
+        {
+          "type": "text",
+          "literal": " "
+        },
+        {
+          "type": "text",
+          "literal": "uses"
+        },
+        {
+          "type": "text",
+          "literal": " "
+        },
+        {
+          "type": "text",
+          "literal": "regex-based"
+        },
+        {
+          "type": "text",
+          "literal": " "
+        },
+        {
+          "type": "text",
+          "literal": "lexical"
+        },
+        {
+          "type": "text",
+          "literal": " "
+        },
+        {
+          "type": "text",
+          "literal": "analysis"
+        },
+        {
+          "type": "text",
+          "literal": " "
+        },
+        {
+          "type": "text",
+          "literal": "combined"
+        },
+        {
+          "type": "text",
+          "literal": " "
+        },
+        {
+          "type": "text",
+          "literal": "with"
+        },
+        {
+          "type": "text",
+          "literal": " "
+        },
+        {
+          "type": "text",
+          "literal": "an"
+        },
+        {
+          "type": "text",
+          "literal": " "
+        },
+        {
+          "type": "text",
+          "literal": "iterative"
+        },
+        {
+          "type": "text",
+          "literal": " "
+        },
+        {
+          "type": "text",
+          "literal": "state"
+        },
+        {
+          "type": "text",
+          "literal": " "
+        },
+        {
+          "type": "text",
+          "literal": "machine"
+        },
+        {
+          "type": "text",
+          "literal": " "
+        },
+        {
+          "type": "text",
+          "literal": "to"
+        },
+        {
+          "type": "text",
+          "literal": " "
+        },
+        {
+          "type": "text",
+          "literal": "build"
+        },
+        {
+          "type": "text",
+          "literal": " "
+        },
+        {
+          "type": "text",
+          "literal": "the"
+        },
+        {
+          "type": "text",
+          "literal": " "
+        },
+        {
+          "type": "text",
+          "literal": "parse"
+        },
+        {
+          "type": "text",
+          "literal": " "
+        },
+        {
+          "type": "text",
+          "literal": "tree."
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "children": [
+        {
+          "type": "text",
+          "literal": "Architecture"
+        }
+      ]
+    },
+    {
+      "type": "code_block",
+      "literal": "Input (Markdown) \n    \u2193\n[Parser] - Block & Inline Parsing \u2192 AST (Node Tree)\n    \u2193\n[Node] - Tree representation with JSON serialization\n    \u2193\n[HtmlRenderer] - JSON IR \u2192 HTML tags\n    \u2193\nOutput (HTML file + JSON IR)\n",
+      "info": ""
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "children": [
+        {
+          "type": "text",
+          "literal": "Features"
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 3,
+      "children": [
+        {
+          "type": "text",
+          "literal": "Block-Level"
+        },
+        {
+          "type": "text",
+          "literal": " "
+        },
+        {
+          "type": "text",
+          "literal": "Elements"
+        }
+      ]
+    },
+    {
+      "type": "list",
+      "children": [
+        {
+          "type": "item",
+          "children": [
+            {
+              "type": "paragraph",
+              "children": [
+                {
+                  "type": "strong",
+                  "children": [
+                    {
+                      "type": "text",
+                      "literal": "Headings"
+                    }
+                  ]
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "(ATX"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "style"
+                },
+                {
+                  "type": "emoji",
+                  "literal": ":"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "code",
+                  "literal": "# H1"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "to"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "code",
+                  "literal": "###### H6"
+                },
+                {
+                  "type": "text",
+                  "literal": ")"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "with"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "custom"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "IDs"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "("
+                },
+                {
+                  "type": "code",
+                  "literal": "{#custom-id}"
+                },
+                {
+                  "type": "text",
+                  "literal": ")"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "item",
+          "children": [
+            {
+              "type": "paragraph",
+              "children": [
+                {
+                  "type": "strong",
+                  "children": [
+                    {
+                      "type": "text",
+                      "literal": "Paragraphs"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "item",
+          "children": [
+            {
+              "type": "paragraph",
+              "children": [
+                {
+                  "type": "strong",
+                  "children": [
+                    {
+                      "type": "text",
+                      "literal": "Blockquotes"
+                    }
+                  ]
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "("
+                },
+                {
+                  "type": "code",
+                  "literal": "> text"
+                },
+                {
+                  "type": "text",
+                  "literal": ")"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "item",
+          "children": [
+            {
+              "type": "paragraph",
+              "children": [
+                {
+                  "type": "strong",
+                  "children": [
+                    {
+                      "type": "text",
+                      "literal": "Code Blocks"
+                    }
+                  ]
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "(fenced"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "with"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "code",
+                  "literal": ""
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "or"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "del",
+                  "children": [
+                    {
+                      "type": "text",
+                      "literal": ""
+                    }
+                  ]
+                },
+                {
+                  "type": "sub",
+                  "children": [
+                    {
+                      "type": "text",
+                      "literal": ""
+                    }
+                  ]
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "with"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "language"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "info)"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "item",
+          "children": [
+            {
+              "type": "paragraph",
+              "children": [
+                {
+                  "type": "strong",
+                  "children": [
+                    {
+                      "type": "text",
+                      "literal": "Thematic Breaks"
+                    }
+                  ]
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "("
+                },
+                {
+                  "type": "code",
+                  "literal": "***"
+                },
+                {
+                  "type": "text",
+                  "literal": ","
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "code",
+                  "literal": "---"
+                },
+                {
+                  "type": "text",
+                  "literal": ","
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "code",
+                  "literal": "___"
+                },
+                {
+                  "type": "text",
+                  "literal": ")"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "item",
+          "children": [
+            {
+              "type": "paragraph",
+              "children": [
+                {
+                  "type": "strong",
+                  "children": [
+                    {
+                      "type": "text",
+                      "literal": "Lists"
+                    }
+                  ]
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "(bullet"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "and"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "ordered)"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "item",
+          "children": [
+            {
+              "type": "paragraph",
+              "children": [
+                {
+                  "type": "strong",
+                  "children": [
+                    {
+                      "type": "text",
+                      "literal": "HTML Blocks"
+                    }
+                  ]
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "(raw"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "HTML"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "passthrough)"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "item",
+          "children": [
+            {
+              "type": "paragraph",
+              "children": [
+                {
+                  "type": "strong",
+                  "children": [
+                    {
+                      "type": "text",
+                      "literal": "Footnote Definitions"
+                    }
+                  ]
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "("
+                },
+                {
+                  "type": "code",
+                  "literal": "[^label]: content"
+                },
+                {
+                  "type": "text",
+                  "literal": ")"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "item",
+          "children": [
+            {
+              "type": "paragraph",
+              "children": [
+                {
+                  "type": "strong",
+                  "children": [
+                    {
+                      "type": "text",
+                      "literal": "Definition Lists"
+                    }
+                  ]
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "("
+                },
+                {
+                  "type": "code",
+                  "literal": ":  definition"
+                },
+                {
+                  "type": "text",
+                  "literal": ")"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "item",
+          "children": [
+            {
+              "type": "paragraph",
+              "children": [
+                {
+                  "type": "strong",
+                  "children": [
+                    {
+                      "type": "text",
+                      "literal": "Math Blocks"
+                    }
+                  ]
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "("
+                },
+                {
+                  "type": "code",
+                  "literal": "$$..$$"
+                },
+                {
+                  "type": "text",
+                  "literal": ")"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "item",
+          "children": [
+            {
+              "type": "paragraph",
+              "children": [
+                {
+                  "type": "strong",
+                  "children": [
+                    {
+                      "type": "text",
+                      "literal": "Mermaid Diagrams"
+                    }
+                  ]
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "("
+                },
+                {
+                  "type": "code",
+                  "literal": "::: mermaid"
+                },
+                {
+                  "type": "text",
+                  "literal": ")"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "item",
+          "children": [
+            {
+              "type": "paragraph",
+              "children": [
+                {
+                  "type": "strong",
+                  "children": [
+                    {
+                      "type": "text",
+                      "literal": "Text Formatting"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "list",
+              "children": [
+                {
+                  "type": "item",
+                  "children": [
+                    {
+                      "type": "paragraph",
+                      "children": [
+                        {
+                          "type": "text",
+                          "literal": "Bold"
+                        },
+                        {
+                          "type": "emoji",
+                          "literal": ":"
+                        },
+                        {
+                          "type": "text",
+                          "literal": " "
+                        },
+                        {
+                          "type": "code",
+                          "literal": "**text**"
+                        },
+                        {
+                          "type": "text",
+                          "literal": " "
+                        },
+                        {
+                          "type": "text",
+                          "literal": "or"
+                        },
+                        {
+                          "type": "text",
+                          "literal": " "
+                        },
+                        {
+                          "type": "code",
+                          "literal": "__text__"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "item",
+                  "children": [
+                    {
+                      "type": "paragraph",
+                      "children": [
+                        {
+                          "type": "text",
+                          "literal": "Italic"
+                        },
+                        {
+                          "type": "emoji",
+                          "literal": ":"
+                        },
+                        {
+                          "type": "text",
+                          "literal": " "
+                        },
+                        {
+                          "type": "code",
+                          "literal": "*text*"
+                        },
+                        {
+                          "type": "text",
+                          "literal": " "
+                        },
+                        {
+                          "type": "text",
+                          "literal": "or"
+                        },
+                        {
+                          "type": "text",
+                          "literal": " "
+                        },
+                        {
+                          "type": "code",
+                          "literal": "_text_"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "item",
+                  "children": [
+                    {
+                      "type": "paragraph",
+                      "children": [
+                        {
+                          "type": "text",
+                          "literal": "Strikethrough"
+                        },
+                        {
+                          "type": "emoji",
+                          "literal": ":"
+                        },
+                        {
+                          "type": "text",
+                          "literal": " "
+                        },
+                        {
+                          "type": "code",
+                          "literal": "~~text~~"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "item",
+                  "children": [
+                    {
+                      "type": "paragraph",
+                      "children": [
+                        {
+                          "type": "text",
+                          "literal": "Underline"
+                        },
+                        {
+                          "type": "emoji",
+                          "literal": ":"
+                        },
+                        {
+                          "type": "text",
+                          "literal": " "
+                        },
+                        {
+                          "type": "code",
+                          "literal": "++text++"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "item",
+                  "children": [
+                    {
+                      "type": "paragraph",
+                      "children": [
+                        {
+                          "type": "text",
+                          "literal": "Mark/Highlight"
+                        },
+                        {
+                          "type": "emoji",
+                          "literal": ":"
+                        },
+                        {
+                          "type": "text",
+                          "literal": " "
+                        },
+                        {
+                          "type": "code",
+                          "literal": "==text=="
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "item",
+                  "children": [
+                    {
+                      "type": "paragraph",
+                      "children": [
+                        {
+                          "type": "text",
+                          "literal": "Subscript"
+                        },
+                        {
+                          "type": "emoji",
+                          "literal": ":"
+                        },
+                        {
+                          "type": "text",
+                          "literal": " "
+                        },
+                        {
+                          "type": "code",
+                          "literal": "~text~"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "item",
+                  "children": [
+                    {
+                      "type": "paragraph",
+                      "children": [
+                        {
+                          "type": "text",
+                          "literal": "Superscript"
+                        },
+                        {
+                          "type": "emoji",
+                          "literal": ":"
+                        },
+                        {
+                          "type": "text",
+                          "literal": " "
+                        },
+                        {
+                          "type": "code",
+                          "literal": "^text^"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "item",
+          "children": [
+            {
+              "type": "paragraph",
+              "children": [
+                {
+                  "type": "strong",
+                  "children": [
+                    {
+                      "type": "text",
+                      "literal": "Links & Images"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "list",
+              "children": [
+                {
+                  "type": "item",
+                  "children": [
+                    {
+                      "type": "paragraph",
+                      "children": [
+                        {
+                          "type": "text",
+                          "literal": "Links"
+                        },
+                        {
+                          "type": "emoji",
+                          "literal": ":"
+                        },
+                        {
+                          "type": "text",
+                          "literal": " "
+                        },
+                        {
+                          "type": "code",
+                          "literal": "[label](url)"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "item",
+                  "children": [
+                    {
+                      "type": "paragraph",
+                      "children": [
+                        {
+                          "type": "text",
+                          "literal": "Images"
+                        },
+                        {
+                          "type": "emoji",
+                          "literal": ":"
+                        },
+                        {
+                          "type": "text",
+                          "literal": " "
+                        },
+                        {
+                          "type": "code",
+                          "literal": "![alt](url)"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "item",
+                  "children": [
+                    {
+                      "type": "paragraph",
+                      "children": [
+                        {
+                          "type": "text",
+                          "literal": "Email"
+                        },
+                        {
+                          "type": "text",
+                          "literal": " "
+                        },
+                        {
+                          "type": "text",
+                          "literal": "autolinks"
+                        },
+                        {
+                          "type": "emoji",
+                          "literal": ":"
+                        },
+                        {
+                          "type": "text",
+                          "literal": " "
+                        },
+                        {
+                          "type": "code",
+                          "literal": "<user@example.com>"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "item",
+                  "children": [
+                    {
+                      "type": "paragraph",
+                      "children": [
+                        {
+                          "type": "text",
+                          "literal": "URL"
+                        },
+                        {
+                          "type": "text",
+                          "literal": " "
+                        },
+                        {
+                          "type": "text",
+                          "literal": "autolinks"
+                        },
+                        {
+                          "type": "emoji",
+                          "literal": ":"
+                        },
+                        {
+                          "type": "text",
+                          "literal": " "
+                        },
+                        {
+                          "type": "code",
+                          "literal": "<https://example.com>"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "item",
+          "children": [
+            {
+              "type": "paragraph",
+              "children": [
+                {
+                  "type": "strong",
+                  "children": [
+                    {
+                      "type": "text",
+                      "literal": "Code & Math"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "list",
+              "children": [
+                {
+                  "type": "item",
+                  "children": [
+                    {
+                      "type": "paragraph",
+                      "children": [
+                        {
+                          "type": "text",
+                          "literal": "Inline"
+                        },
+                        {
+                          "type": "text",
+                          "literal": " "
+                        },
+                        {
+                          "type": "text",
+                          "literal": "code"
+                        },
+                        {
+                          "type": "emoji",
+                          "literal": ":"
+                        },
+                        {
+                          "type": "text",
+                          "literal": " "
+                        },
+                        {
+                          "type": "code",
+                          "literal": ""
+                        },
+                        {
+                          "type": "text",
+                          "literal": "code"
+                        },
+                        {
+                          "type": "code",
+                          "literal": "`"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "item",
+                  "children": [
+                    {
+                      "type": "paragraph",
+                      "children": [
+                        {
+                          "type": "text",
+                          "literal": "Inline"
+                        },
+                        {
+                          "type": "text",
+                          "literal": " "
+                        },
+                        {
+                          "type": "text",
+                          "literal": "math"
+                        },
+                        {
+                          "type": "emoji",
+                          "literal": ":"
+                        },
+                        {
+                          "type": "text",
+                          "literal": " "
+                        },
+                        {
+                          "type": "code",
+                          "literal": "$equation$"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "item",
+          "children": [
+            {
+              "type": "paragraph",
+              "children": [
+                {
+                  "type": "strong",
+                  "children": [
+                    {
+                      "type": "text",
+                      "literal": "Other"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "list",
+              "children": [
+                {
+                  "type": "item",
+                  "children": [
+                    {
+                      "type": "paragraph",
+                      "children": [
+                        {
+                          "type": "text",
+                          "literal": "Footnote"
+                        },
+                        {
+                          "type": "text",
+                          "literal": " "
+                        },
+                        {
+                          "type": "text",
+                          "literal": "references"
+                        },
+                        {
+                          "type": "emoji",
+                          "literal": ":"
+                        },
+                        {
+                          "type": "text",
+                          "literal": " "
+                        },
+                        {
+                          "type": "code",
+                          "literal": "[^label]"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "item",
+                  "children": [
+                    {
+                      "type": "paragraph",
+                      "children": [
+                        {
+                          "type": "text",
+                          "literal": "Emoji"
+                        },
+                        {
+                          "type": "text",
+                          "literal": " "
+                        },
+                        {
+                          "type": "text",
+                          "literal": "shortcuts"
+                        },
+                        {
+                          "type": "emoji",
+                          "literal": ":"
+                        },
+                        {
+                          "type": "text",
+                          "literal": " "
+                        },
+                        {
+                          "type": "code",
+                          "literal": ":emoji_name:"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "item",
+                  "children": [
+                    {
+                      "type": "paragraph",
+                      "children": [
+                        {
+                          "type": "text",
+                          "literal": "Task"
+                        },
+                        {
+                          "type": "text",
+                          "literal": " "
+                        },
+                        {
+                          "type": "text",
+                          "literal": "checkboxes"
+                        },
+                        {
+                          "type": "emoji",
+                          "literal": ":"
+                        },
+                        {
+                          "type": "text",
+                          "literal": " "
+                        },
+                        {
+                          "type": "code",
+                          "literal": "[x]"
+                        },
+                        {
+                          "type": "text",
+                          "literal": " "
+                        },
+                        {
+                          "type": "text",
+                          "literal": "or"
+                        },
+                        {
+                          "type": "text",
+                          "literal": " "
+                        },
+                        {
+                          "type": "code",
+                          "literal": "[ ]"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "item",
+                  "children": [
+                    {
+                      "type": "paragraph",
+                      "children": [
+                        {
+                          "type": "text",
+                          "literal": "HTML"
+                        },
+                        {
+                          "type": "text",
+                          "literal": " "
+                        },
+                        {
+                          "type": "text",
+                          "literal": "entities"
+                        },
+                        {
+                          "type": "emoji",
+                          "literal": ":"
+                        },
+                        {
+                          "type": "text",
+                          "literal": " "
+                        },
+                        {
+                          "type": "code",
+                          "literal": "&amp;"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "item",
+                  "children": [
+                    {
+                      "type": "paragraph",
+                      "children": [
+                        {
+                          "type": "text",
+                          "literal": "Hard"
+                        },
+                        {
+                          "type": "text",
+                          "literal": " "
+                        },
+                        {
+                          "type": "text",
+                          "literal": "breaks"
+                        },
+                        {
+                          "type": "emoji",
+                          "literal": ":"
+                        },
+                        {
+                          "type": "text",
+                          "literal": " "
+                        },
+                        {
+                          "type": "text",
+                          "literal": "two"
+                        },
+                        {
+                          "type": "text",
+                          "literal": " "
+                        },
+                        {
+                          "type": "text",
+                          "literal": "spaces"
+                        },
+                        {
+                          "type": "text",
+                          "literal": " "
+                        },
+                        {
+                          "type": "text",
+                          "literal": "+"
+                        },
+                        {
+                          "type": "text",
+                          "literal": " "
+                        },
+                        {
+                          "type": "text",
+                          "literal": "newline"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "item",
+                  "children": [
+                    {
+                      "type": "paragraph",
+                      "children": [
+                        {
+                          "type": "text",
+                          "literal": "Soft"
+                        },
+                        {
+                          "type": "text",
+                          "literal": " "
+                        },
+                        {
+                          "type": "text",
+                          "literal": "breaks"
+                        },
+                        {
+                          "type": "emoji",
+                          "literal": ":"
+                        },
+                        {
+                          "type": "text",
+                          "literal": " "
+                        },
+                        {
+                          "type": "text",
+                          "literal": "newline"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "item",
+                  "children": [
+                    {
+                      "type": "paragraph",
+                      "children": [
+                        {
+                          "type": "text",
+                          "literal": "Escaped"
+                        },
+                        {
+                          "type": "text",
+                          "literal": " "
+                        },
+                        {
+                          "type": "text",
+                          "literal": "characters"
+                        },
+                        {
+                          "type": "emoji",
+                          "literal": ":"
+                        },
+                        {
+                          "type": "text",
+                          "literal": " "
+                        },
+                        {
+                          "type": "code",
+                          "literal": "\\*"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "item",
+          "children": [
+            {
+              "type": "paragraph",
+              "children": [
+                {
+                  "type": "strong",
+                  "children": [
+                    {
+                      "type": "text",
+                      "literal": "`parser.py`"
+                    }
+                  ]
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "-"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "Main"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "parsing"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "logic"
+                }
+              ]
+            },
+            {
+              "type": "list",
+              "children": [
+                {
+                  "type": "item",
+                  "children": [
+                    {
+                      "type": "paragraph",
+                      "children": [
+                        {
+                          "type": "code",
+                          "literal": "Parser"
+                        },
+                        {
+                          "type": "text",
+                          "literal": " "
+                        },
+                        {
+                          "type": "text",
+                          "literal": "class"
+                        },
+                        {
+                          "type": "emoji",
+                          "literal": ":"
+                        },
+                        {
+                          "type": "text",
+                          "literal": " "
+                        },
+                        {
+                          "type": "text",
+                          "literal": "Block-level"
+                        },
+                        {
+                          "type": "text",
+                          "literal": " "
+                        },
+                        {
+                          "type": "text",
+                          "literal": "parsing"
+                        },
+                        {
+                          "type": "text",
+                          "literal": " "
+                        },
+                        {
+                          "type": "text",
+                          "literal": "with"
+                        },
+                        {
+                          "type": "text",
+                          "literal": " "
+                        },
+                        {
+                          "type": "text",
+                          "literal": "two-phase"
+                        },
+                        {
+                          "type": "text",
+                          "literal": " "
+                        },
+                        {
+                          "type": "text",
+                          "literal": "approach"
+                        },
+                        {
+                          "type": "text",
+                          "literal": " "
+                        },
+                        {
+                          "type": "text",
+                          "literal": "(Phase"
+                        },
+                        {
+                          "type": "text",
+                          "literal": " "
+                        },
+                        {
+                          "type": "text",
+                          "literal": "1"
+                        },
+                        {
+                          "type": "emoji",
+                          "literal": ":"
+                        },
+                        {
+                          "type": "text",
+                          "literal": " "
+                        },
+                        {
+                          "type": "text",
+                          "literal": "blocks,"
+                        },
+                        {
+                          "type": "text",
+                          "literal": " "
+                        },
+                        {
+                          "type": "text",
+                          "literal": "Phase"
+                        },
+                        {
+                          "type": "text",
+                          "literal": " "
+                        },
+                        {
+                          "type": "text",
+                          "literal": "2"
+                        },
+                        {
+                          "type": "emoji",
+                          "literal": ":"
+                        },
+                        {
+                          "type": "text",
+                          "literal": " "
+                        },
+                        {
+                          "type": "text",
+                          "literal": "inlines)"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "item",
+                  "children": [
+                    {
+                      "type": "paragraph",
+                      "children": [
+                        {
+                          "type": "code",
+                          "literal": "InlineParser"
+                        },
+                        {
+                          "type": "text",
+                          "literal": " "
+                        },
+                        {
+                          "type": "text",
+                          "literal": "class"
+                        },
+                        {
+                          "type": "emoji",
+                          "literal": ":"
+                        },
+                        {
+                          "type": "text",
+                          "literal": " "
+                        },
+                        {
+                          "type": "text",
+                          "literal": "Processes"
+                        },
+                        {
+                          "type": "text",
+                          "literal": " "
+                        },
+                        {
+                          "type": "text",
+                          "literal": "inline"
+                        },
+                        {
+                          "type": "text",
+                          "literal": " "
+                        },
+                        {
+                          "type": "text",
+                          "literal": "tokens"
+                        },
+                        {
+                          "type": "text",
+                          "literal": " "
+                        },
+                        {
+                          "type": "text",
+                          "literal": "using"
+                        },
+                        {
+                          "type": "text",
+                          "literal": " "
+                        },
+                        {
+                          "type": "text",
+                          "literal": "regex"
+                        },
+                        {
+                          "type": "text",
+                          "literal": " "
+                        },
+                        {
+                          "type": "text",
+                          "literal": "patterns"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "item",
+          "children": [
+            {
+              "type": "paragraph",
+              "children": [
+                {
+                  "type": "strong",
+                  "children": [
+                    {
+                      "type": "text",
+                      "literal": "`node.py`"
+                    }
+                  ]
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "-"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "AST"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "node"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "representation"
+                }
+              ]
+            },
+            {
+              "type": "list",
+              "children": [
+                {
+                  "type": "item",
+                  "children": [
+                    {
+                      "type": "paragraph",
+                      "children": [
+                        {
+                          "type": "code",
+                          "literal": "Node"
+                        },
+                        {
+                          "type": "text",
+                          "literal": " "
+                        },
+                        {
+                          "type": "text",
+                          "literal": "class"
+                        },
+                        {
+                          "type": "emoji",
+                          "literal": ":"
+                        },
+                        {
+                          "type": "text",
+                          "literal": " "
+                        },
+                        {
+                          "type": "text",
+                          "literal": "Tree"
+                        },
+                        {
+                          "type": "text",
+                          "literal": " "
+                        },
+                        {
+                          "type": "text",
+                          "literal": "structure"
+                        },
+                        {
+                          "type": "text",
+                          "literal": " "
+                        },
+                        {
+                          "type": "text",
+                          "literal": "with"
+                        },
+                        {
+                          "type": "text",
+                          "literal": " "
+                        },
+                        {
+                          "type": "text",
+                          "literal": "parent-child"
+                        },
+                        {
+                          "type": "text",
+                          "literal": " "
+                        },
+                        {
+                          "type": "text",
+                          "literal": "relationships,"
+                        },
+                        {
+                          "type": "text",
+                          "literal": " "
+                        },
+                        {
+                          "type": "text",
+                          "literal": "JSON"
+                        },
+                        {
+                          "type": "text",
+                          "literal": " "
+                        },
+                        {
+                          "type": "text",
+                          "literal": "serialization"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "item",
+          "children": [
+            {
+              "type": "paragraph",
+              "children": [
+                {
+                  "type": "strong",
+                  "children": [
+                    {
+                      "type": "text",
+                      "literal": "`html_renderer.py`"
+                    }
+                  ]
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "-"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "HTML"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "output"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "generation"
+                }
+              ]
+            },
+            {
+              "type": "list",
+              "children": [
+                {
+                  "type": "item",
+                  "children": [
+                    {
+                      "type": "paragraph",
+                      "children": [
+                        {
+                          "type": "code",
+                          "literal": "HtmlRenderer"
+                        },
+                        {
+                          "type": "text",
+                          "literal": " "
+                        },
+                        {
+                          "type": "text",
+                          "literal": "class"
+                        },
+                        {
+                          "type": "emoji",
+                          "literal": ":"
+                        },
+                        {
+                          "type": "text",
+                          "literal": " "
+                        },
+                        {
+                          "type": "text",
+                          "literal": "Converts"
+                        },
+                        {
+                          "type": "text",
+                          "literal": " "
+                        },
+                        {
+                          "type": "text",
+                          "literal": "JSON"
+                        },
+                        {
+                          "type": "text",
+                          "literal": " "
+                        },
+                        {
+                          "type": "text",
+                          "literal": "IR"
+                        },
+                        {
+                          "type": "text",
+                          "literal": " "
+                        },
+                        {
+                          "type": "text",
+                          "literal": "to"
+                        },
+                        {
+                          "type": "text",
+                          "literal": " "
+                        },
+                        {
+                          "type": "text",
+                          "literal": "styled"
+                        },
+                        {
+                          "type": "text",
+                          "literal": " "
+                        },
+                        {
+                          "type": "text",
+                          "literal": "HTML"
+                        },
+                        {
+                          "type": "text",
+                          "literal": " "
+                        },
+                        {
+                          "type": "text",
+                          "literal": "with"
+                        },
+                        {
+                          "type": "text",
+                          "literal": " "
+                        },
+                        {
+                          "type": "text",
+                          "literal": "proper"
+                        },
+                        {
+                          "type": "text",
+                          "literal": " "
+                        },
+                        {
+                          "type": "text",
+                          "literal": "escaping"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "item",
+          "children": [
+            {
+              "type": "paragraph",
+              "children": [
+                {
+                  "type": "strong",
+                  "children": [
+                    {
+                      "type": "text",
+                      "literal": "`regex_rules.py`"
+                    }
+                  ]
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "-"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "Pattern"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "definitions"
+                }
+              ]
+            },
+            {
+              "type": "list",
+              "children": [
+                {
+                  "type": "item",
+                  "children": [
+                    {
+                      "type": "paragraph",
+                      "children": [
+                        {
+                          "type": "text",
+                          "literal": "Block-level"
+                        },
+                        {
+                          "type": "text",
+                          "literal": " "
+                        },
+                        {
+                          "type": "text",
+                          "literal": "token"
+                        },
+                        {
+                          "type": "text",
+                          "literal": " "
+                        },
+                        {
+                          "type": "text",
+                          "literal": "patterns"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "item",
+                  "children": [
+                    {
+                      "type": "paragraph",
+                      "children": [
+                        {
+                          "type": "text",
+                          "literal": "Inline"
+                        },
+                        {
+                          "type": "text",
+                          "literal": " "
+                        },
+                        {
+                          "type": "text",
+                          "literal": "token"
+                        },
+                        {
+                          "type": "text",
+                          "literal": " "
+                        },
+                        {
+                          "type": "text",
+                          "literal": "patterns"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "item",
+                  "children": [
+                    {
+                      "type": "paragraph",
+                      "children": [
+                        {
+                          "type": "text",
+                          "literal": "HTML"
+                        },
+                        {
+                          "type": "text",
+                          "literal": " "
+                        },
+                        {
+                          "type": "text",
+                          "literal": "block"
+                        },
+                        {
+                          "type": "text",
+                          "literal": " "
+                        },
+                        {
+                          "type": "text",
+                          "literal": "detection"
+                        },
+                        {
+                          "type": "text",
+                          "literal": " "
+                        },
+                        {
+                          "type": "text",
+                          "literal": "rules"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "item",
+                  "children": [
+                    {
+                      "type": "paragraph",
+                      "children": [
+                        {
+                          "type": "text",
+                          "literal": "Special"
+                        },
+                        {
+                          "type": "text",
+                          "literal": " "
+                        },
+                        {
+                          "type": "text",
+                          "literal": "regex"
+                        },
+                        {
+                          "type": "text",
+                          "literal": " "
+                        },
+                        {
+                          "type": "text",
+                          "literal": "patterns"
+                        },
+                        {
+                          "type": "text",
+                          "literal": " "
+                        },
+                        {
+                          "type": "text",
+                          "literal": "(heading"
+                        },
+                        {
+                          "type": "text",
+                          "literal": " "
+                        },
+                        {
+                          "type": "text",
+                          "literal": "IDs,"
+                        },
+                        {
+                          "type": "text",
+                          "literal": " "
+                        },
+                        {
+                          "type": "text",
+                          "literal": "line"
+                        },
+                        {
+                          "type": "text",
+                          "literal": " "
+                        },
+                        {
+                          "type": "text",
+                          "literal": "endings)"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "item",
+          "children": [
+            {
+              "type": "paragraph",
+              "children": [
+                {
+                  "type": "strong",
+                  "children": [
+                    {
+                      "type": "text",
+                      "literal": "`compiler.py`"
+                    }
+                  ]
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "-"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "Entry"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "point"
+                }
+              ]
+            },
+            {
+              "type": "list",
+              "children": [
+                {
+                  "type": "item",
+                  "children": [
+                    {
+                      "type": "paragraph",
+                      "children": [
+                        {
+                          "type": "text",
+                          "literal": "Orchestrates"
+                        },
+                        {
+                          "type": "text",
+                          "literal": " "
+                        },
+                        {
+                          "type": "text",
+                          "literal": "parsing,"
+                        },
+                        {
+                          "type": "text",
+                          "literal": " "
+                        },
+                        {
+                          "type": "text",
+                          "literal": "JSON"
+                        },
+                        {
+                          "type": "text",
+                          "literal": " "
+                        },
+                        {
+                          "type": "text",
+                          "literal": "generation,"
+                        },
+                        {
+                          "type": "text",
+                          "literal": " "
+                        },
+                        {
+                          "type": "text",
+                          "literal": "and"
+                        },
+                        {
+                          "type": "text",
+                          "literal": " "
+                        },
+                        {
+                          "type": "text",
+                          "literal": "HTML"
+                        },
+                        {
+                          "type": "text",
+                          "literal": " "
+                        },
+                        {
+                          "type": "text",
+                          "literal": "rendering"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "item",
+                  "children": [
+                    {
+                      "type": "paragraph",
+                      "children": [
+                        {
+                          "type": "text",
+                          "literal": "Arguments"
+                        },
+                        {
+                          "type": "emoji",
+                          "literal": ":"
+                        },
+                        {
+                          "type": "text",
+                          "literal": " "
+                        },
+                        {
+                          "type": "text",
+                          "literal": "input"
+                        },
+                        {
+                          "type": "text",
+                          "literal": " "
+                        },
+                        {
+                          "type": "text",
+                          "literal": "markdown"
+                        },
+                        {
+                          "type": "text",
+                          "literal": " "
+                        },
+                        {
+                          "type": "text",
+                          "literal": "file"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "item",
+                  "children": [
+                    {
+                      "type": "paragraph",
+                      "children": [
+                        {
+                          "type": "text",
+                          "literal": "Outputs"
+                        },
+                        {
+                          "type": "emoji",
+                          "literal": ":"
+                        },
+                        {
+                          "type": "text",
+                          "literal": " "
+                        },
+                        {
+                          "type": "code",
+                          "literal": ".html"
+                        },
+                        {
+                          "type": "text",
+                          "literal": " "
+                        },
+                        {
+                          "type": "text",
+                          "literal": "and"
+                        },
+                        {
+                          "type": "text",
+                          "literal": " "
+                        },
+                        {
+                          "type": "code",
+                          "literal": ".json"
+                        },
+                        {
+                          "type": "text",
+                          "literal": " "
+                        },
+                        {
+                          "type": "text",
+                          "literal": "files"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "item",
+          "children": [
+            {
+              "type": "paragraph",
+              "children": [
+                {
+                  "type": "strong",
+                  "children": [
+                    {
+                      "type": "text",
+                      "literal": "`template.html`"
+                    }
+                  ]
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "-"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "HTML"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "template"
+                }
+              ]
+            },
+            {
+              "type": "list",
+              "children": [
+                {
+                  "type": "item",
+                  "children": [
+                    {
+                      "type": "paragraph",
+                      "children": [
+                        {
+                          "type": "text",
+                          "literal": "Base"
+                        },
+                        {
+                          "type": "text",
+                          "literal": " "
+                        },
+                        {
+                          "type": "text",
+                          "literal": "template"
+                        },
+                        {
+                          "type": "text",
+                          "literal": " "
+                        },
+                        {
+                          "type": "text",
+                          "literal": "with"
+                        },
+                        {
+                          "type": "text",
+                          "literal": " "
+                        },
+                        {
+                          "type": "text",
+                          "literal": "styling"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "item",
+                  "children": [
+                    {
+                      "type": "paragraph",
+                      "children": [
+                        {
+                          "type": "text",
+                          "literal": "Placeholders"
+                        },
+                        {
+                          "type": "emoji",
+                          "literal": ":"
+                        },
+                        {
+                          "type": "text",
+                          "literal": " "
+                        },
+                        {
+                          "type": "code",
+                          "literal": "__TITLE__"
+                        },
+                        {
+                          "type": "text",
+                          "literal": " "
+                        },
+                        {
+                          "type": "text",
+                          "literal": "and"
+                        },
+                        {
+                          "type": "text",
+                          "literal": " "
+                        },
+                        {
+                          "type": "code",
+                          "literal": "__BODY_HTML__"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "item",
+                  "children": [
+                    {
+                      "type": "paragraph",
+                      "children": [
+                        {
+                          "type": "text",
+                          "literal": "Includes"
+                        },
+                        {
+                          "type": "text",
+                          "literal": " "
+                        },
+                        {
+                          "type": "text",
+                          "literal": "KaTeX"
+                        },
+                        {
+                          "type": "text",
+                          "literal": " "
+                        },
+                        {
+                          "type": "text",
+                          "literal": "CDN"
+                        },
+                        {
+                          "type": "text",
+                          "literal": " "
+                        },
+                        {
+                          "type": "text",
+                          "literal": "for"
+                        },
+                        {
+                          "type": "text",
+                          "literal": " "
+                        },
+                        {
+                          "type": "text",
+                          "literal": "math"
+                        },
+                        {
+                          "type": "text",
+                          "literal": " "
+                        },
+                        {
+                          "type": "text",
+                          "literal": "rendering"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 3,
+      "children": [
+        {
+          "type": "text",
+          "literal": "Inline"
+        },
+        {
+          "type": "text",
+          "literal": " "
+        },
+        {
+          "type": "text",
+          "literal": "Elements"
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "children": [
+        {
+          "type": "text",
+          "literal": "File"
+        },
+        {
+          "type": "text",
+          "literal": " "
+        },
+        {
+          "type": "text",
+          "literal": "Structure"
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 3,
+      "children": [
+        {
+          "type": "text",
+          "literal": "Core"
+        },
+        {
+          "type": "text",
+          "literal": " "
+        },
+        {
+          "type": "text",
+          "literal": "Modules"
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "children": [
+        {
+          "type": "text",
+          "literal": "Usage"
+        }
+      ]
+    },
+    {
+      "type": "code_block",
+      "literal": "python3 compiler.py input.md\n",
+      "info": "bash"
+    },
+    {
+      "type": "paragraph",
+      "children": [
+        {
+          "type": "strong",
+          "children": [
+            {
+              "type": "text",
+              "literal": "Output:"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "list",
+      "children": [
+        {
+          "type": "item",
+          "children": [
+            {
+              "type": "paragraph",
+              "children": [
+                {
+                  "type": "code",
+                  "literal": "input.html"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "-"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "Rendered"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "HTML"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "file"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "item",
+          "children": [
+            {
+              "type": "paragraph",
+              "children": [
+                {
+                  "type": "code",
+                  "literal": "input.json"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "-"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "JSON"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "intermediate"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "representation"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "(for"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "debugging/inspection)"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 3,
+      "children": [
+        {
+          "type": "text",
+          "literal": "Example"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "children": [
+        {
+          "type": "strong",
+          "children": [
+            {
+              "type": "text",
+              "literal": "Input (`example.md`):"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "code_block",
+      "literal": "\nThis is a **bold** text with *italic* emphasis.\n\n- Item 1\n- Item 2\n\n",
+      "info": "markdown"
+    },
+    {
+      "type": "heading",
+      "level": 1,
+      "children": [
+        {
+          "type": "text",
+          "literal": "Hello"
+        },
+        {
+          "type": "text",
+          "literal": " "
+        },
+        {
+          "type": "text",
+          "literal": "World"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "children": [
+        {
+          "type": "text",
+          "literal": "def"
+        },
+        {
+          "type": "text",
+          "literal": " "
+        },
+        {
+          "type": "text",
+          "literal": "hello()"
+        },
+        {
+          "type": "emoji",
+          "literal": ":"
+        },
+        {
+          "type": "softbreak"
+        },
+        {
+          "type": "text",
+          "literal": "print(\"world\")"
+        }
+      ]
+    },
+    {
+      "type": "code_block",
+      "literal": "",
+      "info": ""
+    },
+    {
+      "type": "paragraph",
+      "children": [
+        {
+          "type": "strong",
+          "children": [
+            {
+              "type": "text",
+              "literal": "Output:"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "list",
+      "children": [
+        {
+          "type": "item",
+          "children": [
+            {
+              "type": "paragraph",
+              "children": [
+                {
+                  "type": "code",
+                  "literal": "example.html"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "-"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "Beautiful"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "styled"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "webpage"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "item",
+          "children": [
+            {
+              "type": "paragraph",
+              "children": [
+                {
+                  "type": "code",
+                  "literal": "example.json"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "-"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "AST"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "representation"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "for"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "analysis"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "children": [
+        {
+          "type": "text",
+          "literal": "Parser"
+        },
+        {
+          "type": "text",
+          "literal": " "
+        },
+        {
+          "type": "text",
+          "literal": "Type"
+        },
+        {
+          "type": "text",
+          "literal": " "
+        },
+        {
+          "type": "text",
+          "literal": "Details"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "children": [
+        {
+          "type": "text",
+          "literal": "This"
+        },
+        {
+          "type": "text",
+          "literal": " "
+        },
+        {
+          "type": "text",
+          "literal": "is"
+        },
+        {
+          "type": "text",
+          "literal": " "
+        },
+        {
+          "type": "text",
+          "literal": "a"
+        },
+        {
+          "type": "text",
+          "literal": " "
+        },
+        {
+          "type": "strong",
+          "children": [
+            {
+              "type": "text",
+              "literal": "top-down recursive descent parser"
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "literal": " "
+        },
+        {
+          "type": "text",
+          "literal": "with"
+        },
+        {
+          "type": "text",
+          "literal": " "
+        },
+        {
+          "type": "text",
+          "literal": "the"
+        },
+        {
+          "type": "text",
+          "literal": " "
+        },
+        {
+          "type": "text",
+          "literal": "following"
+        },
+        {
+          "type": "text",
+          "literal": " "
+        },
+        {
+          "type": "text",
+          "literal": "characteristics"
+        },
+        {
+          "type": "emoji",
+          "literal": ":"
+        }
+      ]
+    },
+    {
+      "type": "list",
+      "children": [
+        {
+          "type": "item",
+          "children": [
+            {
+              "type": "paragraph",
+              "children": [
+                {
+                  "type": "strong",
+                  "children": [
+                    {
+                      "type": "text",
+                      "literal": "Single-pass, line-by-line processing"
+                    }
+                  ]
+                },
+                {
+                  "type": "emoji",
+                  "literal": ":"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "Processes"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "input"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "sequentially"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "item",
+          "children": [
+            {
+              "type": "paragraph",
+              "children": [
+                {
+                  "type": "strong",
+                  "children": [
+                    {
+                      "type": "text",
+                      "literal": "Two-phase parsing"
+                    }
+                  ]
+                },
+                {
+                  "type": "emoji",
+                  "literal": ":"
+                }
+              ]
+            },
+            {
+              "type": "list",
+              "children": [
+                {
+                  "type": "item",
+                  "children": [
+                    {
+                      "type": "paragraph",
+                      "children": [
+                        {
+                          "type": "text",
+                          "literal": "Block"
+                        },
+                        {
+                          "type": "text",
+                          "literal": " "
+                        },
+                        {
+                          "type": "text",
+                          "literal": "structure"
+                        },
+                        {
+                          "type": "text",
+                          "literal": " "
+                        },
+                        {
+                          "type": "text",
+                          "literal": "parsing"
+                        },
+                        {
+                          "type": "text",
+                          "literal": " "
+                        },
+                        {
+                          "type": "text",
+                          "literal": "to"
+                        },
+                        {
+                          "type": "text",
+                          "literal": " "
+                        },
+                        {
+                          "type": "text",
+                          "literal": "create"
+                        },
+                        {
+                          "type": "text",
+                          "literal": " "
+                        },
+                        {
+                          "type": "text",
+                          "literal": "document"
+                        },
+                        {
+                          "type": "text",
+                          "literal": " "
+                        },
+                        {
+                          "type": "text",
+                          "literal": "hierarchy"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "item",
+                  "children": [
+                    {
+                      "type": "paragraph",
+                      "children": [
+                        {
+                          "type": "text",
+                          "literal": "Inline"
+                        },
+                        {
+                          "type": "text",
+                          "literal": " "
+                        },
+                        {
+                          "type": "text",
+                          "literal": "element"
+                        },
+                        {
+                          "type": "text",
+                          "literal": " "
+                        },
+                        {
+                          "type": "text",
+                          "literal": "parsing"
+                        },
+                        {
+                          "type": "text",
+                          "literal": " "
+                        },
+                        {
+                          "type": "text",
+                          "literal": "within"
+                        },
+                        {
+                          "type": "text",
+                          "literal": " "
+                        },
+                        {
+                          "type": "text",
+                          "literal": "blocks"
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "item",
+          "children": [
+            {
+              "type": "paragraph",
+              "children": [
+                {
+                  "type": "strong",
+                  "children": [
+                    {
+                      "type": "text",
+                      "literal": "Regex-based pattern matching"
+                    }
+                  ]
+                },
+                {
+                  "type": "emoji",
+                  "literal": ":"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "Uses"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "combined"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "regex"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "with"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "named"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "groups"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "item",
+          "children": [
+            {
+              "type": "paragraph",
+              "children": [
+                {
+                  "type": "strong",
+                  "children": [
+                    {
+                      "type": "text",
+                      "literal": "State machine approach"
+                    }
+                  ]
+                },
+                {
+                  "type": "emoji",
+                  "literal": ":"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "Maintains"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "parsing"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "state"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "across"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "line"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "processing"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "item",
+          "children": [
+            {
+              "type": "paragraph",
+              "children": [
+                {
+                  "type": "strong",
+                  "children": [
+                    {
+                      "type": "text",
+                      "literal": "AST generation"
+                    }
+                  ]
+                },
+                {
+                  "type": "emoji",
+                  "literal": ":"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "Builds"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "Abstract"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "Syntax"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "Tree"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "before"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "rendering"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "item",
+          "children": [
+            {
+              "type": "paragraph",
+              "children": [
+                {
+                  "type": "text",
+                  "literal": "Python"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "3.6"
+                },
+                {
+                  "type": "text",
+                  "literal": "+"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "item",
+          "children": [
+            {
+              "type": "paragraph",
+              "children": [
+                {
+                  "type": "text",
+                  "literal": "No"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "external"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "packages"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "required"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "(uses"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "only"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "standard"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "library"
+                },
+                {
+                  "type": "emoji",
+                  "literal": ":"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "code",
+                  "literal": "re"
+                },
+                {
+                  "type": "text",
+                  "literal": ","
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "code",
+                  "literal": "json"
+                },
+                {
+                  "type": "text",
+                  "literal": ","
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "code",
+                  "literal": "sys"
+                },
+                {
+                  "type": "text",
+                  "literal": ","
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "code",
+                  "literal": "os"
+                },
+                {
+                  "type": "text",
+                  "literal": ","
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "code",
+                  "literal": "html"
+                },
+                {
+                  "type": "text",
+                  "literal": ","
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "code",
+                  "literal": "urllib.parse"
+                },
+                {
+                  "type": "text",
+                  "literal": ")"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "children": [
+        {
+          "type": "text",
+          "literal": "Dependencies"
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "children": [
+        {
+          "type": "text",
+          "literal": "JSON"
+        },
+        {
+          "type": "text",
+          "literal": " "
+        },
+        {
+          "type": "text",
+          "literal": "Intermediate"
+        },
+        {
+          "type": "text",
+          "literal": " "
+        },
+        {
+          "type": "text",
+          "literal": "Representation"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "children": [
+        {
+          "type": "text",
+          "literal": "The"
+        },
+        {
+          "type": "text",
+          "literal": " "
+        },
+        {
+          "type": "text",
+          "literal": "JSON"
+        },
+        {
+          "type": "text",
+          "literal": " "
+        },
+        {
+          "type": "text",
+          "literal": "output"
+        },
+        {
+          "type": "text",
+          "literal": " "
+        },
+        {
+          "type": "text",
+          "literal": "contains"
+        },
+        {
+          "type": "text",
+          "literal": " "
+        },
+        {
+          "type": "text",
+          "literal": "the"
+        },
+        {
+          "type": "text",
+          "literal": " "
+        },
+        {
+          "type": "text",
+          "literal": "complete"
+        },
+        {
+          "type": "text",
+          "literal": " "
+        },
+        {
+          "type": "text",
+          "literal": "AST"
+        },
+        {
+          "type": "text",
+          "literal": " "
+        },
+        {
+          "type": "text",
+          "literal": "structure"
+        },
+        {
+          "type": "emoji",
+          "literal": ":"
+        }
+      ]
+    },
+    {
+      "type": "code_block",
+      "literal": "{\n  \"type\": \"document\",\n  \"children\": [\n    {\n      \"type\": \"heading\",\n      \"level\": 1,\n      \"children\": [\n        {\n          \"type\": \"text\",\n          \"literal\": \"Title\"\n        }\n      ]\n    },\n    ...\n  ]\n}\n",
+      "info": "json"
+    },
+    {
+      "type": "paragraph",
+      "children": [
+        {
+          "type": "text",
+          "literal": "This"
+        },
+        {
+          "type": "text",
+          "literal": " "
+        },
+        {
+          "type": "text",
+          "literal": "JSON"
+        },
+        {
+          "type": "text",
+          "literal": " "
+        },
+        {
+          "type": "text",
+          "literal": "can"
+        },
+        {
+          "type": "text",
+          "literal": " "
+        },
+        {
+          "type": "text",
+          "literal": "be"
+        },
+        {
+          "type": "emoji",
+          "literal": ":"
+        }
+      ]
+    },
+    {
+      "type": "list",
+      "children": [
+        {
+          "type": "item",
+          "children": [
+            {
+              "type": "paragraph",
+              "children": [
+                {
+                  "type": "text",
+                  "literal": "Inspected"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "for"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "debugging"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "item",
+          "children": [
+            {
+              "type": "paragraph",
+              "children": [
+                {
+                  "type": "text",
+                  "literal": "Used"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "by"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "external"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "tools"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "item",
+          "children": [
+            {
+              "type": "paragraph",
+              "children": [
+                {
+                  "type": "text",
+                  "literal": "Transformed"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "into"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "different"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "output"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "formats"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "children": [
+        {
+          "type": "text",
+          "literal": "Styling"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "children": [
+        {
+          "type": "text",
+          "literal": "The"
+        },
+        {
+          "type": "text",
+          "literal": " "
+        },
+        {
+          "type": "text",
+          "literal": "HTML"
+        },
+        {
+          "type": "text",
+          "literal": " "
+        },
+        {
+          "type": "text",
+          "literal": "output"
+        },
+        {
+          "type": "text",
+          "literal": " "
+        },
+        {
+          "type": "text",
+          "literal": "includes"
+        },
+        {
+          "type": "emoji",
+          "literal": ":"
+        }
+      ]
+    },
+    {
+      "type": "list",
+      "children": [
+        {
+          "type": "item",
+          "children": [
+            {
+              "type": "paragraph",
+              "children": [
+                {
+                  "type": "text",
+                  "literal": "Responsive"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "design"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "(max-width"
+                },
+                {
+                  "type": "emoji",
+                  "literal": ":"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "800px)"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "item",
+          "children": [
+            {
+              "type": "paragraph",
+              "children": [
+                {
+                  "type": "text",
+                  "literal": "Professional"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "typography"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "with"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "system"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "fonts"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "item",
+          "children": [
+            {
+              "type": "paragraph",
+              "children": [
+                {
+                  "type": "text",
+                  "literal": "Table"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "styling"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "with"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "borders"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "item",
+          "children": [
+            {
+              "type": "paragraph",
+              "children": [
+                {
+                  "type": "text",
+                  "literal": "Code"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "block"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "syntax"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "(ready"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "for"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "highlighting"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "integration)"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "item",
+          "children": [
+            {
+              "type": "paragraph",
+              "children": [
+                {
+                  "type": "text",
+                  "literal": "Math"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "rendering"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "support"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "via"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "KaTeX"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "item",
+          "children": [
+            {
+              "type": "paragraph",
+              "children": [
+                {
+                  "type": "strong",
+                  "children": [
+                    {
+                      "type": "text",
+                      "literal": "Custom heading IDs"
+                    }
+                  ]
+                },
+                {
+                  "type": "emoji",
+                  "literal": ":"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "code",
+                  "literal": "# Heading {#custom-id}"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "item",
+          "children": [
+            {
+              "type": "paragraph",
+              "children": [
+                {
+                  "type": "strong",
+                  "children": [
+                    {
+                      "type": "text",
+                      "literal": "Task lists"
+                    }
+                  ]
+                },
+                {
+                  "type": "emoji",
+                  "literal": ":"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "code",
+                  "literal": "[x] Completed task"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "item",
+          "children": [
+            {
+              "type": "paragraph",
+              "children": [
+                {
+                  "type": "strong",
+                  "children": [
+                    {
+                      "type": "text",
+                      "literal": "Footnotes"
+                    }
+                  ]
+                },
+                {
+                  "type": "emoji",
+                  "literal": ":"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "code",
+                  "literal": "[^1]"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "with"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "definitions"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "code",
+                  "literal": "[^1]: Footnote content"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "item",
+          "children": [
+            {
+              "type": "paragraph",
+              "children": [
+                {
+                  "type": "strong",
+                  "children": [
+                    {
+                      "type": "text",
+                      "literal": "Definition lists"
+                    }
+                  ]
+                },
+                {
+                  "type": "emoji",
+                  "literal": ":"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "Terms"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "with"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "code",
+                  "literal": ": definition"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "entries"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "item",
+          "children": [
+            {
+              "type": "paragraph",
+              "children": [
+                {
+                  "type": "strong",
+                  "children": [
+                    {
+                      "type": "text",
+                      "literal": "Math blocks"
+                    }
+                  ]
+                },
+                {
+                  "type": "emoji",
+                  "literal": ":"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "code",
+                  "literal": "$$formula$$"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "item",
+          "children": [
+            {
+              "type": "paragraph",
+              "children": [
+                {
+                  "type": "strong",
+                  "children": [
+                    {
+                      "type": "text",
+                      "literal": "Mermaid diagrams"
+                    }
+                  ]
+                },
+                {
+                  "type": "emoji",
+                  "literal": ":"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "code",
+                  "literal": "::: mermaid ... :::"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "item",
+          "children": [
+            {
+              "type": "paragraph",
+              "children": [
+                {
+                  "type": "text",
+                  "literal": "Focus"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "on"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "block"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "and"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "inline"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "structure"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "parsing"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "item",
+          "children": [
+            {
+              "type": "paragraph",
+              "children": [
+                {
+                  "type": "text",
+                  "literal": "HTML"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "escaping"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "for"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "security"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "item",
+          "children": [
+            {
+              "type": "paragraph",
+              "children": [
+                {
+                  "type": "text",
+                  "literal": "No"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "external"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "plugins/extensions"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "framework"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "item",
+          "children": [
+            {
+              "type": "paragraph",
+              "children": [
+                {
+                  "type": "text",
+                  "literal": "Designed"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "for"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "educational"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "purposes"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "in"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "compiler"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "lab"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "item",
+          "children": [
+            {
+              "type": "paragraph",
+              "children": [
+                {
+                  "type": "text",
+                  "literal": "Syntax"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "highlighting"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "for"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "code"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "blocks"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "item",
+          "children": [
+            {
+              "type": "paragraph",
+              "children": [
+                {
+                  "type": "text",
+                  "literal": "Smart"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "typography"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "(typographical"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "quotes,"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "em-dashes)"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "item",
+          "children": [
+            {
+              "type": "paragraph",
+              "children": [
+                {
+                  "type": "text",
+                  "literal": "Table"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "of"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "contents"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "generation"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "item",
+          "children": [
+            {
+              "type": "paragraph",
+              "children": [
+                {
+                  "type": "text",
+                  "literal": "Citation/bibliography"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "support"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "item",
+          "children": [
+            {
+              "type": "paragraph",
+              "children": [
+                {
+                  "type": "text",
+                  "literal": "Custom"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "rendering"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "backends"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "beyond"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "HTML"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "children": [
+        {
+          "type": "text",
+          "literal": "Extensions"
+        },
+        {
+          "type": "text",
+          "literal": " "
+        },
+        {
+          "type": "text",
+          "literal": "Supported"
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "children": [
+        {
+          "type": "text",
+          "literal": "Limitations"
+        },
+        {
+          "type": "text",
+          "literal": " "
+        },
+        {
+          "type": "text",
+          "literal": "&"
+        },
+        {
+          "type": "text",
+          "literal": " "
+        },
+        {
+          "type": "text",
+          "literal": "Notes"
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "children": [
+        {
+          "type": "text",
+          "literal": "Future"
+        },
+        {
+          "type": "text",
+          "literal": " "
+        },
+        {
+          "type": "text",
+          "literal": "Enhancements"
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "children": [
+        {
+          "type": "text",
+          "literal": "Author"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "children": [
+        {
+          "type": "text",
+          "literal": "Pranav"
+        },
+        {
+          "type": "text",
+          "literal": " "
+        },
+        {
+          "type": "text",
+          "literal": "-"
+        },
+        {
+          "type": "text",
+          "literal": " "
+        },
+        {
+          "type": "text",
+          "literal": "Compiler"
+        },
+        {
+          "type": "text",
+          "literal": " "
+        },
+        {
+          "type": "text",
+          "literal": "Lab"
+        },
+        {
+          "type": "text",
+          "literal": " "
+        },
+        {
+          "type": "text",
+          "literal": "Project"
+        }
+      ]
+    }
+  ]
+}
