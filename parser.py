@@ -284,6 +284,8 @@ class Parser:
             heading.string_content = raw_content
             self.doc.append_child(heading)
             self._close_tip_if_paragraph()
+            heading.is_open = False
+            self.tip = heading
             return
 
         # 2a. Footnote Definitions
@@ -354,6 +356,8 @@ class Parser:
             tbreak = Node('thematic_break')
             self.doc.append_child(tbreak)
             self._close_tip_if_paragraph()
+            tbreak.is_open = False
+            self.tip = tbreak
             return
 
         # Attempt to open new fences

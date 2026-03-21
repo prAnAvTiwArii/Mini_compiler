@@ -114,11 +114,11 @@ This is a **bold** text with *italic* emphasis.
 
 - Item 1
 - Item 2
+```
 
 ```python
 def hello():
     print("world")
-```
 ```
 
 **Output:** 

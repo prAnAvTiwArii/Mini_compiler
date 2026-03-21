@@ -1160,7 +1160,30 @@
               ]
             }
           ]
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 3,
+      "children": [
+        {
+          "type": "text",
+          "literal": "Inline"
         },
+        {
+          "type": "text",
+          "literal": " "
+        },
+        {
+          "type": "text",
+          "literal": "Elements"
+        }
+      ]
+    },
+    {
+      "type": "list",
+      "children": [
         {
           "type": "item",
           "children": [
@@ -1944,7 +1967,48 @@
               ]
             }
           ]
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "children": [
+        {
+          "type": "text",
+          "literal": "File"
         },
+        {
+          "type": "text",
+          "literal": " "
+        },
+        {
+          "type": "text",
+          "literal": "Structure"
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 3,
+      "children": [
+        {
+          "type": "text",
+          "literal": "Core"
+        },
+        {
+          "type": "text",
+          "literal": " "
+        },
+        {
+          "type": "text",
+          "literal": "Modules"
+        }
+      ]
+    },
+    {
+      "type": "list",
+      "children": [
         {
           "type": "item",
           "children": [
@@ -3085,60 +3149,6 @@
     },
     {
       "type": "heading",
-      "level": 3,
-      "children": [
-        {
-          "type": "text",
-          "literal": "Inline"
-        },
-        {
-          "type": "text",
-          "literal": " "
-        },
-        {
-          "type": "text",
-          "literal": "Elements"
-        }
-      ]
-    },
-    {
-      "type": "heading",
-      "level": 2,
-      "children": [
-        {
-          "type": "text",
-          "literal": "File"
-        },
-        {
-          "type": "text",
-          "literal": " "
-        },
-        {
-          "type": "text",
-          "literal": "Structure"
-        }
-      ]
-    },
-    {
-      "type": "heading",
-      "level": 3,
-      "children": [
-        {
-          "type": "text",
-          "literal": "Core"
-        },
-        {
-          "type": "text",
-          "literal": " "
-        },
-        {
-          "type": "text",
-          "literal": "Modules"
-        }
-      ]
-    },
-    {
-      "type": "heading",
       "level": 2,
       "children": [
         {
@@ -3305,59 +3315,13 @@
     },
     {
       "type": "code_block",
-      "literal": "\nThis is a **bold** text with *italic* emphasis.\n\n- Item 1\n- Item 2\n\n",
+      "literal": "# Hello World\n\nThis is a **bold** text with *italic* emphasis.\n\n- Item 1\n- Item 2\n",
       "info": "markdown"
     },
     {
-      "type": "heading",
-      "level": 1,
-      "children": [
-        {
-          "type": "text",
-          "literal": "Hello"
-        },
-        {
-          "type": "text",
-          "literal": " "
-        },
-        {
-          "type": "text",
-          "literal": "World"
-        }
-      ]
-    },
-    {
-      "type": "paragraph",
-      "children": [
-        {
-          "type": "text",
-          "literal": "def"
-        },
-        {
-          "type": "text",
-          "literal": " "
-        },
-        {
-          "type": "text",
-          "literal": "hello()"
-        },
-        {
-          "type": "emoji",
-          "literal": ":"
-        },
-        {
-          "type": "softbreak"
-        },
-        {
-          "type": "text",
-          "literal": "print(\"world\")"
-        }
-      ]
-    },
-    {
       "type": "code_block",
-      "literal": "",
-      "info": ""
+      "literal": "def hello():\n    print(\"world\")\n",
+      "info": "python"
     },
     {
       "type": "paragraph",
@@ -3976,7 +3940,22 @@
               ]
             }
           ]
-        },
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "children": [
+        {
+          "type": "text",
+          "literal": "Dependencies"
+        }
+      ]
+    },
+    {
+      "type": "list",
+      "children": [
         {
           "type": "item",
           "children": [
@@ -4148,16 +4127,6 @@
               ]
             }
           ]
-        }
-      ]
-    },
-    {
-      "type": "heading",
-      "level": 2,
-      "children": [
-        {
-          "type": "text",
-          "literal": "Dependencies"
         }
       ]
     },
@@ -4700,7 +4669,30 @@
               ]
             }
           ]
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "children": [
+        {
+          "type": "text",
+          "literal": "Extensions"
         },
+        {
+          "type": "text",
+          "literal": " "
+        },
+        {
+          "type": "text",
+          "literal": "Supported"
+        }
+      ]
+    },
+    {
+      "type": "list",
+      "children": [
         {
           "type": "item",
           "children": [
@@ -4934,7 +4926,38 @@
               ]
             }
           ]
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "children": [
+        {
+          "type": "text",
+          "literal": "Limitations"
         },
+        {
+          "type": "text",
+          "literal": " "
+        },
+        {
+          "type": "text",
+          "literal": "&"
+        },
+        {
+          "type": "text",
+          "literal": " "
+        },
+        {
+          "type": "text",
+          "literal": "Notes"
+        }
+      ]
+    },
+    {
+      "type": "list",
+      "children": [
         {
           "type": "item",
           "children": [
@@ -5134,7 +5157,30 @@
               ]
             }
           ]
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "children": [
+        {
+          "type": "text",
+          "literal": "Future"
         },
+        {
+          "type": "text",
+          "literal": " "
+        },
+        {
+          "type": "text",
+          "literal": "Enhancements"
+        }
+      ]
+    },
+    {
+      "type": "list",
+      "children": [
         {
           "type": "item",
           "children": [
@@ -5332,68 +5378,6 @@
               ]
             }
           ]
-        }
-      ]
-    },
-    {
-      "type": "heading",
-      "level": 2,
-      "children": [
-        {
-          "type": "text",
-          "literal": "Extensions"
-        },
-        {
-          "type": "text",
-          "literal": " "
-        },
-        {
-          "type": "text",
-          "literal": "Supported"
-        }
-      ]
-    },
-    {
-      "type": "heading",
-      "level": 2,
-      "children": [
-        {
-          "type": "text",
-          "literal": "Limitations"
-        },
-        {
-          "type": "text",
-          "literal": " "
-        },
-        {
-          "type": "text",
-          "literal": "&"
-        },
-        {
-          "type": "text",
-          "literal": " "
-        },
-        {
-          "type": "text",
-          "literal": "Notes"
-        }
-      ]
-    },
-    {
-      "type": "heading",
-      "level": 2,
-      "children": [
-        {
-          "type": "text",
-          "literal": "Future"
-        },
-        {
-          "type": "text",
-          "literal": " "
-        },
-        {
-          "type": "text",
-          "literal": "Enhancements"
         }
       ]
     },

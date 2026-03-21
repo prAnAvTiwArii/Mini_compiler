@@ -1292,7 +1292,38 @@
               ]
             }
           ]
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 3,
+      "children": [
+        {
+          "type": "text",
+          "literal": "InlineParser"
         },
+        {
+          "type": "text",
+          "literal": " "
+        },
+        {
+          "type": "text",
+          "literal": "("
+        },
+        {
+          "type": "code",
+          "literal": "parser.py"
+        },
+        {
+          "type": "text",
+          "literal": ")"
+        }
+      ]
+    },
+    {
+      "type": "list",
+      "children": [
         {
           "type": "item",
           "children": [
@@ -1636,32 +1667,6 @@
               ]
             }
           ]
-        }
-      ]
-    },
-    {
-      "type": "heading",
-      "level": 3,
-      "children": [
-        {
-          "type": "text",
-          "literal": "InlineParser"
-        },
-        {
-          "type": "text",
-          "literal": " "
-        },
-        {
-          "type": "text",
-          "literal": "("
-        },
-        {
-          "type": "code",
-          "literal": "parser.py"
-        },
-        {
-          "type": "text",
-          "literal": ")"
         }
       ]
     },
@@ -2111,7 +2116,38 @@
               ]
             }
           ]
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 3,
+      "children": [
+        {
+          "type": "text",
+          "literal": "Node"
         },
+        {
+          "type": "text",
+          "literal": " "
+        },
+        {
+          "type": "text",
+          "literal": "("
+        },
+        {
+          "type": "code",
+          "literal": "node.py"
+        },
+        {
+          "type": "text",
+          "literal": ")"
+        }
+      ]
+    },
+    {
+      "type": "list",
+      "children": [
         {
           "type": "item",
           "children": [
@@ -2851,7 +2887,38 @@
               ]
             }
           ]
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 3,
+      "children": [
+        {
+          "type": "text",
+          "literal": "HtmlRenderer"
         },
+        {
+          "type": "text",
+          "literal": " "
+        },
+        {
+          "type": "text",
+          "literal": "("
+        },
+        {
+          "type": "code",
+          "literal": "html_renderer.py"
+        },
+        {
+          "type": "text",
+          "literal": ")"
+        }
+      ]
+    },
+    {
+      "type": "list",
+      "children": [
         {
           "type": "item",
           "children": [
@@ -3369,58 +3436,6 @@
               ]
             }
           ]
-        }
-      ]
-    },
-    {
-      "type": "heading",
-      "level": 3,
-      "children": [
-        {
-          "type": "text",
-          "literal": "Node"
-        },
-        {
-          "type": "text",
-          "literal": " "
-        },
-        {
-          "type": "text",
-          "literal": "("
-        },
-        {
-          "type": "code",
-          "literal": "node.py"
-        },
-        {
-          "type": "text",
-          "literal": ")"
-        }
-      ]
-    },
-    {
-      "type": "heading",
-      "level": 3,
-      "children": [
-        {
-          "type": "text",
-          "literal": "HtmlRenderer"
-        },
-        {
-          "type": "text",
-          "literal": " "
-        },
-        {
-          "type": "text",
-          "literal": "("
-        },
-        {
-          "type": "code",
-          "literal": "html_renderer.py"
-        },
-        {
-          "type": "text",
-          "literal": ")"
         }
       ]
     },
@@ -3951,51 +3966,6 @@
                   "literal": ": definition"
                 }
               ]
-            },
-            {
-              "type": "paragraph",
-              "children": [
-                {
-                  "type": "text",
-                  "literal": "Matches"
-                },
-                {
-                  "type": "text",
-                  "literal": " "
-                },
-                {
-                  "type": "text",
-                  "literal": "(in"
-                },
-                {
-                  "type": "text",
-                  "literal": " "
-                },
-                {
-                  "type": "text",
-                  "literal": "order"
-                },
-                {
-                  "type": "text",
-                  "literal": " "
-                },
-                {
-                  "type": "text",
-                  "literal": "of"
-                },
-                {
-                  "type": "text",
-                  "literal": " "
-                },
-                {
-                  "type": "text",
-                  "literal": "precedence)"
-                },
-                {
-                  "type": "emoji",
-                  "literal": ":"
-                }
-              ]
             }
           ]
         }
@@ -4024,6 +3994,51 @@
         {
           "type": "text",
           "literal": "Pattern"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "children": [
+        {
+          "type": "text",
+          "literal": "Matches"
+        },
+        {
+          "type": "text",
+          "literal": " "
+        },
+        {
+          "type": "text",
+          "literal": "(in"
+        },
+        {
+          "type": "text",
+          "literal": " "
+        },
+        {
+          "type": "text",
+          "literal": "order"
+        },
+        {
+          "type": "text",
+          "literal": " "
+        },
+        {
+          "type": "text",
+          "literal": "of"
+        },
+        {
+          "type": "text",
+          "literal": " "
+        },
+        {
+          "type": "text",
+          "literal": "precedence)"
+        },
+        {
+          "type": "emoji",
+          "literal": ":"
         }
       ]
     },
@@ -5118,7 +5133,46 @@
               ]
             }
           ]
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "children": [
+        {
+          "type": "text",
+          "literal": "Template"
         },
+        {
+          "type": "text",
+          "literal": " "
+        },
+        {
+          "type": "text",
+          "literal": "System"
+        },
+        {
+          "type": "text",
+          "literal": " "
+        },
+        {
+          "type": "text",
+          "literal": "("
+        },
+        {
+          "type": "code",
+          "literal": "template.html"
+        },
+        {
+          "type": "text",
+          "literal": ")"
+        }
+      ]
+    },
+    {
+      "type": "list",
+      "children": [
         {
           "type": "item",
           "children": [
@@ -5388,40 +5442,6 @@
               ]
             }
           ]
-        }
-      ]
-    },
-    {
-      "type": "heading",
-      "level": 2,
-      "children": [
-        {
-          "type": "text",
-          "literal": "Template"
-        },
-        {
-          "type": "text",
-          "literal": " "
-        },
-        {
-          "type": "text",
-          "literal": "System"
-        },
-        {
-          "type": "text",
-          "literal": " "
-        },
-        {
-          "type": "text",
-          "literal": "("
-        },
-        {
-          "type": "code",
-          "literal": "template.html"
-        },
-        {
-          "type": "text",
-          "literal": ")"
         }
       ]
     },
@@ -6909,7 +6929,38 @@
               ]
             }
           ]
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "children": [
+        {
+          "type": "text",
+          "literal": "Important"
         },
+        {
+          "type": "text",
+          "literal": " "
+        },
+        {
+          "type": "text",
+          "literal": "Design"
+        },
+        {
+          "type": "text",
+          "literal": " "
+        },
+        {
+          "type": "text",
+          "literal": "Decisions"
+        }
+      ]
+    },
+    {
+      "type": "list",
+      "children": [
         {
           "type": "item",
           "children": [
@@ -7443,7 +7494,76 @@
               ]
             }
           ]
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "children": [
+        {
+          "type": "text",
+          "literal": "Common"
         },
+        {
+          "type": "text",
+          "literal": " "
+        },
+        {
+          "type": "text",
+          "literal": "Modifications"
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 3,
+      "children": [
+        {
+          "type": "text",
+          "literal": "Add"
+        },
+        {
+          "type": "text",
+          "literal": " "
+        },
+        {
+          "type": "text",
+          "literal": "a"
+        },
+        {
+          "type": "text",
+          "literal": " "
+        },
+        {
+          "type": "text",
+          "literal": "new"
+        },
+        {
+          "type": "text",
+          "literal": " "
+        },
+        {
+          "type": "text",
+          "literal": "block"
+        },
+        {
+          "type": "text",
+          "literal": " "
+        },
+        {
+          "type": "text",
+          "literal": "type"
+        },
+        {
+          "type": "emoji",
+          "literal": ":"
+        }
+      ]
+    },
+    {
+      "type": "list",
+      "children": [
         {
           "type": "item",
           "children": [
@@ -7627,7 +7747,58 @@
               ]
             }
           ]
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 3,
+      "children": [
+        {
+          "type": "text",
+          "literal": "Add"
         },
+        {
+          "type": "text",
+          "literal": " "
+        },
+        {
+          "type": "text",
+          "literal": "a"
+        },
+        {
+          "type": "text",
+          "literal": " "
+        },
+        {
+          "type": "text",
+          "literal": "new"
+        },
+        {
+          "type": "text",
+          "literal": " "
+        },
+        {
+          "type": "text",
+          "literal": "inline"
+        },
+        {
+          "type": "text",
+          "literal": " "
+        },
+        {
+          "type": "text",
+          "literal": "element"
+        },
+        {
+          "type": "emoji",
+          "literal": ":"
+        }
+      ]
+    },
+    {
+      "type": "list",
+      "children": [
         {
           "type": "item",
           "children": [
@@ -7811,7 +7982,42 @@
               ]
             }
           ]
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 3,
+      "children": [
+        {
+          "type": "text",
+          "literal": "Change"
         },
+        {
+          "type": "text",
+          "literal": " "
+        },
+        {
+          "type": "text",
+          "literal": "HTML"
+        },
+        {
+          "type": "text",
+          "literal": " "
+        },
+        {
+          "type": "text",
+          "literal": "output"
+        },
+        {
+          "type": "emoji",
+          "literal": ":"
+        }
+      ]
+    },
+    {
+      "type": "list",
+      "children": [
         {
           "type": "item",
           "children": [
@@ -7895,172 +8101,6 @@
               ]
             }
           ]
-        }
-      ]
-    },
-    {
-      "type": "heading",
-      "level": 2,
-      "children": [
-        {
-          "type": "text",
-          "literal": "Important"
-        },
-        {
-          "type": "text",
-          "literal": " "
-        },
-        {
-          "type": "text",
-          "literal": "Design"
-        },
-        {
-          "type": "text",
-          "literal": " "
-        },
-        {
-          "type": "text",
-          "literal": "Decisions"
-        }
-      ]
-    },
-    {
-      "type": "heading",
-      "level": 2,
-      "children": [
-        {
-          "type": "text",
-          "literal": "Common"
-        },
-        {
-          "type": "text",
-          "literal": " "
-        },
-        {
-          "type": "text",
-          "literal": "Modifications"
-        }
-      ]
-    },
-    {
-      "type": "heading",
-      "level": 3,
-      "children": [
-        {
-          "type": "text",
-          "literal": "Add"
-        },
-        {
-          "type": "text",
-          "literal": " "
-        },
-        {
-          "type": "text",
-          "literal": "a"
-        },
-        {
-          "type": "text",
-          "literal": " "
-        },
-        {
-          "type": "text",
-          "literal": "new"
-        },
-        {
-          "type": "text",
-          "literal": " "
-        },
-        {
-          "type": "text",
-          "literal": "block"
-        },
-        {
-          "type": "text",
-          "literal": " "
-        },
-        {
-          "type": "text",
-          "literal": "type"
-        },
-        {
-          "type": "emoji",
-          "literal": ":"
-        }
-      ]
-    },
-    {
-      "type": "heading",
-      "level": 3,
-      "children": [
-        {
-          "type": "text",
-          "literal": "Add"
-        },
-        {
-          "type": "text",
-          "literal": " "
-        },
-        {
-          "type": "text",
-          "literal": "a"
-        },
-        {
-          "type": "text",
-          "literal": " "
-        },
-        {
-          "type": "text",
-          "literal": "new"
-        },
-        {
-          "type": "text",
-          "literal": " "
-        },
-        {
-          "type": "text",
-          "literal": "inline"
-        },
-        {
-          "type": "text",
-          "literal": " "
-        },
-        {
-          "type": "text",
-          "literal": "element"
-        },
-        {
-          "type": "emoji",
-          "literal": ":"
-        }
-      ]
-    },
-    {
-      "type": "heading",
-      "level": 3,
-      "children": [
-        {
-          "type": "text",
-          "literal": "Change"
-        },
-        {
-          "type": "text",
-          "literal": " "
-        },
-        {
-          "type": "text",
-          "literal": "HTML"
-        },
-        {
-          "type": "text",
-          "literal": " "
-        },
-        {
-          "type": "text",
-          "literal": "output"
-        },
-        {
-          "type": "emoji",
-          "literal": ":"
         }
       ]
     },
@@ -8510,7 +8550,30 @@
               ]
             }
           ]
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "children": [
+        {
+          "type": "text",
+          "literal": "Performance"
         },
+        {
+          "type": "text",
+          "literal": " "
+        },
+        {
+          "type": "text",
+          "literal": "Notes"
+        }
+      ]
+    },
+    {
+      "type": "list",
+      "children": [
         {
           "type": "item",
           "children": [
@@ -8754,24 +8817,6 @@
               ]
             }
           ]
-        }
-      ]
-    },
-    {
-      "type": "heading",
-      "level": 2,
-      "children": [
-        {
-          "type": "text",
-          "literal": "Performance"
-        },
-        {
-          "type": "text",
-          "literal": " "
-        },
-        {
-          "type": "text",
-          "literal": "Notes"
         }
       ]
     },

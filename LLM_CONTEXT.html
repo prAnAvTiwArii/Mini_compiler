@@ -110,13 +110,15 @@ Phase 2: Inline Parsing (InlineParser.parse_inlines)
 <li><code>indent</code>: Indentation level</li>
 <li><code>blank</code>: Whether line is empty</li>
 <li><code>line_number</code>: For debugging/tracking</li>
+</ol>
+<h3>InlineParser (<code>parser.py</code>)</h3>
+<ol>
 <li><strong>`parse(block_node)`</strong>: Entry for inline processing</li>
 <li><strong>`parse_inlines(block)`</strong>: Tokenizes block.string<em>content using `inline</em>token<em></em>pattern<code></code></li>
 <li><strong>`peek()`</strong>: Peek at current character</li>
 <li><strong>`match(pattern)`</strong>: Match regex at current position</li>
 <li>Creates child nodes for all inline elements (text, strong, emph, links, etc.)</li>
 </ol>
-<h3>InlineParser (<code>parser.py</code>)</h3>
 <p><strong>Supported Inline Nodes:</strong></p>
 <ol>
 <li><code>text</code> (plain text)</li>
@@ -130,6 +132,9 @@ Phase 2: Inline Parsing (InlineParser.parse_inlines)
 <li><code>task_checkbox</code> (with checked property)</li>
 <li><code>html_inline</code> (raw HTML)</li>
 <li><code>hardbreak</code>, <code>softbreak</code> (line breaks)</li>
+</ol>
+<h3>Node (<code>node.py</code>)</h3>
+<ol>
 <li><strong>Tree structure</strong>: parent, first<em>child, last</em>child, prev, next (doubly-linked)</li>
 <li><strong>Properties:</strong><ol>
 <li><code>type</code>: node category (heading, paragraph, etc.)</li>
@@ -149,6 +154,9 @@ Phase 2: Inline Parsing (InlineParser.parse_inlines)
 <li><code>to_json()</code>: Serializes to JSON string or dict</li>
 </ol>
 </li>
+</ol>
+<h3>HtmlRenderer (<code>html_renderer.py</code>)</h3>
+<ol>
 <li><strong>Processes JSON IR</strong> (from node.to<em></em>json())</li>
 <li><strong>`render_json_ir(ir_dict)`</strong>: Main entry</li>
 <li><strong>`_render_node(node, tight=False)`</strong>: Recursive rendering</li>
@@ -160,8 +168,6 @@ Phase 2: Inline Parsing (InlineParser.parse_inlines)
 </ol>
 </li>
 </ol>
-<h3>Node (<code>node.py</code>)</h3>
-<h3>HtmlRenderer (<code>html_renderer.py</code>)</h3>
 <h2>Regex Patterns (<code>regex_rules.py</code>)</h2>
 <h3>Block Token Pattern</h3>
 <p>Combined regex with named groups detecting:</p>
@@ -175,9 +181,10 @@ Phase 2: Inline Parsing (InlineParser.parse_inlines)
 <li><code>mermaid_fence</code>: <code>::: mermaid</code></li>
 <li><code>mermaid_close</code>: <code>:::</code></li>
 <li><code>footnote_def</code>: <code>[^label]: content</code></li>
-<li><code>def_list_marker</code>: <code>: definition</code>Matches (in order of precedence):</li>
+<li><code>def_list_marker</code>: <code>: definition</code></li>
 </ol>
 <h3>Inline Token Pattern</h3>
+<p>Matches (in order of precedence):</p>
 <ol>
 <li>Images: <code>![alt](url)</code></li>
 <li>Links: <code>[label](url)</code></li>
@@ -222,13 +229,15 @@ def main():
 <ol>
 <li><code>&lt;name&gt;.html</code>: Final rendered HTML (from template)</li>
 <li><code>&lt;name&gt;.json</code>: JSON IR for inspection/debugging</li>
+</ol>
+<h2>Template System (<code>template.html</code>)</h2>
+<ol>
 <li>Standard HTML5 structure</li>
 <li>Placeholders: <code>__TITLE__</code> (from filename) and <code>__BODY_HTML__</code> (from renderer)</li>
 <li>Includes KaTeX CDN for math rendering</li>
 <li>CSS styling for body, tables, code blocks, etc.</li>
 <li>Responsive design (max-width: 800px)</li>
 </ol>
-<h2>Template System (<code>template.html</code>)</h2>
 <h2>Block Parsing Logic (Key Algorithm)</h2>
 <p>For each line:</p>
 <ol>
@@ -264,6 +273,9 @@ def main():
 </ol>
 </li>
 <li><strong>Append nodes</strong> to parent block node</li>
+</ol>
+<h2>Important Design Decisions</h2>
+<ol>
 <li><strong>Two-phase parsing</strong>: Separates structural parsing from content parsing</li>
 <li><strong>String deferral</strong>: Block parsing stores inline content as string<em></em>content, processed later</li>
 <li><strong>Regex-based lexing</strong>: No traditional tokenizer; patterns handle tokenization</li>
@@ -271,22 +283,27 @@ def main():
 <li><strong>Named groups</strong>: Used to identify token type without secondary matching</li>
 <li><strong>Node tree first</strong>: JSON and HTML generated from validated AST</li>
 <li><strong>JSON intermediate</strong>: Enables non-HTML backends and inspection</li>
+</ol>
+<h2>Common Modifications</h2>
+<h3>Add a new block type:</h3>
+<ol>
 <li>Add pattern to <code>block_token_pattern</code> in <code>regex_rules.py</code></li>
 <li>Add condition in <code>Parser.incorporate_line()</code></li>
 <li>Create node with appropriate properties</li>
 <li>Add rendering logic to <code>HtmlRenderer._render_node()</code></li>
+</ol>
+<h3>Add a new inline element:</h3>
+<ol>
 <li>Add pattern to <code>inline_token_pattern</code> in <code>regex_rules.py</code></li>
 <li>Add condition in <code>InlineParser.parse_inlines()</code></li>
 <li>Extract content and create node</li>
 <li>Add rendering case in <code>HtmlRenderer._render_node()</code></li>
+</ol>
+<h3>Change HTML output:</h3>
+<ol>
 <li>Modify <code>HtmlRenderer._render_node()</code> for specific node type</li>
 <li>Adjust <code>template.html</code> styling</li>
 </ol>
-<h2>Important Design Decisions</h2>
-<h2>Common Modifications</h2>
-<h3>Add a new block type:</h3>
-<h3>Add a new inline element:</h3>
-<h3>Change HTML output:</h3>
 <h2>Debugging Tips</h2>
 <ol>
 <li>Check <code>output.json</code> to see AST structure</li>
@@ -300,12 +317,14 @@ def main():
 <li><code>test.md</code>: Sample markdown input</li>
 <li><code>test.html</code>: Expected HTML output</li>
 <li><code>test.json</code>: Expected JSON IR</li>
+</ol>
+<h2>Performance Notes</h2>
+<ol>
 <li>Linear time complexity: O(n) where n = input length</li>
 <li>Single-pass block parsing</li>
 <li>Regex overhead for pattern matching (acceptable for markdown-sized inputs)</li>
 <li>No heavy dependencies (pure Python stdlib)</li>
 </ol>
-<h2>Performance Notes</h2>
 <p><strong>Last Updated:</strong> March 2026<strong>Project Type:</strong> Compiler Lab - Educational Markdown Compiler</p>
 
   <script type="module">

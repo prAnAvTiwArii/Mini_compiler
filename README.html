@@ -61,6 +61,17 @@
 <h2>Project Overview</h2>
 <p>This project implements a <strong>top-down recursive descent parser</strong> that processes Markdown files with extensions and converts them into styled HTML output. It uses regex-based lexical analysis combined with an iterative state machine to build the parse tree.</p>
 <h2>Architecture</h2>
+<pre><code>
+Input (Markdown) 
+    ↓
+[Parser] - Block &amp; Inline Parsing → AST (Node Tree)
+    ↓
+[Node] - Tree representation with JSON serialization
+    ↓
+[HtmlRenderer] - JSON IR → HTML tags
+    ↓
+Output (HTML file + JSON IR)
+</code></pre>
 <h2>Features</h2>
 <h3>Block-Level Elements</h3>
 <ol>
@@ -75,6 +86,9 @@
 <li><strong>Definition Lists</strong> (<code>:  definition</code>)</li>
 <li><strong>Math Blocks</strong> (<code>$$..$$</code>)</li>
 <li><strong>Mermaid Diagrams</strong> (<code>::: mermaid</code>)</li>
+</ol>
+<h3>Inline Elements</h3>
+<ol>
 <li><strong>Text Formatting</strong><ol>
 <li>Bold: <code>**text**</code> or <code>__text__</code></li>
 <li>Italic: <code>*text*</code> or <code>_text_</code></li>
@@ -107,6 +121,10 @@
 <li>Escaped characters: <code>\*</code></li>
 </ol>
 </li>
+</ol>
+<h2>File Structure</h2>
+<h3>Core Modules</h3>
+<ol>
 <li><strong>`parser.py`</strong> - Main parsing logic<ol>
 <li><code>Parser</code> class: Block-level parsing with two-phase approach (Phase 1: blocks, Phase 2: inlines)</li>
 <li><code>InlineParser</code> class: Processes inline tokens using regex patterns</li>
@@ -140,10 +158,10 @@
 </ol>
 </li>
 </ol>
-<h3>Inline Elements</h3>
-<h2>File Structure</h2>
-<h3>Core Modules</h3>
 <h2>Usage</h2>
+<pre><code class="language-bash">
+python3 compiler.py input.md
+</code></pre>
 <p><strong>Output:</strong></p>
 <ol>
 <li><code>input.html</code> - Rendered HTML file</li>
@@ -151,8 +169,18 @@
 </ol>
 <h3>Example</h3>
 <p><strong>Input (`example.md`):</strong></p>
-<h1>Hello World</h1>
-<p>def hello():print(&quot;world&quot;)</p>
+<pre><code class="language-markdown">
+# Hello World
+
+This is a **bold** text with *italic* emphasis.
+
+- Item 1
+- Item 2
+</code></pre>
+<pre><code class="language-python">
+def hello():
+    print(&quot;world&quot;)
+</code></pre>
 <p><strong>Output:</strong></p>
 <ol>
 <li><code>example.html</code> - Beautiful styled webpage</li>
@@ -170,12 +198,32 @@
 <li><strong>Regex-based pattern matching</strong>: Uses combined regex with named groups</li>
 <li><strong>State machine approach</strong>: Maintains parsing state across line processing</li>
 <li><strong>AST generation</strong>: Builds Abstract Syntax Tree before rendering</li>
+</ol>
+<h2>Dependencies</h2>
+<ol>
 <li>Python 3.6+</li>
 <li>No external packages required (uses only standard library: <code>re</code>, <code>json</code>, <code>sys</code>, <code>os</code>, <code>html</code>, <code>urllib.parse</code>)</li>
 </ol>
-<h2>Dependencies</h2>
 <h2>JSON Intermediate Representation</h2>
 <p>The JSON output contains the complete AST structure:</p>
+<pre><code class="language-json">
+{
+  &quot;type&quot;: &quot;document&quot;,
+  &quot;children&quot;: [
+    {
+      &quot;type&quot;: &quot;heading&quot;,
+      &quot;level&quot;: 1,
+      &quot;children&quot;: [
+        {
+          &quot;type&quot;: &quot;text&quot;,
+          &quot;literal&quot;: &quot;Title&quot;
+        }
+      ]
+    },
+    ...
+  ]
+}
+</code></pre>
 <p>This JSON can be:</p>
 <ol>
 <li>Inspected for debugging</li>
@@ -190,25 +238,31 @@
 <li>Table styling with borders</li>
 <li>Code block syntax (ready for highlighting integration)</li>
 <li>Math rendering support via KaTeX</li>
+</ol>
+<h2>Extensions Supported</h2>
+<ol>
 <li><strong>Custom heading IDs</strong>: <code># Heading {#custom-id}</code></li>
 <li><strong>Task lists</strong>: <code>[x] Completed task</code></li>
 <li><strong>Footnotes</strong>: <code>[^1]</code> with definitions <code>[^1]: Footnote content</code></li>
 <li><strong>Definition lists</strong>: Terms with <code>: definition</code> entries</li>
 <li><strong>Math blocks</strong>: <code>$$formula$$</code></li>
 <li><strong>Mermaid diagrams</strong>: <code>::: mermaid ... :::</code></li>
+</ol>
+<h2>Limitations &amp; Notes</h2>
+<ol>
 <li>Focus on block and inline structure parsing</li>
 <li>HTML escaping for security</li>
 <li>No external plugins/extensions framework</li>
 <li>Designed for educational purposes in compiler lab</li>
+</ol>
+<h2>Future Enhancements</h2>
+<ol>
 <li>Syntax highlighting for code blocks</li>
 <li>Smart typography (typographical quotes, em-dashes)</li>
 <li>Table of contents generation</li>
 <li>Citation/bibliography support</li>
 <li>Custom rendering backends beyond HTML</li>
 </ol>
-<h2>Extensions Supported</h2>
-<h2>Limitations &amp; Notes</h2>
-<h2>Future Enhancements</h2>
 <h2>Author</h2>
 <p>Pranav - Compiler Lab Project</p>
 
