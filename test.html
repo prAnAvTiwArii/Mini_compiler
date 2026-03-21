@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>test</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      line-height: 1.6;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 2rem;
+      color: #333;
+    }
+
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      margin-bottom: 1rem;
+    }
+
+    th,
+    td {
+      padding: 8px;
+      border: 1px solid #ddd;
+      text-align: left;
+    }
+
+    th {
+      background-color: #f4f4f4;
+    }
+
+    pre {
+      background: #f4f4f4;
+      padding: 1rem;
+      overflow-x: auto;
+    }
+
+    code {
+      font-family: Consolas, Monaco, "Andale Mono", "Ubuntu Mono", monospace;
+      background: #f4f4f4;
+      padding: 2px 4px;
+      border-radius: 4px;
+    }
+
+    blockquote {
+      border-left: 4px solid #ccc;
+      margin-left: 0;
+      padding-left: 1rem;
+      color: #666;
+    }
+  </style>
+</head>
+
+<body>
+  <h1>Kitchen Sink Document</h1>
+<p>Here is a paragraph with a <sup>superscript</sup>, a <sub>subscript</sub>, and some <mark>highlighted text</mark>.Don&#x27;t forget <u>underlines</u> and <del>strikethrough</del>.Also emojis: :smile: :rocket:</p>
+<h2>Task Lists</h2>
+<ol>
+<li><input type="checkbox" disabled> Completed task</li>
+</ol>
+<ol>
+<li><input type="checkbox" disabled> Incomplete taskHere is some inline math: <span class="math math-inline">E=mc^2</span>.</li>
+</ol>
+<h2>Mathematics</h2>
+<p>And here is a math block:</p>
+<div class="math math-display">
+\int_0^\infty \mathrm{e}^{-x}\,\mathrm{d}x
+</div>
+<h2>Mermaid Diagrams</h2>
+<div class="mermaid">
+graph TD;
+    A--&gt;B;
+    A--&gt;C;
+    B--&gt;D;
+    C--&gt;D;
+</div>
+<div class="mermaid">
+sequenceDiagram
+    Alice-&gt;&gt;Bob: Hello Bob, how are you?
+    Bob--&gt;&gt;Alice: Fine, thanks!
+</div>
+<h2>Footnotes</h2>
+<p>Here is a reference to a footnote.<sup><a href="#fn:">^</a></sup></p>
+<div class="footnote" id="fn:">
+<strong>[]:</strong> <p>This is the text of the footnote.</p>
+</div>
+<h2>Definition Lists</h2>
+<dl>
+<dt>First Term</dt>
+<dd><p>This is the definition of the first term.</p>
+</dd>
+</dl>
+<dl>
+<dt>Second Term</dt>
+<dd><p>This is one definition of the second term.</p>
+</dd>
+</dl>
+<h2>Hard Breaks</h2>
+<p>This line ends with two spaces.<br />
+This is the next line immediately below it.</p>
+<h3>Tables</h3>
+<table border="1">
+<tr>
+<th>ID</th>
+<th>Name</th>
+<th>Role</th>
+</tr>
+<tr>
+<td>1</td>
+<td>Alice</td>
+<td>Admin</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Bob</td>
+<td>User</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Charlie</td>
+<td>User</td>
+</tr>
+</table>
+<div style='color: red'>This is raw HTML</div><p>Inline HTML <span style='color: blue'>works</span> here.</p>
+
+  <script type="module">
+    import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.esm.min.mjs';
+    mermaid.initialize({startOnLoad: true});
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js" onload="renderMathInElement(document.body, {
+            delimiters: [
+                {left: '$$', right: '$$', display: true},
+                {left: '$', right: '$', display: false},
+                {left: '\\[', right: '\\]', display: true},
+                {left: '\\(', right: '\\)', display: false}
+            ]
+        });"></script>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      if (typeof katex === 'undefined') return;
+      var mathElements = document.getElementsByClassName("math");
+      for (var i = 0; i < mathElements.length; i++) {
+        var texText = mathElements[i].textContent;
+        var isDisplay = mathElements[i].classList.contains('math-display');
+        try {
+          katex.render(texText, mathElements[i], {
+            displayMode: isDisplay,
+            throwOnError: false
+          });
+        } catch (e) {console.error('KaTeX render error:', e);}
+      }
+    });
+  </script>
+</body>
+
+</html>
