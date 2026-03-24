@@ -101,6 +101,3 @@ class Node:
 
         return d
 
-    def to_json(self):
-        """Outputs the node and its children as formatted JSON"""
-        return json.dumps(self.to_dict(), indent=2)
