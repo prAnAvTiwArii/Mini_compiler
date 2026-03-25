@@ -145,9 +145,9 @@ class HtmlRenderer:
             self.buffer.append("</div>\n")
             
         elif node_type == "mermaid_block":
-            self.buffer.append("<div class=\"mermaid\">\n")
-            self.buffer.append(self.escape(node.get("literal", "")))
-            self.buffer.append("</div>\n")
+            self.buffer.append("<pre class=\"mermaid\">\n")
+            self.buffer.append(node.get("literal", ""))
+            self.buffer.append("</pre>\n")
             
         elif node_type == "footnote_def":
             label = self.escape(node.get("label", ""))

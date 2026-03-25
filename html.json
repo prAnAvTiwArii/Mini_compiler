@@ -1,0 +1,3455 @@
+{
+  "type": "document",
+  "children": [
+    {
+      "type": "heading",
+      "level": 1,
+      "children": [
+        {
+          "type": "text",
+          "literal": "HTML"
+        },
+        {
+          "type": "text",
+          "literal": " "
+        },
+        {
+          "type": "text",
+          "literal": "Rendering"
+        },
+        {
+          "type": "text",
+          "literal": " "
+        },
+        {
+          "type": "text",
+          "literal": "Rules"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "children": [
+        {
+          "type": "text",
+          "literal": "Defined"
+        },
+        {
+          "type": "text",
+          "literal": " "
+        },
+        {
+          "type": "text",
+          "literal": "in"
+        },
+        {
+          "type": "text",
+          "literal": " "
+        },
+        {
+          "type": "code",
+          "literal": "html_renderer.py"
+        },
+        {
+          "type": "text",
+          "literal": "."
+        },
+        {
+          "type": "text",
+          "literal": " "
+        },
+        {
+          "type": "text",
+          "literal": "The"
+        },
+        {
+          "type": "text",
+          "literal": " "
+        },
+        {
+          "type": "code",
+          "literal": "HtmlRenderer"
+        },
+        {
+          "type": "text",
+          "literal": " "
+        },
+        {
+          "type": "text",
+          "literal": "class"
+        },
+        {
+          "type": "text",
+          "literal": " "
+        },
+        {
+          "type": "text",
+          "literal": "walks"
+        },
+        {
+          "type": "text",
+          "literal": " "
+        },
+        {
+          "type": "text",
+          "literal": "a"
+        },
+        {
+          "type": "text",
+          "literal": " "
+        },
+        {
+          "type": "code",
+          "literal": "to_dict()"
+        },
+        {
+          "type": "text",
+          "literal": " "
+        },
+        {
+          "type": "text",
+          "literal": "tree"
+        },
+        {
+          "type": "text",
+          "literal": " "
+        },
+        {
+          "type": "text",
+          "literal": "produced"
+        },
+        {
+          "type": "text",
+          "literal": " "
+        },
+        {
+          "type": "text",
+          "literal": "by"
+        },
+        {
+          "type": "text",
+          "literal": " "
+        },
+        {
+          "type": "code",
+          "literal": "Node"
+        },
+        {
+          "type": "text",
+          "literal": " "
+        },
+        {
+          "type": "text",
+          "literal": "and"
+        },
+        {
+          "type": "text",
+          "literal": " "
+        },
+        {
+          "type": "text",
+          "literal": "emits"
+        },
+        {
+          "type": "text",
+          "literal": " "
+        },
+        {
+          "type": "text",
+          "literal": "HTML"
+        },
+        {
+          "type": "text",
+          "literal": " "
+        },
+        {
+          "type": "text",
+          "literal": "strings"
+        },
+        {
+          "type": "text",
+          "literal": " "
+        },
+        {
+          "type": "text",
+          "literal": "collected"
+        },
+        {
+          "type": "text",
+          "literal": " "
+        },
+        {
+          "type": "text",
+          "literal": "in"
+        },
+        {
+          "type": "text",
+          "literal": " "
+        },
+        {
+          "type": "code",
+          "literal": "self.buffer"
+        },
+        {
+          "type": "text",
+          "literal": "."
+        }
+      ]
+    },
+    {
+      "type": "thematic_break"
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "children": [
+        {
+          "type": "text",
+          "literal": "Entry"
+        },
+        {
+          "type": "text",
+          "literal": " "
+        },
+        {
+          "type": "text",
+          "literal": "Point"
+        }
+      ]
+    },
+    {
+      "type": "code_block",
+      "literal": "renderer = HtmlRenderer()\nhtml = renderer.render(doc.to_dict())\n",
+      "info": "python"
+    },
+    {
+      "type": "paragraph",
+      "children": [
+        {
+          "type": "code",
+          "literal": "render()"
+        },
+        {
+          "type": "text",
+          "literal": " "
+        },
+        {
+          "type": "text",
+          "literal": "resets"
+        },
+        {
+          "type": "text",
+          "literal": " "
+        },
+        {
+          "type": "text",
+          "literal": "the"
+        },
+        {
+          "type": "text",
+          "literal": " "
+        },
+        {
+          "type": "text",
+          "literal": "buffer,"
+        },
+        {
+          "type": "text",
+          "literal": " "
+        },
+        {
+          "type": "text",
+          "literal": "calls"
+        },
+        {
+          "type": "text",
+          "literal": " "
+        },
+        {
+          "type": "code",
+          "literal": "_render_node(root_dict)"
+        },
+        {
+          "type": "text",
+          "literal": ","
+        },
+        {
+          "type": "text",
+          "literal": " "
+        },
+        {
+          "type": "text",
+          "literal": "and"
+        },
+        {
+          "type": "text",
+          "literal": " "
+        },
+        {
+          "type": "text",
+          "literal": "joins"
+        },
+        {
+          "type": "text",
+          "literal": " "
+        },
+        {
+          "type": "text",
+          "literal": "the"
+        },
+        {
+          "type": "text",
+          "literal": " "
+        },
+        {
+          "type": "text",
+          "literal": "buffer"
+        },
+        {
+          "type": "text",
+          "literal": " "
+        },
+        {
+          "type": "text",
+          "literal": "into"
+        },
+        {
+          "type": "text",
+          "literal": " "
+        },
+        {
+          "type": "text",
+          "literal": "a"
+        },
+        {
+          "type": "text",
+          "literal": " "
+        },
+        {
+          "type": "text",
+          "literal": "single"
+        },
+        {
+          "type": "text",
+          "literal": " "
+        },
+        {
+          "type": "text",
+          "literal": "string."
+        }
+      ]
+    },
+    {
+      "type": "thematic_break"
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "children": [
+        {
+          "type": "text",
+          "literal": "Escaping"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "children": [
+        {
+          "type": "text",
+          "literal": "The"
+        },
+        {
+          "type": "text",
+          "literal": " "
+        },
+        {
+          "type": "code",
+          "literal": "escape(text)"
+        },
+        {
+          "type": "text",
+          "literal": " "
+        },
+        {
+          "type": "text",
+          "literal": "helper"
+        },
+        {
+          "type": "text",
+          "literal": " "
+        },
+        {
+          "type": "text",
+          "literal": "HTML-encodes"
+        },
+        {
+          "type": "text",
+          "literal": " "
+        },
+        {
+          "type": "text",
+          "literal": "five"
+        },
+        {
+          "type": "text",
+          "literal": " "
+        },
+        {
+          "type": "text",
+          "literal": "characters"
+        },
+        {
+          "type": "emoji",
+          "literal": ":"
+        }
+      ]
+    },
+    {
+      "type": "table",
+      "children": [
+        {
+          "type": "table_row",
+          "children": [
+            {
+              "type": "table_header",
+              "children": [
+                {
+                  "type": "text",
+                  "literal": "Character"
+                }
+              ]
+            },
+            {
+              "type": "table_header",
+              "children": [
+                {
+                  "type": "text",
+                  "literal": "Encoded"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "as"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "table_row",
+          "children": [
+            {
+              "type": "table_cell",
+              "children": [
+                {
+                  "type": "code",
+                  "literal": "&"
+                }
+              ]
+            },
+            {
+              "type": "table_cell",
+              "children": [
+                {
+                  "type": "code",
+                  "literal": "&amp;"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "table_row",
+          "children": [
+            {
+              "type": "table_cell",
+              "children": [
+                {
+                  "type": "code",
+                  "literal": "<"
+                }
+              ]
+            },
+            {
+              "type": "table_cell",
+              "children": [
+                {
+                  "type": "code",
+                  "literal": "&lt;"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "table_row",
+          "children": [
+            {
+              "type": "table_cell",
+              "children": [
+                {
+                  "type": "code",
+                  "literal": ">"
+                }
+              ]
+            },
+            {
+              "type": "table_cell",
+              "children": [
+                {
+                  "type": "code",
+                  "literal": "&gt;"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "table_row",
+          "children": [
+            {
+              "type": "table_cell",
+              "children": [
+                {
+                  "type": "code",
+                  "literal": "\""
+                }
+              ]
+            },
+            {
+              "type": "table_cell",
+              "children": [
+                {
+                  "type": "code",
+                  "literal": "&quot;"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "table_row",
+          "children": [
+            {
+              "type": "table_cell",
+              "children": [
+                {
+                  "type": "code",
+                  "literal": "'"
+                }
+              ]
+            },
+            {
+              "type": "table_cell",
+              "children": [
+                {
+                  "type": "code",
+                  "literal": "&#x27;"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "children": [
+        {
+          "type": "text",
+          "literal": "This"
+        },
+        {
+          "type": "text",
+          "literal": " "
+        },
+        {
+          "type": "text",
+          "literal": "is"
+        },
+        {
+          "type": "text",
+          "literal": " "
+        },
+        {
+          "type": "text",
+          "literal": "applied"
+        },
+        {
+          "type": "text",
+          "literal": " "
+        },
+        {
+          "type": "text",
+          "literal": "to"
+        },
+        {
+          "type": "text",
+          "literal": " "
+        },
+        {
+          "type": "text",
+          "literal": "all"
+        },
+        {
+          "type": "text",
+          "literal": " "
+        },
+        {
+          "type": "text",
+          "literal": "user-provided"
+        },
+        {
+          "type": "text",
+          "literal": " "
+        },
+        {
+          "type": "text",
+          "literal": "text"
+        },
+        {
+          "type": "text",
+          "literal": " "
+        },
+        {
+          "type": "text",
+          "literal": "content"
+        },
+        {
+          "type": "text",
+          "literal": " "
+        },
+        {
+          "type": "strong",
+          "children": [
+            {
+              "type": "text",
+              "literal": "except"
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "literal": " "
+        },
+        {
+          "type": "text",
+          "literal": "raw"
+        },
+        {
+          "type": "text",
+          "literal": " "
+        },
+        {
+          "type": "text",
+          "literal": "HTML"
+        },
+        {
+          "type": "text",
+          "literal": " "
+        },
+        {
+          "type": "text",
+          "literal": "literals"
+        },
+        {
+          "type": "text",
+          "literal": " "
+        },
+        {
+          "type": "text",
+          "literal": "and"
+        },
+        {
+          "type": "text",
+          "literal": " "
+        },
+        {
+          "type": "text",
+          "literal": "mermaid"
+        },
+        {
+          "type": "text",
+          "literal": " "
+        },
+        {
+          "type": "text",
+          "literal": "diagram"
+        },
+        {
+          "type": "text",
+          "literal": " "
+        },
+        {
+          "type": "text",
+          "literal": "source."
+        }
+      ]
+    },
+    {
+      "type": "thematic_break"
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "children": [
+        {
+          "type": "code",
+          "literal": "tight"
+        },
+        {
+          "type": "text",
+          "literal": " "
+        },
+        {
+          "type": "text",
+          "literal": "mode"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "children": [
+        {
+          "type": "code",
+          "literal": "_render_node(node, tight=False)"
+        },
+        {
+          "type": "text",
+          "literal": " "
+        },
+        {
+          "type": "text",
+          "literal": "accepts"
+        },
+        {
+          "type": "text",
+          "literal": " "
+        },
+        {
+          "type": "text",
+          "literal": "a"
+        },
+        {
+          "type": "text",
+          "literal": " "
+        },
+        {
+          "type": "code",
+          "literal": "tight"
+        },
+        {
+          "type": "text",
+          "literal": " "
+        },
+        {
+          "type": "text",
+          "literal": "flag."
+        },
+        {
+          "type": "text",
+          "literal": " "
+        },
+        {
+          "type": "text",
+          "literal": "When"
+        },
+        {
+          "type": "text",
+          "literal": " "
+        },
+        {
+          "type": "code",
+          "literal": "tight=True"
+        },
+        {
+          "type": "text",
+          "literal": ","
+        },
+        {
+          "type": "text",
+          "literal": " "
+        },
+        {
+          "type": "code",
+          "literal": "paragraph"
+        },
+        {
+          "type": "text",
+          "literal": " "
+        },
+        {
+          "type": "text",
+          "literal": "nodes"
+        },
+        {
+          "type": "text",
+          "literal": " "
+        },
+        {
+          "type": "text",
+          "literal": "render"
+        },
+        {
+          "type": "text",
+          "literal": " "
+        },
+        {
+          "type": "text",
+          "literal": "their"
+        },
+        {
+          "type": "text",
+          "literal": " "
+        },
+        {
+          "type": "text",
+          "literal": "inline"
+        },
+        {
+          "type": "text",
+          "literal": " "
+        },
+        {
+          "type": "text",
+          "literal": "children"
+        },
+        {
+          "type": "text",
+          "literal": " "
+        },
+        {
+          "type": "strong",
+          "children": [
+            {
+              "type": "text",
+              "literal": "without"
+            }
+          ]
+        },
+        {
+          "type": "text",
+          "literal": " "
+        },
+        {
+          "type": "code",
+          "literal": "<p>\u2026</p>"
+        },
+        {
+          "type": "text",
+          "literal": " "
+        },
+        {
+          "type": "text",
+          "literal": "wrappers."
+        },
+        {
+          "type": "text",
+          "literal": " "
+        },
+        {
+          "type": "text",
+          "literal": "This"
+        },
+        {
+          "type": "text",
+          "literal": " "
+        },
+        {
+          "type": "text",
+          "literal": "is"
+        },
+        {
+          "type": "text",
+          "literal": " "
+        },
+        {
+          "type": "text",
+          "literal": "used"
+        },
+        {
+          "type": "text",
+          "literal": " "
+        },
+        {
+          "type": "text",
+          "literal": "for"
+        },
+        {
+          "type": "text",
+          "literal": " "
+        },
+        {
+          "type": "text",
+          "literal": "list"
+        },
+        {
+          "type": "text",
+          "literal": " "
+        },
+        {
+          "type": "text",
+          "literal": "items"
+        },
+        {
+          "type": "text",
+          "literal": " "
+        },
+        {
+          "type": "text",
+          "literal": "and"
+        },
+        {
+          "type": "text",
+          "literal": " "
+        },
+        {
+          "type": "text",
+          "literal": "table"
+        },
+        {
+          "type": "text",
+          "literal": " "
+        },
+        {
+          "type": "text",
+          "literal": "cells"
+        },
+        {
+          "type": "text",
+          "literal": " "
+        },
+        {
+          "type": "text",
+          "literal": "to"
+        },
+        {
+          "type": "text",
+          "literal": " "
+        },
+        {
+          "type": "text",
+          "literal": "avoid"
+        },
+        {
+          "type": "text",
+          "literal": " "
+        },
+        {
+          "type": "text",
+          "literal": "unwanted"
+        },
+        {
+          "type": "text",
+          "literal": " "
+        },
+        {
+          "type": "text",
+          "literal": "block"
+        },
+        {
+          "type": "text",
+          "literal": " "
+        },
+        {
+          "type": "text",
+          "literal": "wrapping."
+        }
+      ]
+    },
+    {
+      "type": "thematic_break"
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "children": [
+        {
+          "type": "text",
+          "literal": "Node"
+        },
+        {
+          "type": "text",
+          "literal": " "
+        },
+        {
+          "type": "text",
+          "literal": "\u2192"
+        },
+        {
+          "type": "text",
+          "literal": " "
+        },
+        {
+          "type": "text",
+          "literal": "HTML"
+        },
+        {
+          "type": "text",
+          "literal": " "
+        },
+        {
+          "type": "text",
+          "literal": "Rules"
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 3,
+      "children": [
+        {
+          "type": "text",
+          "literal": "Block"
+        },
+        {
+          "type": "text",
+          "literal": " "
+        },
+        {
+          "type": "text",
+          "literal": "Nodes"
+        }
+      ]
+    },
+    {
+      "type": "table",
+      "children": [
+        {
+          "type": "table_row",
+          "children": [
+            {
+              "type": "table_header",
+              "children": [
+                {
+                  "type": "text",
+                  "literal": "Node"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "type"
+                }
+              ]
+            },
+            {
+              "type": "table_header",
+              "children": [
+                {
+                  "type": "text",
+                  "literal": "Output"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "HTML"
+                }
+              ]
+            },
+            {
+              "type": "table_header",
+              "children": [
+                {
+                  "type": "text",
+                  "literal": "Notes"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "table_row",
+          "children": [
+            {
+              "type": "table_cell",
+              "children": [
+                {
+                  "type": "code",
+                  "literal": "document"
+                }
+              ]
+            },
+            {
+              "type": "table_cell",
+              "children": [
+                {
+                  "type": "emph",
+                  "children": [
+                    {
+                      "type": "text",
+                      "literal": "(renders children, no wrapper)"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "table_cell",
+              "children": [
+                {
+                  "type": "text",
+                  "literal": "Root"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "node"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "table_row",
+          "children": [
+            {
+              "type": "table_cell",
+              "children": [
+                {
+                  "type": "code",
+                  "literal": "heading"
+                }
+              ]
+            },
+            {
+              "type": "table_cell",
+              "children": [
+                {
+                  "type": "code",
+                  "literal": "<hN id=\"\u2026\">\u2026</hN>\\n"
+                }
+              ]
+            },
+            {
+              "type": "table_cell",
+              "children": [
+                {
+                  "type": "code",
+                  "literal": "id"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "attr"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "only"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "if"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "code",
+                  "literal": "custom_id"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "present"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "table_row",
+          "children": [
+            {
+              "type": "table_cell",
+              "children": [
+                {
+                  "type": "code",
+                  "literal": "paragraph"
+                }
+              ]
+            },
+            {
+              "type": "table_cell",
+              "children": [
+                {
+                  "type": "code",
+                  "literal": "<p>\u2026</p>\\n"
+                }
+              ]
+            },
+            {
+              "type": "table_cell",
+              "children": [
+                {
+                  "type": "text",
+                  "literal": "Omitted"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "in"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "tight"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "mode"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "table_row",
+          "children": [
+            {
+              "type": "table_cell",
+              "children": [
+                {
+                  "type": "code",
+                  "literal": "block_quote"
+                }
+              ]
+            },
+            {
+              "type": "table_cell",
+              "children": [
+                {
+                  "type": "code",
+                  "literal": "<blockquote>\\n\u2026</blockquote>\\n"
+                }
+              ]
+            },
+            {
+              "type": "table_cell"
+            }
+          ]
+        },
+        {
+          "type": "table_row",
+          "children": [
+            {
+              "type": "table_cell",
+              "children": [
+                {
+                  "type": "code",
+                  "literal": "code_block"
+                }
+              ]
+            },
+            {
+              "type": "table_cell",
+              "children": [
+                {
+                  "type": "code",
+                  "literal": "<pre><code class=\"language-X\">\\nLITERAL</code></pre>\\n"
+                }
+              ]
+            },
+            {
+              "type": "table_cell",
+              "children": [
+                {
+                  "type": "code",
+                  "literal": "class"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "omitted"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "if"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "no"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "info"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "string;"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "content"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "is"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "escaped"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "table_row",
+          "children": [
+            {
+              "type": "table_cell",
+              "children": [
+                {
+                  "type": "code",
+                  "literal": "math_block"
+                }
+              ]
+            },
+            {
+              "type": "table_cell",
+              "children": [
+                {
+                  "type": "code",
+                  "literal": "<div class=\"math math-display\">\\nLITERAL</div>\\n"
+                }
+              ]
+            },
+            {
+              "type": "table_cell",
+              "children": [
+                {
+                  "type": "text",
+                  "literal": "Content"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "is"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "escaped;"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "rendered"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "by"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "KaTeX"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "table_row",
+          "children": [
+            {
+              "type": "table_cell",
+              "children": [
+                {
+                  "type": "code",
+                  "literal": "mermaid_block"
+                }
+              ]
+            },
+            {
+              "type": "table_cell",
+              "children": [
+                {
+                  "type": "code",
+                  "literal": "<pre class=\"mermaid\">\\nLITERAL</pre>\\n"
+                }
+              ]
+            },
+            {
+              "type": "table_cell",
+              "children": [
+                {
+                  "type": "text",
+                  "literal": "Content"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "is"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "strong",
+                  "children": [
+                    {
+                      "type": "text",
+                      "literal": "not"
+                    }
+                  ]
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "escaped;"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "rendered"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "by"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "Mermaid.js"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "table_row",
+          "children": [
+            {
+              "type": "table_cell",
+              "children": [
+                {
+                  "type": "code",
+                  "literal": "html_block"
+                }
+              ]
+            },
+            {
+              "type": "table_cell",
+              "children": [
+                {
+                  "type": "emph",
+                  "children": [
+                    {
+                      "type": "text",
+                      "literal": "(literal emitted verbatim)"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "table_cell",
+              "children": [
+                {
+                  "type": "text",
+                  "literal": "No"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "escaping"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "table_row",
+          "children": [
+            {
+              "type": "table_cell",
+              "children": [
+                {
+                  "type": "code",
+                  "literal": "thematic_break"
+                }
+              ]
+            },
+            {
+              "type": "table_cell",
+              "children": [
+                {
+                  "type": "emph",
+                  "children": [
+                    {
+                      "type": "text",
+                      "literal": "(not implemented \u2014 no output)"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "table_cell",
+              "children": [
+                {
+                  "type": "text",
+                  "literal": "Falls"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "through"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "silently"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "table_row",
+          "children": [
+            {
+              "type": "table_cell",
+              "children": [
+                {
+                  "type": "code",
+                  "literal": "list"
+                }
+              ]
+            },
+            {
+              "type": "table_cell",
+              "children": [
+                {
+                  "type": "code",
+                  "literal": "<ul>\u2026</ul>\\n"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "(bullet)"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "or"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "code",
+                  "literal": "<ol>\u2026</ol>\\n"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "(ordered)"
+                }
+              ]
+            },
+            {
+              "type": "table_cell"
+            }
+          ]
+        },
+        {
+          "type": "table_row",
+          "children": [
+            {
+              "type": "table_cell",
+              "children": [
+                {
+                  "type": "code",
+                  "literal": "item"
+                }
+              ]
+            },
+            {
+              "type": "table_cell",
+              "children": [
+                {
+                  "type": "code",
+                  "literal": "<li>\u2026</li>\\n"
+                }
+              ]
+            },
+            {
+              "type": "table_cell",
+              "children": [
+                {
+                  "type": "text",
+                  "literal": "Children"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "rendered"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "in"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "tight"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "mode"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "table_row",
+          "children": [
+            {
+              "type": "table_cell",
+              "children": [
+                {
+                  "type": "code",
+                  "literal": "table"
+                }
+              ]
+            },
+            {
+              "type": "table_cell",
+              "children": [
+                {
+                  "type": "code",
+                  "literal": "<table border=\"1\">\\n\u2026</table>\\n"
+                }
+              ]
+            },
+            {
+              "type": "table_cell"
+            }
+          ]
+        },
+        {
+          "type": "table_row",
+          "children": [
+            {
+              "type": "table_cell",
+              "children": [
+                {
+                  "type": "code",
+                  "literal": "table_row"
+                }
+              ]
+            },
+            {
+              "type": "table_cell",
+              "children": [
+                {
+                  "type": "code",
+                  "literal": "<tr>\\n\u2026</tr>\\n"
+                }
+              ]
+            },
+            {
+              "type": "table_cell"
+            }
+          ]
+        },
+        {
+          "type": "table_row",
+          "children": [
+            {
+              "type": "table_cell",
+              "children": [
+                {
+                  "type": "code",
+                  "literal": "table_header"
+                }
+              ]
+            },
+            {
+              "type": "table_cell",
+              "children": [
+                {
+                  "type": "code",
+                  "literal": "<th>\u2026</th>\\n"
+                }
+              ]
+            },
+            {
+              "type": "table_cell",
+              "children": [
+                {
+                  "type": "text",
+                  "literal": "Children"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "in"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "tight"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "mode"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "table_row",
+          "children": [
+            {
+              "type": "table_cell",
+              "children": [
+                {
+                  "type": "code",
+                  "literal": "table_cell"
+                }
+              ]
+            },
+            {
+              "type": "table_cell",
+              "children": [
+                {
+                  "type": "code",
+                  "literal": "<td>\u2026</td>\\n"
+                }
+              ]
+            },
+            {
+              "type": "table_cell",
+              "children": [
+                {
+                  "type": "text",
+                  "literal": "Children"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "in"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "tight"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "mode"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "table_row",
+          "children": [
+            {
+              "type": "table_cell",
+              "children": [
+                {
+                  "type": "code",
+                  "literal": "footnote_def"
+                }
+              ]
+            },
+            {
+              "type": "table_cell",
+              "children": [
+                {
+                  "type": "code",
+                  "literal": "<div class=\"footnote\" id=\"fn:LABEL\">\\n<p><strong>[LABEL]:</strong> \u2026</p>\\n</div>\\n"
+                }
+              ]
+            },
+            {
+              "type": "table_cell",
+              "children": [
+                {
+                  "type": "text",
+                  "literal": "First"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "child"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "paragraph"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "is"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "inlined"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "with"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "the"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "label"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "prefix"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "table_row",
+          "children": [
+            {
+              "type": "table_cell",
+              "children": [
+                {
+                  "type": "code",
+                  "literal": "def_list"
+                }
+              ]
+            },
+            {
+              "type": "table_cell",
+              "children": [
+                {
+                  "type": "code",
+                  "literal": "<dl>\\n\u2026</dl>\\n"
+                }
+              ]
+            },
+            {
+              "type": "table_cell"
+            }
+          ]
+        },
+        {
+          "type": "table_row",
+          "children": [
+            {
+              "type": "table_cell",
+              "children": [
+                {
+                  "type": "code",
+                  "literal": "def_term"
+                }
+              ]
+            },
+            {
+              "type": "table_cell",
+              "children": [
+                {
+                  "type": "code",
+                  "literal": "<dt>\u2026</dt>\\n"
+                }
+              ]
+            },
+            {
+              "type": "table_cell"
+            }
+          ]
+        },
+        {
+          "type": "table_row",
+          "children": [
+            {
+              "type": "table_cell",
+              "children": [
+                {
+                  "type": "code",
+                  "literal": "def_item"
+                }
+              ]
+            },
+            {
+              "type": "table_cell",
+              "children": [
+                {
+                  "type": "code",
+                  "literal": "<dd>\u2026</dd>\\n"
+                }
+              ]
+            },
+            {
+              "type": "table_cell"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "heading",
+      "level": 3,
+      "children": [
+        {
+          "type": "text",
+          "literal": "Inline"
+        },
+        {
+          "type": "text",
+          "literal": " "
+        },
+        {
+          "type": "text",
+          "literal": "Nodes"
+        }
+      ]
+    },
+    {
+      "type": "table",
+      "children": [
+        {
+          "type": "table_row",
+          "children": [
+            {
+              "type": "table_header",
+              "children": [
+                {
+                  "type": "text",
+                  "literal": "Node"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "type"
+                }
+              ]
+            },
+            {
+              "type": "table_header",
+              "children": [
+                {
+                  "type": "text",
+                  "literal": "Output"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "HTML"
+                }
+              ]
+            },
+            {
+              "type": "table_header",
+              "children": [
+                {
+                  "type": "text",
+                  "literal": "Notes"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "table_row",
+          "children": [
+            {
+              "type": "table_cell",
+              "children": [
+                {
+                  "type": "code",
+                  "literal": "text"
+                }
+              ]
+            },
+            {
+              "type": "table_cell",
+              "children": [
+                {
+                  "type": "code",
+                  "literal": "ESCAPED_LITERAL"
+                }
+              ]
+            },
+            {
+              "type": "table_cell",
+              "children": [
+                {
+                  "type": "text",
+                  "literal": "Plain"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "escaped"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "text"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "table_row",
+          "children": [
+            {
+              "type": "table_cell",
+              "children": [
+                {
+                  "type": "code",
+                  "literal": "strong"
+                }
+              ]
+            },
+            {
+              "type": "table_cell",
+              "children": [
+                {
+                  "type": "code",
+                  "literal": "<strong>\u2026</strong>"
+                }
+              ]
+            },
+            {
+              "type": "table_cell"
+            }
+          ]
+        },
+        {
+          "type": "table_row",
+          "children": [
+            {
+              "type": "table_cell",
+              "children": [
+                {
+                  "type": "code",
+                  "literal": "emph"
+                }
+              ]
+            },
+            {
+              "type": "table_cell",
+              "children": [
+                {
+                  "type": "code",
+                  "literal": "<em>\u2026</em>"
+                }
+              ]
+            },
+            {
+              "type": "table_cell"
+            }
+          ]
+        },
+        {
+          "type": "table_row",
+          "children": [
+            {
+              "type": "table_cell",
+              "children": [
+                {
+                  "type": "code",
+                  "literal": "mark"
+                }
+              ]
+            },
+            {
+              "type": "table_cell",
+              "children": [
+                {
+                  "type": "code",
+                  "literal": "<mark>\u2026</mark>"
+                }
+              ]
+            },
+            {
+              "type": "table_cell"
+            }
+          ]
+        },
+        {
+          "type": "table_row",
+          "children": [
+            {
+              "type": "table_cell",
+              "children": [
+                {
+                  "type": "code",
+                  "literal": "u"
+                }
+              ]
+            },
+            {
+              "type": "table_cell",
+              "children": [
+                {
+                  "type": "code",
+                  "literal": "<u>\u2026</u>"
+                }
+              ]
+            },
+            {
+              "type": "table_cell"
+            }
+          ]
+        },
+        {
+          "type": "table_row",
+          "children": [
+            {
+              "type": "table_cell",
+              "children": [
+                {
+                  "type": "code",
+                  "literal": "del"
+                }
+              ]
+            },
+            {
+              "type": "table_cell",
+              "children": [
+                {
+                  "type": "code",
+                  "literal": "<del>\u2026</del>"
+                }
+              ]
+            },
+            {
+              "type": "table_cell"
+            }
+          ]
+        },
+        {
+          "type": "table_row",
+          "children": [
+            {
+              "type": "table_cell",
+              "children": [
+                {
+                  "type": "code",
+                  "literal": "sub"
+                }
+              ]
+            },
+            {
+              "type": "table_cell",
+              "children": [
+                {
+                  "type": "code",
+                  "literal": "<sub>\u2026</sub>"
+                }
+              ]
+            },
+            {
+              "type": "table_cell"
+            }
+          ]
+        },
+        {
+          "type": "table_row",
+          "children": [
+            {
+              "type": "table_cell",
+              "children": [
+                {
+                  "type": "code",
+                  "literal": "sup"
+                }
+              ]
+            },
+            {
+              "type": "table_cell",
+              "children": [
+                {
+                  "type": "code",
+                  "literal": "<sup>\u2026</sup>"
+                }
+              ]
+            },
+            {
+              "type": "table_cell"
+            }
+          ]
+        },
+        {
+          "type": "table_row",
+          "children": [
+            {
+              "type": "table_cell",
+              "children": [
+                {
+                  "type": "code",
+                  "literal": "code"
+                }
+              ]
+            },
+            {
+              "type": "table_cell",
+              "children": [
+                {
+                  "type": "code",
+                  "literal": "<code>ESCAPED_LITERAL</code>"
+                }
+              ]
+            },
+            {
+              "type": "table_cell"
+            }
+          ]
+        },
+        {
+          "type": "table_row",
+          "children": [
+            {
+              "type": "table_cell",
+              "children": [
+                {
+                  "type": "code",
+                  "literal": "math_inline"
+                }
+              ]
+            },
+            {
+              "type": "table_cell",
+              "children": [
+                {
+                  "type": "code",
+                  "literal": "<span class=\"math math-inline\">ESCAPED_LITERAL</span>"
+                }
+              ]
+            },
+            {
+              "type": "table_cell",
+              "children": [
+                {
+                  "type": "text",
+                  "literal": "Rendered"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "by"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "KaTeX"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "table_row",
+          "children": [
+            {
+              "type": "table_cell",
+              "children": [
+                {
+                  "type": "code",
+                  "literal": "link"
+                }
+              ]
+            },
+            {
+              "type": "table_cell",
+              "children": [
+                {
+                  "type": "code",
+                  "literal": "<a href=\"DEST\">\u2026</a>"
+                }
+              ]
+            },
+            {
+              "type": "table_cell",
+              "children": [
+                {
+                  "type": "code",
+                  "literal": "javascript:"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "destinations"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "are"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "cleared"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "to"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "code",
+                  "literal": "\"\""
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "table_row",
+          "children": [
+            {
+              "type": "table_cell",
+              "children": [
+                {
+                  "type": "code",
+                  "literal": "image"
+                }
+              ]
+            },
+            {
+              "type": "table_cell",
+              "children": [
+                {
+                  "type": "emph",
+                  "children": [
+                    {
+                      "type": "text",
+                      "literal": "(not yet rendered \u2014 falls through)"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "table_cell"
+            }
+          ]
+        },
+        {
+          "type": "table_row",
+          "children": [
+            {
+              "type": "table_cell",
+              "children": [
+                {
+                  "type": "code",
+                  "literal": "footnote_ref"
+                }
+              ]
+            },
+            {
+              "type": "table_cell",
+              "children": [
+                {
+                  "type": "code",
+                  "literal": "<sup><a href=\"#fn:LABEL\">^LABEL</a></sup>"
+                }
+              ]
+            },
+            {
+              "type": "table_cell"
+            }
+          ]
+        },
+        {
+          "type": "table_row",
+          "children": [
+            {
+              "type": "table_cell",
+              "children": [
+                {
+                  "type": "code",
+                  "literal": "emoji"
+                }
+              ]
+            },
+            {
+              "type": "table_cell",
+              "children": [
+                {
+                  "type": "code",
+                  "literal": "ESCAPED_LITERAL"
+                }
+              ]
+            },
+            {
+              "type": "table_cell",
+              "children": [
+                {
+                  "type": "text",
+                  "literal": "Raw"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "code",
+                  "literal": ":name:"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "\u2014"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "no"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "emoji"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "substitution"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "table_row",
+          "children": [
+            {
+              "type": "table_cell",
+              "children": [
+                {
+                  "type": "code",
+                  "literal": "task_checkbox"
+                }
+              ]
+            },
+            {
+              "type": "table_cell",
+              "children": [
+                {
+                  "type": "code",
+                  "literal": "<input type=\"checkbox\" disabled[ checked]>"
+                }
+              ]
+            },
+            {
+              "type": "table_cell",
+              "children": [
+                {
+                  "type": "code",
+                  "literal": "disabled"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "always;"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "code",
+                  "literal": "checked"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "if"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "code",
+                  "literal": "node.checked"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "is"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "truthy"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "table_row",
+          "children": [
+            {
+              "type": "table_cell",
+              "children": [
+                {
+                  "type": "code",
+                  "literal": "hardbreak"
+                }
+              ]
+            },
+            {
+              "type": "table_cell",
+              "children": [
+                {
+                  "type": "code",
+                  "literal": "<br />\\n"
+                }
+              ]
+            },
+            {
+              "type": "table_cell"
+            }
+          ]
+        },
+        {
+          "type": "table_row",
+          "children": [
+            {
+              "type": "table_cell",
+              "children": [
+                {
+                  "type": "code",
+                  "literal": "softbreak"
+                }
+              ]
+            },
+            {
+              "type": "table_cell",
+              "children": [
+                {
+                  "type": "code",
+                  "literal": "<br />\\n"
+                }
+              ]
+            },
+            {
+              "type": "table_cell"
+            }
+          ]
+        },
+        {
+          "type": "table_row",
+          "children": [
+            {
+              "type": "table_cell",
+              "children": [
+                {
+                  "type": "code",
+                  "literal": "html_inline"
+                }
+              ]
+            },
+            {
+              "type": "table_cell",
+              "children": [
+                {
+                  "type": "emph",
+                  "children": [
+                    {
+                      "type": "text",
+                      "literal": "(literal emitted verbatim)"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "table_cell",
+              "children": [
+                {
+                  "type": "text",
+                  "literal": "No"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "escaping"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "thematic_break"
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "children": [
+        {
+          "type": "text",
+          "literal": "Template"
+        },
+        {
+          "type": "text",
+          "literal": " "
+        },
+        {
+          "type": "text",
+          "literal": "Integration"
+        },
+        {
+          "type": "text",
+          "literal": " "
+        },
+        {
+          "type": "text",
+          "literal": "("
+        },
+        {
+          "type": "code",
+          "literal": "template.html"
+        },
+        {
+          "type": "text",
+          "literal": ")"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "children": [
+        {
+          "type": "text",
+          "literal": "The"
+        },
+        {
+          "type": "text",
+          "literal": " "
+        },
+        {
+          "type": "text",
+          "literal": "compiler"
+        },
+        {
+          "type": "text",
+          "literal": " "
+        },
+        {
+          "type": "text",
+          "literal": "injects"
+        },
+        {
+          "type": "text",
+          "literal": " "
+        },
+        {
+          "type": "text",
+          "literal": "the"
+        },
+        {
+          "type": "text",
+          "literal": " "
+        },
+        {
+          "type": "text",
+          "literal": "rendered"
+        },
+        {
+          "type": "text",
+          "literal": " "
+        },
+        {
+          "type": "text",
+          "literal": "body"
+        },
+        {
+          "type": "text",
+          "literal": " "
+        },
+        {
+          "type": "text",
+          "literal": "into"
+        },
+        {
+          "type": "text",
+          "literal": " "
+        },
+        {
+          "type": "code",
+          "literal": "template.html"
+        },
+        {
+          "type": "text",
+          "literal": " "
+        },
+        {
+          "type": "text",
+          "literal": "by"
+        },
+        {
+          "type": "text",
+          "literal": " "
+        },
+        {
+          "type": "text",
+          "literal": "replacing"
+        },
+        {
+          "type": "text",
+          "literal": " "
+        },
+        {
+          "type": "code",
+          "literal": "__BODY_HTML__"
+        },
+        {
+          "type": "text",
+          "literal": " "
+        },
+        {
+          "type": "text",
+          "literal": "and"
+        },
+        {
+          "type": "text",
+          "literal": " "
+        },
+        {
+          "type": "code",
+          "literal": "__TITLE__"
+        },
+        {
+          "type": "text",
+          "literal": "."
+        },
+        {
+          "type": "text",
+          "literal": " "
+        },
+        {
+          "type": "text",
+          "literal": "The"
+        },
+        {
+          "type": "text",
+          "literal": " "
+        },
+        {
+          "type": "text",
+          "literal": "template"
+        },
+        {
+          "type": "text",
+          "literal": " "
+        },
+        {
+          "type": "text",
+          "literal": "provides"
+        },
+        {
+          "type": "emoji",
+          "literal": ":"
+        }
+      ]
+    },
+    {
+      "type": "table",
+      "children": [
+        {
+          "type": "table_row",
+          "children": [
+            {
+              "type": "table_header",
+              "children": [
+                {
+                  "type": "text",
+                  "literal": "Feature"
+                }
+              ]
+            },
+            {
+              "type": "table_header",
+              "children": [
+                {
+                  "type": "text",
+                  "literal": "Implementation"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "table_row",
+          "children": [
+            {
+              "type": "table_cell",
+              "children": [
+                {
+                  "type": "text",
+                  "literal": "Math"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "rendering"
+                }
+              ]
+            },
+            {
+              "type": "table_cell",
+              "children": [
+                {
+                  "type": "text",
+                  "literal": "KaTeX"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "code",
+                  "literal": "@0.16.8"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "via"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "CDN;"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "code",
+                  "literal": "<span class=\"math math-inline\">"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "and"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "code",
+                  "literal": "<div class=\"math math-display\">"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "are"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "targeted"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "table_row",
+          "children": [
+            {
+              "type": "table_cell",
+              "children": [
+                {
+                  "type": "text",
+                  "literal": "Diagram"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "rendering"
+                }
+              ]
+            },
+            {
+              "type": "table_cell",
+              "children": [
+                {
+                  "type": "text",
+                  "literal": "Mermaid"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "code",
+                  "literal": "@11"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "via"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "CDN"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "ESM;"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "targets"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "code",
+                  "literal": "<pre class=\"mermaid\">"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "table_row",
+          "children": [
+            {
+              "type": "table_cell",
+              "children": [
+                {
+                  "type": "text",
+                  "literal": "Code"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "font"
+                }
+              ]
+            },
+            {
+              "type": "table_cell",
+              "children": [
+                {
+                  "type": "text",
+                  "literal": "Consolas/Monaco"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "monospace"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "via"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "CSS"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "table_row",
+          "children": [
+            {
+              "type": "table_cell",
+              "children": [
+                {
+                  "type": "text",
+                  "literal": "Table"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "styling"
+                }
+              ]
+            },
+            {
+              "type": "table_cell",
+              "children": [
+                {
+                  "type": "code",
+                  "literal": "border-collapse: collapse"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "+"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "code",
+                  "literal": "1px solid #ddd"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "borders"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "table_row",
+          "children": [
+            {
+              "type": "table_cell",
+              "children": [
+                {
+                  "type": "text",
+                  "literal": "Blockquote"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "styling"
+                }
+              ]
+            },
+            {
+              "type": "table_cell",
+              "children": [
+                {
+                  "type": "code",
+                  "literal": "4px solid #ccc"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "left"
+                },
+                {
+                  "type": "text",
+                  "literal": " "
+                },
+                {
+                  "type": "text",
+                  "literal": "border"
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "thematic_break"
+    },
+    {
+      "type": "heading",
+      "level": 2,
+      "children": [
+        {
+          "type": "text",
+          "literal": "Full"
+        },
+        {
+          "type": "text",
+          "literal": " "
+        },
+        {
+          "type": "text",
+          "literal": "Rendering"
+        },
+        {
+          "type": "text",
+          "literal": " "
+        },
+        {
+          "type": "text",
+          "literal": "Example"
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "children": [
+        {
+          "type": "strong",
+          "children": [
+            {
+              "type": "text",
+              "literal": "Input Markdown:"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "code_block",
+      "literal": "## Hello {#hello}\n\nThis is **bold** and `code`.\n",
+      "info": "markdown"
+    },
+    {
+      "type": "paragraph",
+      "children": [
+        {
+          "type": "strong",
+          "children": [
+            {
+              "type": "text",
+              "literal": "AST (dict):"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "code_block",
+      "literal": "{\n  \"type\": \"document\",\n  \"children\": [\n    {\n      \"type\": \"heading\",\n      \"level\": 2,\n      \"custom_id\": \"hello\",\n      \"children\": [{\"type\": \"text\", \"literal\": \"Hello\"}]\n    },\n    {\n      \"type\": \"paragraph\",\n      \"children\": [\n        {\"type\": \"text\",   \"literal\": \"This is \"},\n        {\"type\": \"strong\", \"children\": [{\"type\": \"text\", \"literal\": \"bold\"}]},\n        {\"type\": \"text\",   \"literal\": \" and \"},\n        {\"type\": \"code\",   \"literal\": \"code\"},\n        {\"type\": \"text\",   \"literal\": \".\"}\n      ]\n    }\n  ]\n}\n",
+      "info": "json"
+    },
+    {
+      "type": "paragraph",
+      "children": [
+        {
+          "type": "strong",
+          "children": [
+            {
+              "type": "text",
+              "literal": "Output HTML:"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "code_block",
+      "literal": "<h2 id=\"hello\">Hello</h2>\n<p>This is <strong>bold</strong> and <code>code</code>.</p>\n",
+      "info": "html"
+    }
+  ]
+}

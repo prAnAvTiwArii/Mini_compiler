@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>tokens</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      line-height: 1.6;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 2rem;
+      color: #333;
+    }
+
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      margin-bottom: 1rem;
+    }
+
+    th,
+    td {
+      padding: 8px;
+      border: 1px solid #ddd;
+      text-align: left;
+    }
+
+    th {
+      background-color: #f4f4f4;
+    }
+
+    pre {
+      background: #f4f4f4;
+      padding: 1rem;
+      overflow-x: auto;
+    }
+
+    code {
+      font-family: Consolas, Monaco, "Andale Mono", "Ubuntu Mono", monospace;
+      background: #f4f4f4;
+      padding: 2px 4px;
+      border-radius: 4px;
+    }
+
+    blockquote {
+      border-left: 4px solid #ccc;
+      margin-left: 0;
+      padding-left: 1rem;
+      color: #666;
+    }
+  </style>
+</head>
+
+<body>
+  <h1>Token Reference</h1>
+<p>All tokens are defined in <code>regex_rules.py</code>. The <code>Token</code> class is also defined there and imported by <code>lexer.py</code> and <code>parser.py</code>.</p>
+<h2>Token Class</h2>
+<pre><code class="language-python">
+class Token:
+    __slots__ = (&quot;type&quot;, &quot;value&quot;, &quot;meta&quot;, &quot;indent&quot;)
+
+    def __init__(self, type_: str, value: str, meta: dict | None = None, indent: int = 0):
+        self.type   = type_    # one of the string constants below
+        self.value  = value    # raw text of the matched line or span
+        self.meta   = meta or {}  # structured metadata extracted from the match
+        self.indent = indent   # number of leading spaces on the original line
+</code></pre>
+<h2>Block Token Constants</h2>
+<p>Produced by the <code>Lexer.tokenize()</code> (Phase 1) from a full Markdown line.</p>
+<table border="1">
+<tr>
+<th>Constant</th>
+<th>Value</th>
+<th>Description</th>
+</tr>
+<tr>
+<td><code>BLANK</code></td>
+<td><code>&quot;BLANK&quot;</code></td>
+<td>Empty or whitespace-only line</td>
+</tr>
+<tr>
+<td><code>PARAGRAPH</code></td>
+<td><code>&quot;PARAGRAPH&quot;</code></td>
+<td>Plain text line (catch-all)</td>
+</tr>
+<tr>
+<td><code>ATX_HEADING</code></td>
+<td><code>&quot;ATX_HEADING&quot;</code></td>
+<td><code># Heading</code> (levels 1–6)</td>
+</tr>
+<tr>
+<td><code>THEMATIC_BREAK</code></td>
+<td><code>&quot;THEMATIC_BREAK&quot;</code></td>
+<td><code>---</code>, <code>***</code>, or <code>___</code></td>
+</tr>
+<tr>
+<td><code>BLOCKQUOTE</code></td>
+<td><code>&quot;BLOCKQUOTE&quot;</code></td>
+<td>Line starting with <code>&gt;</code></td>
+</tr>
+<tr>
+<td><code>BULLET_LIST</code></td>
+<td><code>&quot;BULLET_LIST&quot;</code></td>
+<td>Line starting with <code>*</code>, <code>+</code>, or <code>-</code></td>
+</tr>
+<tr>
+<td><code>ORDERED_LIST</code></td>
+<td><code>&quot;ORDERED_LIST&quot;</code></td>
+<td>Line starting with <code>1.</code> / <code>1)</code> etc.</td>
+</tr>
+<tr>
+<td><code>CODE_FENCE</code></td>
+<td><code>&quot;CODE_FENCE&quot;</code></td>
+<td>Opening <code>`</code> <code>or</code><del></del><sub></sub><code></code> fence</td>
+</tr>
+<tr>
+<td><code>CODE_FENCE_END</code></td>
+<td><code>&quot;CODE_FENCE_END&quot;</code></td>
+<td>Closing fence matching opener</td>
+</tr>
+<tr>
+<td><code>MATH_FENCE</code></td>
+<td><code>&quot;MATH_FENCE&quot;</code></td>
+<td>Opening <code>$$</code> on its own line</td>
+</tr>
+<tr>
+<td><code>MATH_FENCE_END</code></td>
+<td><code>&quot;MATH_FENCE_END&quot;</code></td>
+<td>Closing <code>$$</code> on its own line</td>
+</tr>
+<tr>
+<td><code>MERMAID_FENCE</code></td>
+<td><code>&quot;MERMAID_FENCE&quot;</code></td>
+<td>Opening <code>:::mermaid</code></td>
+</tr>
+<tr>
+<td><code>MERMAID_CLOSE</code></td>
+<td><code>&quot;MERMAID_CLOSE&quot;</code></td>
+<td>Closing <code>:::</code></td>
+</tr>
+<tr>
+<td><code>FOOTNOTE_DEF</code></td>
+<td><code>&quot;FOOTNOTE_DEF&quot;</code></td>
+<td><code>[^label]: text</code></td>
+</tr>
+<tr>
+<td><code>DEF_LIST_MARKER</code></td>
+<td><code>&quot;DEF_LIST_MARKER&quot;</code></td>
+<td><code>: definition text</code></td>
+</tr>
+<tr>
+<td><code>TABLE_ROW</code></td>
+<td><code>&quot;TABLE_ROW&quot;</code></td>
+<td><code></code></td>
+<td>cell</td>
+<td>cell</td>
+<td><code></code></td>
+</tr>
+<tr>
+<td><code>TABLE_SEP</code></td>
+<td><code>&quot;TABLE_SEP&quot;</code></td>
+<td><code></code></td>
+<td>---</td>
+<td>---</td>
+<td><code></code></td>
+</tr>
+<tr>
+<td><code>HTML_BLOCK</code></td>
+<td><code>&quot;HTML_BLOCK&quot;</code></td>
+<td>Raw HTML opening tag block</td>
+</tr>
+<tr>
+<td><code>RAW_CONTENT</code></td>
+<td><code>&quot;RAW_CONTENT&quot;</code></td>
+<td>Content line inside any fenced block</td>
+</tr>
+</table>
+<h2>Inline Token Constants</h2>
+<p>Produced by <code>Lexer.tokenize_inline()</code> (Phase 2) from a single text span.</p>
+<table border="1">
+<tr>
+<th>Constant</th>
+<th>Value</th>
+<th>Syntax</th>
+<th>Example</th>
+</tr>
+<tr>
+<td><code>IL_IMAGE</code></td>
+<td><code>&quot;IL_IMAGE&quot;</code></td>
+<td><code>![alt](url)</code></td>
+<td><code>![logo](img.png)</code></td>
+</tr>
+<tr>
+<td><code>IL_LINK</code></td>
+<td><code>&quot;IL_LINK&quot;</code></td>
+<td><code>[label](url)</code></td>
+<td><code>[click](https://...)</code></td>
+</tr>
+<tr>
+<td><code>IL_STRONG</code></td>
+<td><code>&quot;IL_STRONG&quot;</code></td>
+<td><code>**text**</code> or <code>__text__</code></td>
+<td><code>**bold**</code></td>
+</tr>
+<tr>
+<td><code>IL_EMPH</code></td>
+<td><code>&quot;IL_EMPH&quot;</code></td>
+<td><code>*text*</code> or <code>_text_</code></td>
+<td><code>*italic*</code></td>
+</tr>
+<tr>
+<td><code>IL_MARK</code></td>
+<td><code>&quot;IL_MARK&quot;</code></td>
+<td><code>==text==</code></td>
+<td><code>==highlight==</code></td>
+</tr>
+<tr>
+<td><code>IL_UNDERLINE</code></td>
+<td><code>&quot;IL_UNDERLINE&quot;</code></td>
+<td><code>++text++</code></td>
+<td><code>++underline++</code></td>
+</tr>
+<tr>
+<td><code>IL_DEL</code></td>
+<td><code>&quot;IL_DEL&quot;</code></td>
+<td><code>~~text~~</code></td>
+<td><code>~~strike~~</code></td>
+</tr>
+<tr>
+<td><code>IL_SUB</code></td>
+<td><code>&quot;IL_SUB&quot;</code></td>
+<td><code>~text~</code></td>
+<td><code>H~2~O</code></td>
+</tr>
+<tr>
+<td><code>IL_SUP</code></td>
+<td><code>&quot;IL_SUP&quot;</code></td>
+<td><code>^text^</code></td>
+<td><code>x^2^</code></td>
+</tr>
+<tr>
+<td><code>IL_CODE</code></td>
+<td><code>&quot;IL_CODE&quot;</code></td>
+<td><code></code>code<code>`</code></td>
+<td><code></code>print()<code>`</code></td>
+</tr>
+<tr>
+<td><code>IL_MATH</code></td>
+<td><code>&quot;IL_MATH&quot;</code></td>
+<td><code>$equation$</code></td>
+<td><code>$E=mc^2$</code></td>
+</tr>
+<tr>
+<td><code>IL_FOOTNOTE_REF</code></td>
+<td><code>&quot;IL_FOOTNOTE_REF&quot;</code></td>
+<td><code>[^label]</code></td>
+<td><code>[^1]</code></td>
+</tr>
+<tr>
+<td><code>IL_EMOJI</code></td>
+<td><code>&quot;IL_EMOJI&quot;</code></td>
+<td><code>:name:</code></td>
+<td><code>:smile:</code></td>
+</tr>
+<tr>
+<td><code>IL_TASK</code></td>
+<td><code>&quot;IL_TASK&quot;</code></td>
+<td><code>[ ]</code> or <code>[x]</code> or <code>[X]</code></td>
+<td><code>[x]</code></td>
+</tr>
+<tr>
+<td><code>IL_HTML</code></td>
+<td><code>&quot;IL_HTML&quot;</code></td>
+<td><code>&lt;tag&gt;</code> or <code>&lt;/tag&gt;</code></td>
+<td><code>&lt;br&gt;</code></td>
+</tr>
+<tr>
+<td><code>IL_EMAIL_LINK</code></td>
+<td><code>&quot;IL_EMAIL_LINK&quot;</code></td>
+<td><code>&lt;user@host&gt;</code></td>
+<td><code>&lt;me@example.com&gt;</code></td>
+</tr>
+<tr>
+<td><code>IL_URI_LINK</code></td>
+<td><code>&quot;IL_URI_LINK&quot;</code></td>
+<td><code>&lt;scheme:...&gt;</code></td>
+<td><code>&lt;https://x.com&gt;</code></td>
+</tr>
+<tr>
+<td><code>IL_ENTITY</code></td>
+<td><code>&quot;IL_ENTITY&quot;</code></td>
+<td><code>&amp;name;</code> or <code>&amp;#N;</code></td>
+<td><code>&amp;amp;</code></td>
+</tr>
+<tr>
+<td><code>IL_HARDBREAK</code></td>
+<td><code>&quot;IL_HARDBREAK&quot;</code></td>
+<td>Two spaces then <code>\n</code></td>
+<td><code>\n</code></td>
+</tr>
+<tr>
+<td><code>IL_SOFTBREAK</code></td>
+<td><code>&quot;IL_SOFTBREAK&quot;</code></td>
+<td>Single <code>\n</code></td>
+<td><code>\n</code></td>
+</tr>
+<tr>
+<td><code>IL_ESCAPED</code></td>
+<td><code>&quot;IL_ESCAPED&quot;</code></td>
+<td><code>\X</code> (any char)</td>
+<td><code>\*</code></td>
+</tr>
+<tr>
+<td><code>IL_TEXT</code></td>
+<td><code>&quot;IL_TEXT&quot;</code></td>
+<td>Any plain text</td>
+<td><code>hello</code></td>
+</tr>
+</table>
+<h2>Regex Patterns</h2>
+<h3><code>block_token_pattern</code></h3>
+<p>A single compiled regex with named groups. The <code>Lexer</code> calls <code>.match(stripped_line)</code> and reads <code>lastgroup</code> to identify the token type.</p>
+<table border="1">
+<tr>
+<th>Named Group</th>
+<th>Pattern</th>
+<th>Matches</th>
+</tr>
+<tr>
+<td><code>thematic_break</code></td>
+<td><code>(?:\*[ \t]*){3,}</code> \</td>
+<td><code>(?:_[ \t]*){3,}</code> \</td>
+<td><code>(?:-[ \t]*){3,}</code></td>
+<td><code>---</code>, <code>***</code>, <code>___</code></td>
+</tr>
+<tr>
+<td><code>bullet_list</code></td>
+<td><code>^\s*[*+-]\s+</code></td>
+<td><code>- item</code>, <code>* item</code></td>
+</tr>
+<tr>
+<td><code>ordered_list</code></td>
+<td><code>^\s*(\d{1,9})[.)]\s+</code></td>
+<td><code>1. item</code>, <code>2) item</code></td>
+</tr>
+<tr>
+<td><code>atx_heading</code></td>
+<td><code></code><sup></sup>#{1,6}(?:[ t]+\</td>
+<td><span class="math math-inline"></span>)<code></code></td>
+<td><code>## Heading</code></td>
+</tr>
+<tr>
+<td><code>code_fence</code></td>
+<td><code>^</code>{3,}(?!.<em></em><code>)</code> \</td>
+<td><code>^~{3,}</code></td>
+<td><code></code> <code></code><del></del><sub></sub><code></code></td>
+</tr>
+<tr>
+<td><code>math_fence</code></td>
+<td><code>^\$\$[ \t]*$</code></td>
+<td><code>$$</code> alone on a line</td>
+</tr>
+<tr>
+<td><code>mermaid_fence</code></td>
+<td><code>^:::[ \t]+mermaid[ \t]*$</code></td>
+<td><code>:::mermaid</code></td>
+</tr>
+<tr>
+<td><code>mermaid_close</code></td>
+<td><code>^:::[ \t]*$</code></td>
+<td><code>:::</code> alone</td>
+</tr>
+<tr>
+<td><code>footnote_def</code></td>
+<td><code>^\[\^([^\]]+)\]:[ \t]*(.*)</code></td>
+<td><code>[^1]: text</code></td>
+</tr>
+<tr>
+<td><code>def_list_marker</code></td>
+<td><code>^:[ \t]+(.*)</code></td>
+<td><code>: definition</code></td>
+</tr>
+</table>
+<h3><code>inline_token_pattern</code></h3>
+<p>A single compiled regex with alternation groups (no named groups — order determines priority).</p>
+<table border="1">
+<tr>
+<th>Priority</th>
+<th>Pattern</th>
+<th>Token assigned by</th>
+</tr>
+<tr>
+<td>1</td>
+<td><code>!\[.*?\]\(.*?\)</code></td>
+<td><code>IL_IMAGE</code></td>
+</tr>
+<tr>
+<td>2</td>
+<td><code>\[.*?\]\(.*?\)</code></td>
+<td><code>IL_LINK</code></td>
+</tr>
+<tr>
+<td>3</td>
+<td><code>\*\*.*?\*\*</code> \</td>
+<td><code>__.*?__</code></td>
+<td><code>IL_STRONG</code></td>
+</tr>
+<tr>
+<td>4</td>
+<td><code>\*.*?\*</code> \</td>
+<td><code>_.*?_</code></td>
+<td><code>IL_EMPH</code></td>
+</tr>
+<tr>
+<td>5</td>
+<td><code>==.*?==</code></td>
+<td><code>IL_MARK</code></td>
+</tr>
+<tr>
+<td>6</td>
+<td><code>\+\+.*?\+\+</code></td>
+<td><code>IL_UNDERLINE</code></td>
+</tr>
+<tr>
+<td>7</td>
+<td><code>~~.*?~~</code></td>
+<td><code>IL_DEL</code></td>
+</tr>
+<tr>
+<td>8</td>
+<td><code>~.*?~</code></td>
+<td><code>IL_SUB</code></td>
+</tr>
+<tr>
+<td>9</td>
+<td><code>\^.*?\^</code></td>
+<td><code>IL_SUP</code></td>
+</tr>
+<tr>
+<td>10</td>
+<td><code></code>+.<em></em>?<code>+ `</code></td>
+<td><code>IL_CODE</code></td>
+</tr>
+<tr>
+<td>11</td>
+<td><code>\$.*?\$</code></td>
+<td><code>IL_MATH</code></td>
+</tr>
+<tr>
+<td>12</td>
+<td><code>\[\^[^\]]+\]</code></td>
+<td><code>IL_FOOTNOTE_REF</code></td>
+</tr>
+<tr>
+<td>13</td>
+<td><code>:[a-zA-Z0-9_\-]+:</code></td>
+<td><code>IL_EMOJI</code></td>
+</tr>
+<tr>
+<td>14</td>
+<td><code></code><sup></sup>([[ xX]]\</td>
+<td>\[ ])<code></code></td>
+<td><code>IL_TASK</code></td>
+</tr>
+<tr>
+<td>15</td>
+<td><code>&lt;[A-Za-z/].*?&gt;</code></td>
+<td><code>IL_HTML</code> / <code>IL_EMAIL_LINK</code> / <code>IL_URI_LINK</code></td>
+</tr>
+<tr>
+<td>16</td>
+<td><code>&amp;[#a-zA-Z0-9]+;</code></td>
+<td><code>IL_ENTITY</code></td>
+</tr>
+<tr>
+<td>17</td>
+<td><code>\n</code></td>
+<td><code>IL_HARDBREAK</code></td>
+</tr>
+<tr>
+<td>18</td>
+<td><code>\\.</code></td>
+<td><code>IL_ESCAPED</code></td>
+</tr>
+<tr>
+<td>19</td>
+<td><code>\n</code></td>
+<td><code>IL_SOFTBREAK</code></td>
+</tr>
+<tr>
+<td>20</td>
+<td>plain text run</td>
+<td><code>IL_TEXT</code></td>
+</tr>
+<tr>
+<td>21</td>
+<td>single special char</td>
+<td><code>IL_TEXT</code> (fallback)</td>
+</tr>
+</table>
+<h3>Miscellaneous Regexes</h3>
+<table border="1">
+<tr>
+<th>Name</th>
+<th>Pattern</th>
+<th>Used for</th>
+</tr>
+<tr>
+<td><code>re_heading_id</code></td>
+<td><code>\{#([^}]+)\}\s*$</code></td>
+<td>Extract <code>{#custom-id}</code> from heading text</td>
+</tr>
+<tr>
+<td><code>re_line_ending</code></td>
+<td><code></code>rn\</td>
+<td>n\</td>
+<td>r<code></code></td>
+<td>Split raw text into lines</td>
+</tr>
+<tr>
+<td><code>re_table_sep</code></td>
+<td><code></code><sup></sup>\</td>
+<td>[ t-:\</td>
+<td>]+\</td>
+<td>[ t]<em></em><span class="math math-inline"></span><code></code></td>
+<td>Detect <code></code>\</td>
+<td>---\</td>
+<td>---\</td>
+<td><code></code> separator rows</td>
+</tr>
+<tr>
+<td><code>re_footnote</code></td>
+<td><code>^\[\^([^\]]+)\]:[ \t]*(.*)</code></td>
+<td>Extract footnote label + content</td>
+</tr>
+<tr>
+<td><code>re_deflist</code></td>
+<td><code>^:[ \t]+(.*)</code></td>
+<td>Extract definition list content</td>
+</tr>
+<tr>
+<td><code>re_ol_num</code></td>
+<td><code>\d+</code></td>
+<td>Extract start number from ordered list marker</td>
+</tr>
+</table>
+<h3>HTML Block Open Patterns (<code>reHtmlBlockOpen</code>)</h3>
+<p>A list of compiled regexes tested against the stripped line. First match wins.</p>
+<table border="1">
+<tr>
+<th>#</th>
+<th>Pattern</th>
+<th>Matches</th>
+</tr>
+<tr>
+<td>1</td>
+<td><code></code><sup></sup>&lt;(?:script\</td>
+<td>pre\</td>
+<td>textarea\</td>
+<td>style)(?:s\</td>
+<td>&gt;\</td>
+<td><span class="math math-inline"></span>)<code></code></td>
+<td>Raw HTML containers</td>
+</tr>
+<tr>
+<td>2</td>
+<td><code>^&lt;!--</code></td>
+<td>HTML comment</td>
+</tr>
+<tr>
+<td>3</td>
+<td><code>^&lt;?</code></td>
+<td>Processing instruction</td>
+</tr>
+<tr>
+<td>4</td>
+<td><code>^&lt;![A-Za-z]</code></td>
+<td>DOCTYPE</td>
+</tr>
+<tr>
+<td>5</td>
+<td><code>^&lt;!\[CDATA\[</code></td>
+<td>CDATA section</td>
+</tr>
+<tr>
+<td>6</td>
+<td><code></code><sup></sup>&lt;/?block-tag(?:s\</td>
+<td>/?&gt;\</td>
+<td><span class="math math-inline"></span>)<code></code></td>
+<td>All standard block-level HTML tags</td>
+</tr>
+<tr>
+<td>7</td>
+<td><code></code><sup></sup>(?:&lt;Tag\</td>
+<td></Tag\s*>)s<em></em><span class="math math-inline"></span><code></code></td>
+<td>Standalone open/close custom tags</td>
+</tr>
+</table>
+<h2>Other Constants</h2>
+<table border="1">
+<tr>
+<th>Name</th>
+<th>Value</th>
+<th>Purpose</th>
+</tr>
+<tr>
+<td><code>CODE_INDENT</code></td>
+<td><code>4</code></td>
+<td>Minimum indent for an indented code block (reserved, not yet used)</td>
+</tr>
+</table>
+
+  <script type="module">
+    import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
+    mermaid.initialize({startOnLoad: true});
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js" onload="renderMathInElement(document.body, {
+            delimiters: [
+                {left: '$$', right: '$$', display: true},
+                {left: '$', right: '$', display: false},
+                {left: '\\[', right: '\\]', display: true},
+                {left: '\\(', right: '\\)', display: false}
+            ]
+        });"></script>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      if (typeof katex === 'undefined') return;
+      var mathElements = document.getElementsByClassName("math");
+      for (var i = 0; i < mathElements.length; i++) {
+        var texText = mathElements[i].textContent;
+        var isDisplay = mathElements[i].classList.contains('math-display');
+        try {
+          katex.render(texText, mathElements[i], {
+            displayMode: isDisplay,
+            throwOnError: false
+          });
+        } catch (e) {console.error('KaTeX render error:', e);}
+      }
+    });
+  </script>
+</body>
+
+</html>
