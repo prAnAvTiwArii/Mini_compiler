@@ -1,4 +1,4 @@
-from token import *
+from lex_token import *
 
 class Lexer:
 
@@ -37,9 +37,17 @@ class Lexer:
                         in_fence = False
                         continue
 
-                elif fence_block_type == 'mermaid_block':
-                    if bg == 'mermaid_close':
+                elif fence_block_type in ('mermaid_block', 'details'):
+                    # Opened with :::mermaid or :::details → close with :::
+                    if fence_char is None and bg == 'mermaid_close':
                         tokens.append(Token(MERMAID_CLOSE, stripped, indent=indent))
+                        in_fence = False
+                        continue
+                    # Opened with ```mermaid → close with matching ```
+                    elif fence_char is not None and bg == 'code_fence' and \
+                            block_match.group('code_fence')[0] == fence_char and \
+                            len(block_match.group('code_fence')) >= fence_length:
+                        tokens.append(Token(CODE_FENCE_END, stripped, indent=indent))
                         in_fence = False
                         continue
 
@@ -128,6 +136,18 @@ class Lexer:
                 tokens.append(Token(MERMAID_FENCE, stripped, indent=indent))
                 continue
 
+            # details fence (:::details Title)
+            if bg == 'details_fence':
+                m2 = block_match.group('details_fence')
+                # extract title: everything after ':::details'
+                title = stripped[len(':::details'):].strip()
+                in_fence       = True
+                fence_block_type = 'details'
+                fence_char     = None
+                tokens.append(Token(DETAILS_FENCE, stripped,
+                                    meta={'title': title}, indent=indent))
+                continue
+
             # bullet list item
             if bg == 'bullet_list':
                 marker  = block_match.group('bullet_list')
@@ -187,6 +207,8 @@ class Lexer:
 
     @staticmethod
     def _classify_inline(token: str) -> str:
+        if token.startswith('&[') and '](' in token and token.endswith(')'):
+            return IL_AUDIO
         if token.startswith('@[') and '](' in token and token.endswith(')'):
             return IL_VIDEO
         if token.startswith('![') and '](' in token and token.endswith(')'):
@@ -238,6 +260,9 @@ class Lexer:
 
     @staticmethod
     def _inline_meta(token: str, type_: str) -> dict:
+        if type_ == IL_AUDIO:
+            label, rest = token[2:].split('](', 1)
+            return {'label': label, 'dest': rest[:-1]}
         if type_ == IL_VIDEO:
             label, rest = token[2:].split('](', 1)
             return {'label': label, 'dest': rest[:-1]}

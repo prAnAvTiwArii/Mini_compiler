@@ -28,12 +28,13 @@ MATH_FENCE     = "MATH_FENCE"
 MATH_FENCE_END = "MATH_FENCE_END"
 MERMAID_FENCE  = "MERMAID_FENCE"
 MERMAID_CLOSE  = "MERMAID_CLOSE"
+DETAILS_FENCE  = "DETAILS_FENCE"
 FOOTNOTE_DEF   = "FOOTNOTE_DEF"
 DEF_LIST_MARKER= "DEF_LIST_MARKER"
 TABLE_ROW      = "TABLE_ROW"
 TABLE_SEP      = "TABLE_SEP"
 HTML_BLOCK     = "HTML_BLOCK"
-RAW_CONTENT    = "RAW_CONTENT"  
+RAW_CONTENT    = "RAW_CONTENT"
 
 # Inline token type constants
 
@@ -60,6 +61,7 @@ IL_SOFTBREAK    = "IL_SOFTBREAK"
 IL_ESCAPED      = "IL_ESCAPED"
 IL_TEXT         = "IL_TEXT"
 IL_VIDEO        = "IL_VIDEO"
+IL_AUDIO        = "IL_AUDIO"
 
 
 reHtmlBlockOpen = [
@@ -80,6 +82,7 @@ block_token_pattern = re.compile(
     r'(?P<code_fence>^`{3,}(?!.*`)|^~{3,})|'
     r'(?P<math_fence>^\$\$[ \t]*$)|'
     r'(?P<mermaid_fence>^:::[ \t]+mermaid[ \t]*$)|'
+    r'(?P<details_fence>^:::[ \t]*details(?:[ \t]+(.*))?[ \t]*$)|'
     r'(?P<mermaid_close>^:::[ \t]*$)|'
     r'(?P<footnote_def>^\[\^([^\]]+)\]:[ \t]*(.*))|'
     r'(?P<def_list_marker>^:[ \t]+(.*))'
@@ -93,6 +96,7 @@ re_deflist   = re.compile(r'^:[ \t]+(.*)')
 re_ol_num    = re.compile(r'\d+')
 
 inline_token_pattern = re.compile(
+    r'(&\[.*?\]\(.*?\))|'        # Audio: &[caption](url)
     r'(@\[.*?\]\(.*?\))|'        # Video: @[caption](url)
     r'(!\[.*?\]\(.*?\))|'        # Image: ![alt](url)
     r'(\[.*?\]\(.*?\))|'         # Link: [label](url)

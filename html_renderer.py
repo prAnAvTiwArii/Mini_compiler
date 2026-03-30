@@ -130,15 +130,29 @@ class HtmlRenderer:
             self.buffer.append("</u>")
             
         elif node_type == "del":
-            self.buffer.append("<del>")
+            self.buffer.append("<s>")
             for child in node.get("children", []):
                 self._render_node(child)
-            self.buffer.append("</del>")
+            self.buffer.append("</s>")
             
         elif node_type == "table":
-            self.buffer.append("<table border=\"1\">\n")
-            for child in node.get("children", []):
-                self._render_node(child)
+            children = node.get("children", [])
+            # Split rows into header group and body group
+            header_rows = [r for r in children
+                           if any(c.get("type") == "table_header"
+                                  for c in r.get("children", []))]
+            body_rows   = [r for r in children if r not in header_rows]
+            self.buffer.append("<table>\n")
+            if header_rows:
+                self.buffer.append("<thead>\n")
+                for row in header_rows:
+                    self._render_node(row)
+                self.buffer.append("</thead>\n")
+            if body_rows:
+                self.buffer.append("<tbody>\n")
+                for row in body_rows:
+                    self._render_node(row)
+                self.buffer.append("</tbody>\n")
             self.buffer.append("</table>\n")
             
         elif node_type == "table_row":
@@ -163,6 +177,34 @@ class HtmlRenderer:
             self.buffer.append("<div class=\"math math-display\">\n")
             self.buffer.append(self.escape(node.get("literal", "")))
             self.buffer.append("</div>\n")
+
+        elif node_type == "thematic_break":
+            self.buffer.append("<hr />\n")
+
+        elif node_type == "details":
+            title = self.escape(node.get("title", "") or "Details")
+            self.buffer.append(f'<details>\n<summary>{title}</summary>\n')
+            inner = (node.get("string_content") or "").strip()
+            children = node.get("children", [])
+            
+            if inner or children:
+                self.buffer.append("<p>\n")
+                if inner:
+                    self.buffer.append(self.escape(inner))
+                for child in children:
+                    self._render_node(child)
+                self.buffer.append("</p>\n")
+
+            self.buffer.append("</details>\n")
+
+        elif node_type == "audio":
+            dest    = self.escape(node.get("destination", ""))
+            caption = self.escape(node.get("title", ""))
+            self.buffer.append(f'<audio controls>\n')
+            self.buffer.append(f'  <source src="{dest}" />\n')
+            if caption:
+                self.buffer.append(f'  {caption}\n')
+            self.buffer.append('</audio>\n')
             
         elif node_type == "mermaid_block":
             self.buffer.append("<pre class=\"mermaid\">\n")

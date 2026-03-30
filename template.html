@@ -6,87 +6,32 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>__TITLE__</title>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
-  <style>
-    body {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-      line-height: 1.6;
-      max-width: 800px;
-      margin: 0 auto;
-      padding: 2rem;
-      color: #333;
-    }
-
-    table {
-      border-collapse: collapse;
-      width: 100%;
-      margin-bottom: 1rem;
-    }
-
-    th,
-    td {
-      padding: 8px;
-      border: 1px solid #ddd;
-      text-align: left;
-    }
-
-    th {
-      background-color: #f4f4f4;
-    }
-
-    pre {
-      background: #f4f4f4;
-      padding: 1rem;
-      overflow-x: auto;
-    }
-
-    code {
-      font-family: Consolas, Monaco, "Andale Mono", "Ubuntu Mono", monospace;
-      background: #f4f4f4;
-      padding: 2px 4px;
-      border-radius: 4px;
-    }
-
-    blockquote {
-      border-left: 4px solid #ccc;
-      margin-left: 0;
-      padding-left: 1rem;
-      color: #666;
-    }
-  </style>
+  <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
   __BODY_HTML__
+
+  <!-- Mermaid diagrams -->
   <script type="module">
     import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
     mermaid.initialize({ startOnLoad: true });
   </script>
-  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
-  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js" onload="renderMathInElement(document.body, {
-            delimiters: [
-                {left: '$$', right: '$$', display: true},
-                {left: '$', right: '$', display: false},
-                {left: '\\[', right: '\\]', display: true},
-                {left: '\\(', right: '\\)', display: false}
-            ]
-        });"></script>
 
-  <script>
-    document.addEventListener("DOMContentLoaded", function () {
-      if (typeof katex === 'undefined') return;
-      var mathElements = document.getElementsByClassName("math");
-      for (var i = 0; i < mathElements.length; i++) {
-        var texText = mathElements[i].textContent;
-        var isDisplay = mathElements[i].classList.contains('math-display');
+  <!-- KaTeX math rendering -->
+  <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js" onload="
+      document.querySelectorAll('.math').forEach(function(el) {
+        var isDisplay = el.classList.contains('math-display');
         try {
-          katex.render(texText, mathElements[i], {
+          katex.render(el.textContent, el, {
             displayMode: isDisplay,
             throwOnError: false
           });
-        } catch (e) { console.error('KaTeX render error:', e); }
-      }
-    });
-  </script>
+        } catch(e) { console.error('KaTeX:', e); }
+      });
+    ">
+    </script>
+
 </body>
 
 </html>

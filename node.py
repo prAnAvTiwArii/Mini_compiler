@@ -82,6 +82,8 @@ class Node:
             d["destination"] = self.destination
         if self.info is not None:
             d["info"] = self.info
+        if self.title is not None:
+            d["title"] = self.title
 
         if hasattr(self, 'custom_id') and self.custom_id is not None:
             d["custom_id"] = self.custom_id
@@ -89,6 +91,8 @@ class Node:
             d["label"] = self.label
         if hasattr(self, 'checked') and self.checked is not None:
             d["checked"] = self.checked
+        if hasattr(self, 'list_type') and self.list_type is not None:
+            d["list_type"] = self.list_type
 
         children = []
         child = self.first_child

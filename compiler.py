@@ -35,21 +35,25 @@ def main():
     renderer = HtmlRenderer()
     body_html = renderer.render(ir_data)
     
+    pyv_dir = os.path.dirname(os.path.abspath(__file__))
+
     try:
-        template_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), "template.html")
+        template_path = os.path.join(pyv_dir, "template.html")
         with open(template_path, 'r', encoding='utf-8') as f:
             template = f.read()
     except FileNotFoundError:
         print("Error: template.html not found.")
         sys.exit(1)
 
-    final_html = template.replace("__TITLE__", title).replace("__BODY_HTML__", body_html)
+    final_html = (template
+                  .replace("__TITLE__", title)
+                  .replace("__BODY_HTML__", body_html))
     
     print(f"Writing output to {output_html_path}...")
     with open(output_html_path, 'w', encoding='utf-8') as f:
         f.write(final_html)
     with open(output_json_path, 'w', encoding='utf-8') as f:
-        json.dump(ir_data,f, indent=2)
+        json.dump(ir_data, f, indent=2)
     print(f"Compilation successful! Wrote to {output_html_path}")
 
 if __name__ == "__main__":

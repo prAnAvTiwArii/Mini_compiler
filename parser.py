@@ -4,7 +4,7 @@ import urllib.parse
 
 from node import Node
 from lexer import Lexer
-from token import *
+from lex_token import *
 
 class InlineParser:
 
@@ -27,6 +27,12 @@ class InlineParser:
 
     def _token_to_node(self, tok: Token) -> Node | None:
         t, v, m = tok.type, tok.value, tok.meta
+
+        if t == IL_AUDIO:
+            node = Node('audio')
+            node.destination = m['dest']
+            node.title = m['label']
+            return node
 
         if t == IL_VIDEO:
             node = Node('video')
@@ -186,7 +192,7 @@ class Parser:
 
         # open raw-block continuation
         if t == RAW_CONTENT:
-            if self.tip and self.tip.type in ('code_block', 'math_block', 'mermaid_block'):
+            if self.tip and self.tip.type in ('code_block', 'math_block', 'mermaid_block', 'details'):
                 self.tip.string_content += tok.value + '\n'
             return
 
@@ -320,6 +326,16 @@ class Parser:
             self.tip = mm
             return
 
+        # details fence (:::details Title)
+        if t == DETAILS_FENCE:
+            det = Node('details')
+            det.title = m.get('title', '')
+            det.string_content = ""
+            self.doc.append_child(det)
+            self._close_tip_if_paragraph()
+            self.tip = det
+            return
+
         # bullet / ordered list item 
         if t in (BULLET_LIST, ORDERED_LIST):
             list_type  = m['list_type']
@@ -447,7 +463,7 @@ class Parser:
         """Walk the AST and expand string_content into inline child nodes."""
         for node, entering in doc.walker():
             if entering and node.type in ('paragraph', 'heading', 'table_cell',
-                                          'table_header', 'def_term') \
+                                          'table_header', 'def_term', 'details') \
                     and getattr(node, 'string_content', None):
                 self.inline_parser.parse(node)
 

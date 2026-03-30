@@ -1,208 +1,68 @@
-# Markdown to HTML Compiler
+# Marky: Markdown to HTML Compiler
 
-A Python-based Markdown compiler that parses Markdown syntax into an Abstract Syntax Tree (AST), converts it to JSON intermediate representation (IR), and renders it to HTML with extensive formatting support.
+`Marky` is a zero-dependency, rigorously designed Python compiler bridging Markdown dialects to fully functioning, highly styled semantic HTML. Built with pedagogical intent, it rejects monolithic regular expressions and complex state machines in favor of an easily hackable, multi-staged pipeline architecture.
 
-## Project Overview
+Everything from LaTeX compilation, Mermaid diagram integration, Table architectures, to native HTML5 interactive `<details>` lists are supported and documented openly.
 
-This project implements a **top-down recursive descent parser** that processes Markdown files with extensions and converts them into styled HTML output. It uses regex-based lexical analysis combined with an iterative state machine to build the parse tree.
+---
 
-## Architecture
+## 1. Project Philosophy
 
-```
-Input (Markdown) 
-    ↓
-[Parser] - Block & Inline Parsing → AST (Node Tree)
-    ↓
-[Node] - Tree representation with JSON serialization
-    ↓
-[HtmlRenderer] - JSON IR → HTML tags
-    ↓
-Output (HTML file + JSON IR)
-```
+The primary objective behind `Marky` is predictable extraction. 
+Traditionally, Markdown files are swept utilizing unreadable chained lookahead regexes that fail on edge cases. 
+`Marky` separates execution into two immutable paths:
+- **Phase A (Block Parsing)**: Establishes container layout. Defines the structural hierarchy recursively (e.g. `Document > List > ListItem > Paragraph`). Nested parsing handles scoping cleanly without string mutation.
+- **Phase B (Inline Parsing)**: Operates strictly _inside_ the string contents populated by Phase A. This ensures a bold `**text**` pattern inside a codeblock isn't errantly executed. 
 
-## Features
+---
 
-### Block-Level Elements
-- **Headings** (ATX style: `# H1` to `###### H6`) with custom IDs (`{#custom-id}`)
-- **Paragraphs**
-- **Blockquotes** (`> text`)
-- **Code Blocks** (fenced with ``` or ~~~ with language info)
-- **Thematic Breaks** (`***`, `---`, `___`)
-- **Lists** (bullet and ordered)
-- **HTML Blocks** (raw HTML passthrough)
-- **Footnote Definitions** (`[^label]: content`)
-- **Definition Lists** (`:  definition`)
-- **Math Blocks** (`$$..$$`)
-- **Mermaid Diagrams** (`::: mermaid`)
+## 2. Compilation Stages
 
-### Inline Elements
-- **Text Formatting**
-  - Bold: `**text**` or `__text__`
-  - Italic: `*text*` or `_text_`
-  - Strikethrough: `~~text~~`
-  - Underline: `++text++`
-  - Mark/Highlight: `==text==`
-  - Subscript: `~text~`
-  - Superscript: `^text^`
-  
-- **Links & Images**
-  - Links: `[label](url)`
-  - Images: `![alt](url)`
-  - Email autolinks: `<user@example.com>`
-  - URL autolinks: `<https://example.com>`
-  
-- **Code & Math**
-  - Inline code: `` `code` ``
-  - Inline math: `$equation$`
-  
-- **Other**
-  - Footnote references: `[^label]`
-  - Emoji shortcuts: `:emoji_name:`
-  - Task checkboxes: `[x]` or `[ ]`
-  - HTML entities: `&amp;`
-  - Hard breaks: two spaces + newline
-  - Soft breaks: newline
-  - Escaped characters: `\*`
+Executing the program via `python3 compiler.py <filename>.md` enacts five strict stages:
 
-## File Structure
+1. **Tokenization (Line Evaluation)**
+    `lexer.py` ingests the file, iterating line by line evaluating against extraction dictionaries in `lex_token.py`. Results in arrays of Block Tokens (`PARAGRAPH`, `MERMAID_FENCE`, etc.).
+2. **Abstract Syntax Tree (AST)** 
+    `parser.py` consumes the Token array, creating relational `node.py` objects binding properties like `parent`, `first_child`, and `next_sibling`.
+3. **Inline Extraction**
+    Once block derivation is finished, the parser sweeps across nodes containing literal strings. `InlineParser` calls back to `lexer.py` sweeping the text for exact formats (`IL_STRONG`, `IL_CODE`), swapping the raw string value with distinct node elements.
+4. **Intermediate Representation (JSON IR)**
+    To act as a structural source of truth, `compiler.py` enforces a `to_dict()` cycle cascading down the root AST. This generates a strict, human-readable `<filename>.json` layout describing the compilation path deeply.
+5. **Renderer Translation**
+    The `html_renderer.py` module climbs over the JSON dictionary, injecting values into matching semantic HTML element strings.
+    The resulting body matches against `template.html`, picking up the `style.css` configurations and rendering to the target `.html` file natively!
 
-### Core Modules
+---
 
-- **`parser.py`** - Main parsing logic
-  - `Parser` class: Block-level parsing with two-phase approach (Phase 1: blocks, Phase 2: inlines)
-  - `InlineParser` class: Processes inline tokens using regex patterns
-  
-- **`node.py`** - AST node representation
-  - `Node` class: Tree structure with parent-child relationships, JSON serialization
-  
-- **`html_renderer.py`** - HTML output generation
-  - `HtmlRenderer` class: Converts JSON IR to styled HTML with proper escaping
-  
-- **`regex_rules.py`** - Pattern definitions
-  - Block-level token patterns
-  - Inline token patterns
-  - HTML block detection rules
-  - Special regex patterns (heading IDs, line endings)
-  
-- **`compiler.py`** - Entry point
-  - Orchestrates parsing, JSON generation, and HTML rendering
-  - Arguments: input markdown file
-  - Outputs: `.html` and `.json` files
-  
-- **`template.html`** - HTML template
-  - Base template with styling
-  - Placeholders: `__TITLE__` and `__BODY_HTML__`
-  - Includes KaTeX CDN for math rendering
+## 3. How to Use Marky
 
-## Usage
+### Prerequisites
+- Python 3.9+ 
+- No `pip` installations required. Standard library only (`json`, `sys`, `os`, `re`, `urllib`).
+
+### Running the Compiler
+To process a file, call the entry script with your markdown route:
 
 ```bash
-python3 compiler.py input.md
+python3 compiler.py docs/test.md
 ```
 
-**Output:**
-- `input.html` - Rendered HTML file
-- `input.json` - JSON intermediate representation (for debugging/inspection)
+The system will parse `test.md` and yield two outputs located precisely in the working folder:
+- `test.json`: The fully evaluated Abstract Syntax Tree dictionary map.
+- `test.html`: The fully formatted HTML document.
 
-### Example
+Open `test.html` in your browser. Styles are linked organically from the `style.css` within the same package directory ensuring instant reloading dynamics.
 
-**Input (`example.md`):**
-```markdown
-# Hello World
+---
 
-This is a **bold** text with *italic* emphasis.
+## 4. File Roster
 
-- Item 1
-- Item 2
-```
-
-```python
-def hello():
-    print("world")
-```
-
-**Output:** 
-- `example.html` - Beautiful styled webpage
-- `example.json` - AST representation for analysis
-
-## Parser Type Details
-
-This is a **top-down recursive descent parser** with the following characteristics:
-
-- **Single-pass, line-by-line processing**: Processes input sequentially
-- **Two-phase parsing**: 
-  1. Block structure parsing to create document hierarchy
-  2. Inline element parsing within blocks
-- **Regex-based pattern matching**: Uses combined regex with named groups
-- **State machine approach**: Maintains parsing state across line processing
-- **AST generation**: Builds Abstract Syntax Tree before rendering
-
-## Dependencies
-
-- Python 3.6+
-- No external packages required (uses only standard library: `re`, `json`, `sys`, `os`, `html`, `urllib.parse`)
-
-## JSON Intermediate Representation
-
-The JSON output contains the complete AST structure:
-
-```json
-{
-  "type": "document",
-  "children": [
-    {
-      "type": "heading",
-      "level": 1,
-      "children": [
-        {
-          "type": "text",
-          "literal": "Title"
-        }
-      ]
-    },
-    ...
-  ]
-}
-```
-
-This JSON can be:
-- Inspected for debugging
-- Used by external tools
-- Transformed into different output formats
-
-## Styling
-
-The HTML output includes:
-- Responsive design (max-width: 800px)
-- Professional typography with system fonts
-- Table styling with borders
-- Code block syntax (ready for highlighting integration)
-- Math rendering support via KaTeX
-
-## Extensions Supported
-
-- **Custom heading IDs**: `# Heading {#custom-id}`
-- **Task lists**: `[x] Completed task`
-- **Footnotes**: `[^1]` with definitions `[^1]: Footnote content`
-- **Definition lists**: Terms with `: definition` entries
-- **Math blocks**: `$$formula$$`
-- **Mermaid diagrams**: `::: mermaid ... :::`
-
-## Limitations & Notes
-
-- Focus on block and inline structure parsing
-- HTML escaping for security
-- No external plugins/extensions framework
-- Designed for educational purposes in compiler lab
-
-## Future Enhancements
-
-- Syntax highlighting for code blocks
-- Smart typography (typographical quotes, em-dashes)
-- Table of contents generation
-- Citation/bibliography support
-- Custom rendering backends beyond HTML
-
-## Author
-
-Pranav - Compiler Lab Project
+- **`compiler.py`**: Execution glue binding templates, parser commands, and IO writing together.
+- **`lex_token.py`**: Mathematical, standalone evaluation regex rules isolating text characteristics safely.
+- **`lexer.py`**: The mechanism sweeping strings to apply `lex_token.py` configurations generating `Token()` classes. 
+- **`parser.py`**: AST Builder routing Tokens into Node clusters. 
+- **`node.py`**: The raw generic container defining hierarchy (`to_dict()`, `walker()`, `parent`). 
+- **`html_renderer.py`**: Mapping IR classes back to actual HTML format tags (e.g. `<img/>`, `<table>`).
+- **`template.html`**: Browser boilerplate housing dynamic KaTeX scripts, module logic, and the `__BODY_HTML__` injection zone.
+- **`style.css`**: Completely independent, highly polished CSS formatting guidelines emulating professional system-font oriented documentation sites.
+- **`docs/`**: Library folder containing explicit technical breakdowns (`grammar.md`, `tokens.md`) and operational tests (`test.md`).
