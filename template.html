@@ -59,7 +59,7 @@
   __BODY_HTML__
   <script type="module">
     import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
-    mermaid.initialize({startOnLoad: true});
+    mermaid.initialize({ startOnLoad: true });
   </script>
   <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js"></script>
   <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/contrib/auto-render.min.js" onload="renderMathInElement(document.body, {
@@ -83,7 +83,7 @@
             displayMode: isDisplay,
             throwOnError: false
           });
-        } catch (e) {console.error('KaTeX render error:', e);}
+        } catch (e) { console.error('KaTeX render error:', e); }
       }
     });
   </script>

@@ -59,6 +59,7 @@ IL_HARDBREAK    = "IL_HARDBREAK"
 IL_SOFTBREAK    = "IL_SOFTBREAK"
 IL_ESCAPED      = "IL_ESCAPED"
 IL_TEXT         = "IL_TEXT"
+IL_VIDEO        = "IL_VIDEO"
 
 
 reHtmlBlockOpen = [
@@ -92,6 +93,7 @@ re_deflist   = re.compile(r'^:[ \t]+(.*)')
 re_ol_num    = re.compile(r'\d+')
 
 inline_token_pattern = re.compile(
+    r'(@\[.*?\]\(.*?\))|'        # Video: @[caption](url)
     r'(!\[.*?\]\(.*?\))|'        # Image: ![alt](url)
     r'(\[.*?\]\(.*?\))|'         # Link: [label](url)
     r'(\*\*.*?\*\*|__.*?__)|'    # Strong: **text** or __text__

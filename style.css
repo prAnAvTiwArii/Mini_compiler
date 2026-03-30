@@ -1,0 +1,106 @@
+/* Base Typography & Layout */
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    line-height: 1.6;
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 2rem;
+    color: #1a1a1a;
+    background-color: #fdfdfd;
+}
+
+/* Headings */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    color: #000;
+    margin-top: 2em;
+    margin-bottom: 0.5em;
+    font-weight: 600;
+}
+
+h1 {
+    font-size: 2.25rem;
+    border-bottom: 2px solid #eaeaea;
+    padding-bottom: 0.3em;
+    margin-top: 0;
+}
+
+h2 {
+    font-size: 1.75rem;
+    border-bottom: 1px solid #eaeaea;
+    padding-bottom: 0.3em;
+}
+
+/* Tables - High Contrast for Scientific Data */
+table {
+    border-collapse: collapse;
+    width: 100%;
+    margin: 1.5rem 0;
+    font-size: 0.95rem;
+    border: 1px solid #d1d5db;
+}
+
+th,
+td {
+    padding: 12px 16px;
+    border: 1px solid #d1d5db;
+    text-align: left;
+}
+
+th {
+    background-color: #f3f4f6;
+    font-weight: bold;
+    color: #111827;
+}
+
+tr:nth-child(even) {
+    background-color: #f9fafb;
+}
+
+/* Code and Preformatted Text */
+pre {
+    background-color: #f3f4f6;
+    padding: 1.25rem;
+    overflow-x: auto;
+    border-radius: 4px;
+    border: 1px solid #e5e7eb;
+}
+
+code {
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+    background-color: #f3f4f6;
+    padding: 0.2em 0.4em;
+    font-size: 0.9em;
+    border-radius: 3px;
+    color: #be185d;
+}
+
+pre code {
+    background-color: transparent;
+    padding: 0;
+    color: #1f2937;
+}
+
+/* Blockquotes */
+blockquote {
+    border-left: 4px solid #9ca3af;
+    margin: 1.5rem 0;
+    padding-left: 1rem;
+    color: #4b5563;
+    font-style: italic;
+}
+
+/* Mermaid Wrapper */
+.mermaid {
+    background: #fff;
+    padding: 1rem;
+    margin: 1.5rem 0;
+    border: 1px solid #e5e7eb;
+    border-radius: 4px;
+    display: flex;
+    justify-content: center;
+}

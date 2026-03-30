@@ -4,7 +4,7 @@ import urllib.parse
 
 from node import Node
 from lexer import Lexer
-from regex_rules import *
+from token import *
 
 class InlineParser:
 
@@ -25,65 +25,70 @@ class InlineParser:
             if node is not None:
                 block.append_child(node)
 
-    @staticmethod
-    def _token_to_node(tok: Token) -> Node | None:
+    def _token_to_node(self, tok: Token) -> Node | None:
         t, v, m = tok.type, tok.value, tok.meta
+
+        if t == IL_VIDEO:
+            node = Node('video')
+            node.destination = m['dest']
+            node.title = m['label']
+            return node
 
         if t == IL_IMAGE:
             node = Node('image')
             node.destination = m['dest']
             node.title = m['label']
-            child = Node('text'); child.literal = m['label']
-            node.append_child(child)
+            inner = self._lexer.tokenize_inline(m['label'])
+            self._build_nodes(node, inner)
             return node
 
         if t == IL_LINK:
             node = Node('link')
             node.destination = m['dest']
-            child = Node('text'); child.literal = m['label']
-            node.append_child(child)
+            inner = self._lexer.tokenize_inline(m['label'])
+            self._build_nodes(node, inner)
             return node
 
         if t == IL_STRONG:
             node = Node('strong')
-            child = Node('text'); child.literal = m['text']
-            node.append_child(child)
+            inner = self._lexer.tokenize_inline(m['text'])
+            self._build_nodes(node, inner)
             return node
 
         if t == IL_EMPH:
             node = Node('emph')
-            child = Node('text'); child.literal = m['text']
-            node.append_child(child)
+            inner = self._lexer.tokenize_inline(m['text'])
+            self._build_nodes(node, inner)
             return node
 
         if t == IL_MARK:
             node = Node('mark')
-            child = Node('text'); child.literal = m['text']
-            node.append_child(child)
+            inner = self._lexer.tokenize_inline(m['text'])
+            self._build_nodes(node, inner)
             return node
 
         if t == IL_UNDERLINE:
             node = Node('u')
-            child = Node('text'); child.literal = m['text']
-            node.append_child(child)
+            inner = self._lexer.tokenize_inline(m['text'])
+            self._build_nodes(node, inner)
             return node
 
         if t == IL_DEL:
             node = Node('del')
-            child = Node('text'); child.literal = m['text']
-            node.append_child(child)
+            inner = self._lexer.tokenize_inline(m['text'])
+            self._build_nodes(node, inner)
             return node
 
         if t == IL_SUB:
             node = Node('sub')
-            child = Node('text'); child.literal = m['text']
-            node.append_child(child)
+            inner = self._lexer.tokenize_inline(m['text'])
+            self._build_nodes(node, inner)
             return node
 
         if t == IL_SUP:
             node = Node('sup')
-            child = Node('text'); child.literal = m['text']
-            node.append_child(child)
+            inner = self._lexer.tokenize_inline(m['text'])
+            self._build_nodes(node, inner)
             return node
 
         if t == IL_MATH:

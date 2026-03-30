@@ -10,6 +10,12 @@ class HtmlRenderer:
         text = text.replace('"', "&quot;")
         text = text.replace("'", "&#x27;")
         return text
+
+    def _text_content(self, node: dict) -> str:
+        """Recursively extract plain text from a node subtree (used for alt attributes)."""
+        if node.get("literal") is not None:
+            return str(node["literal"])
+        return "".join(self._text_content(c) for c in node.get("children", []))
         
     def render(self, ir_dict):
         self.buffer = []
@@ -83,6 +89,20 @@ class HtmlRenderer:
             for child in node.get("children", []):
                 self._render_node(child)
             self.buffer.append("</a>")
+
+        elif node_type == "image":
+            dest = self.escape(node.get("destination", ""))
+            alt  = self.escape(self._text_content(node))
+            self.buffer.append(f'<img src="{dest}" alt="{alt}" />')
+
+        elif node_type == "video":
+            dest    = self.escape(node.get("destination", ""))
+            caption = self.escape(node.get("title", ""))
+            self.buffer.append(f'<video controls>\n')
+            self.buffer.append(f'  <source src="{dest}" />\n')
+            if caption:
+                self.buffer.append(f'  {caption}\n')
+            self.buffer.append('</video>\n')
             
         elif node_type == "list":
             tag = "ul" if node.get("list_type") == "bullet" else "ol"

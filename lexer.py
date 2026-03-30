@@ -1,4 +1,4 @@
-from regex_rules import *
+from token import *
 
 class Lexer:
 
@@ -187,6 +187,8 @@ class Lexer:
 
     @staticmethod
     def _classify_inline(token: str) -> str:
+        if token.startswith('@[') and '](' in token and token.endswith(')'):
+            return IL_VIDEO
         if token.startswith('![') and '](' in token and token.endswith(')'):
             return IL_IMAGE
         if token.startswith('[') and '](' in token and token.endswith(')'):
@@ -236,6 +238,9 @@ class Lexer:
 
     @staticmethod
     def _inline_meta(token: str, type_: str) -> dict:
+        if type_ == IL_VIDEO:
+            label, rest = token[2:].split('](', 1)
+            return {'label': label, 'dest': rest[:-1]}
         if type_ == IL_IMAGE:
             label, rest = token[2:].split('](', 1)
             return {'label': label, 'dest': rest[:-1]}
