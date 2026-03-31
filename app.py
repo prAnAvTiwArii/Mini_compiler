@@ -8,14 +8,20 @@ import os
 import json
 from flask import Flask, render_template, request, jsonify, Response
 
-from lexer import Lexer
-from parser import Parser
-from semantic_analyzer import SemanticAnalyzer
-from ast_visualizer import ASTVisualizer
-from cst_visualizer import CSTVisualizer
-from html_renderer import HtmlRenderer
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+import sys
+sys.path.insert(0, os.path.join(BASE_DIR, 'backend'))
+
+from backend import (
+    Lexer,
+    Parser,
+    SemanticAnalyzer,
+    ASTVisualizer,
+    CSTVisualizer,
+    HtmlRenderer
+)
+
 app = Flask(__name__,
             template_folder=os.path.join(BASE_DIR, 'frontend', 'templates'),
             static_folder=os.path.join(BASE_DIR, 'frontend', 'static'))
