@@ -1,0 +1,215 @@
+==================================================
+MARKDOWN COMPILER - FORMAL GRAMMAR & TOKEN FORMAT
+  (Vertical Chaining Edition — LALR-style parse tree)
+==================================================
+
+DESIGN PRINCIPLE
+-----------------
+Every repeated sequence X X X ... is encoded as right-recursive chains:
+  XList  → X XList'
+  XList' → X XList' | ε
+This guarantees at most 2 children per non-terminal and produces a deep,
+vertical parse tree identical in style to LALR / SLR derivation trees.
+Wide "flat" productions (A → B B B B) are completely eliminated.
+
+
+1. GRAMMAR RULES (Right-Recursive Chaining Structure)
+------------------------------------------------------
+Capitalized words = Non-Terminals.
+UPPERCASE_WITH_UNDERSCORES = Terminal Tokens from the Lexer.
+
+─── Entry point ─────────────────────────────────────────────────────
+
+  Document  →  BlockList
+
+─── Block-level productions ─────────────────────────────────────────
+
+BEFORE (flat):  BlockList → Block BlockList | ε
+AFTER  (chain): BlockList  →  Block  BlockList'
+                BlockList' →  Block  BlockList' | ε
+
+  BlockList   →  Block  BlockList'
+  BlockList'  →  Block  BlockList'
+              |   ε
+
+  Block  →  Heading
+         |  Paragraph
+         |  Blockquote
+         |  CodeBlock
+         |  MathBlock
+         |  MermaidBlock
+         |  List
+         |  Table
+         |  ThematicBreak
+         |  HtmlBlock
+         |  FootnoteDef
+         |  DefList
+
+─── Block constructors ───────────────────────────────────────────────
+
+  Heading      →  HEADING_TOKEN  InlineList
+  Paragraph    →  InlineList
+  Blockquote   →  BLOCKQUOTE_TOKEN  BlockList
+  ThematicBreak →  THEMATIC_BREAK
+  HtmlBlock    →  HTML_BLOCK
+
+─── Fenced blocks (content uses right-recursive chain) ──────────────
+
+BEFORE (flat):  CodeBlock → CODE_FENCE CODE_CONTENT* CODE_FENCE_CLOSE
+AFTER  (chain): CodeBlock → CODE_FENCE CodeContentList CODE_FENCE_CLOSE
+                CodeContentList → CODE_CONTENT CodeContentList | ε
+
+  CodeBlock        →  CODE_FENCE  CodeContentList  CODE_FENCE_CLOSE
+  CodeContentList  →  CODE_CONTENT  CodeContentList
+                   |  ε
+
+  MathBlock        →  MATH_FENCE  MathContentList  MATH_FENCE_CLOSE
+  MathContentList  →  MATH_CONTENT  MathContentList
+                   |  ε
+
+  MermaidBlock        →  MERMAID_OPEN  MermaidContentList  MERMAID_CLOSE
+  MermaidContentList  →  MERMAID_CONTENT  MermaidContentList
+                      |  ε
+
+─── List (right-recursive chain) ────────────────────────────────────
+
+BEFORE (flat):  List → Item List | Item
+AFTER  (chain): List  →  Item  ListTail
+                ListTail →  Item  ListTail | ε
+
+  List      →  Item  ListTail
+  ListTail  →  Item  ListTail
+            |  ε
+
+  Item   →  ListMarker  BlockList
+  ListMarker  →  BULLET_LIST_ITEM
+              |  ORDERED_LIST_ITEM
+
+─── Table (right-recursive chain) ───────────────────────────────────
+
+BEFORE (flat):  Table → TableRow Table | TableRow
+AFTER  (chain): Table     →  TableRow  TableTail
+                TableTail →  TableRow  TableTail | ε
+
+  Table      →  TableRow  TableTail
+  TableTail  →  TableRow  TableTail
+             |  ε
+
+  TableRow   →  TABLE_ROW  CellList
+             |  TABLE_SEPARATOR
+
+BEFORE (flat):  TableRow → TABLE_ROW (TABLE_CELL)*
+AFTER  (chain): CellList →  TABLE_CELL  CellList | ε
+
+  CellList   →  TABLE_CELL  CellList
+             |  ε
+
+─── Footnote & Definition List ──────────────────────────────────────
+
+  FootnoteDef  →  FOOTNOTE_DEF  InlineList
+
+  DefList      →  DefTerm  DefItemList
+  DefTerm      →  Paragraph
+  DefItemList  →  DefItem  DefItemList
+              |   ε
+  DefItem      →  DEF_LIST_MARKER  InlineList
+
+─── Inline productions ──────────────────────────────────────────────
+
+BEFORE (flat):  InlineList → Inline InlineList | ε
+AFTER  (chain): InlineList  →  Inline  InlineList'
+                InlineList' →  Inline  InlineList' | ε
+
+  InlineList   →  Inline  InlineList'
+  InlineList'  →  Inline  InlineList'
+               |  ε
+
+  Inline  →  TEXT
+          |  STRONG
+          |  EMPH
+          |  INLINE_CODE
+          |  LINK
+          |  IMAGE
+          |  HIGHLIGHT       (==mark==)
+          |  STRIKETHROUGH   (~~del~~)
+          |  SUBSCRIPT       (~sub~)
+          |  SUPERSCRIPT     (^sup^)
+          |  INLINE_MATH     ($math$)
+          |  FOOTNOTE_REF    ([^1])
+          |  CHECKBOX        ([x])
+          |  EMOJI           (:emoji:)
+
+
+HOW THIS PRODUCES A VERTICAL TREE
+----------------------------------
+  With the old flat rule  BlockList → Block Block Block ... Block ε
+  D3 draws ALL blocks as siblings — wide and shallow.
+
+  With the new chain rule:
+    BlockList  → Block  BlockList'
+    BlockList' → Block  BlockList'
+    BlockList' → ε
+  D3 draws a spine that recurses one level deeper per block — deep and narrow.
+
+  Example for "# H1 / Para / ---":
+    Document
+    └─ BlockList
+       ├─ Block (Heading)
+       └─ BlockList'
+          ├─ Block (Paragraph)
+          └─ BlockList'
+             ├─ Block (ThematicBreak)
+             └─ BlockList' (ε)
+
+  The same pattern applies to InlineList, List, Table, and all other
+  repeated sequences, making every level of the tree at most 2-wide.
+
+
+2. TOKEN FORMAT & DATA STRUCTURE
+--------------------------------------------------
+The Lexer strictly produces a 1-dimensional array of `Token` class instances.
+Each Token represents a block-level construct (usually line-by-line) and
+optionally holds sub-tokens for inline parsing.
+
+Object Structure for `Token`:
+{
+  "type": "...",          // String classification (e.g., 'HEADING', 'TEXT', 'CODE_FENCE')
+  "value": "...",         // The exact raw matched string from the file
+  "line_number": Int,     // The line number in the source markdown
+
+  // Computed dynamically by the lexer only for tokens that contain inline elements
+  // (like HEADING, TEXT, BULLET_LIST_ITEM)
+  "sub_tokens": [
+    {
+      "type": "...",      // Inline sub-token type (e.g., 'STRONG', 'LINK', 'TEXT')
+      "value": "..."      // Inline sub-token raw string (e.g., '**bold**', '[link](url)')
+    },
+    ...
+  ]
+}
+
+Example Token Stream:
+Consider the markdown:
+`# Hello **World**`
+
+Output from Lexer `.tokenize()`:
+[
+  Token(
+    type='HEADING',
+    value='# Hello **World**',
+    line_number=1,
+    sub_tokens=[
+      {"type": "HEADING_MARKER", "value": "# "},
+      {"type": "TEXT",           "value": "Hello "},
+      {"type": "STRONG",         "value": "**World**"}
+    ]
+  )
+]
+
+How the Parser consumes this:
+1. The Parser recognizes the `HEADING` token type.
+2. It explicitly builds the `Heading` AST Node.
+3. It iterates over the `sub_tokens` provided by the Lexer.
+4. It reads the `TEXT` sub-token to build a `Text` AST Node under `Heading`.
+5. It reads the `STRONG` sub-token to build a `Strong` AST Node under `Heading`,
+   completing the InlineList' chain derivation.
