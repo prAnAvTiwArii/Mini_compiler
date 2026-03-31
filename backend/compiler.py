@@ -35,14 +35,14 @@ def main():
     renderer = HtmlRenderer()
     body_html = renderer.render(ir_data)
     
-    pyv_dir = os.path.dirname(os.path.abspath(__file__))
+    pyv_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
     try:
-        template_path = os.path.join(pyv_dir, "template.html")
+        template_path = os.path.join(pyv_dir, "frontend", "templates", "template.html")
         with open(template_path, 'r', encoding='utf-8') as f:
             template = f.read()
     except FileNotFoundError:
-        print("Error: template.html not found.")
+        print(f"Error: {template_path} not found.")
         sys.exit(1)
 
     final_html = (template
