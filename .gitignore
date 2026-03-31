@@ -150,4 +150,5 @@ cython_debug/
 
 #data
 *.html
+!frontend/templates/*.html
 *.json

@@ -1,0 +1,1220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Markdown Compiler — Interactive Phase Visualizer</title>
+  <meta name="description" content="Interactive visualization of all 5 compiler phases: Lexer, Parser, Semantic Analysis, IR Generation, and Code Generation.">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/style.css">
+  <script src="https://d3js.org/d3.v7.min.js"></script>
+</head>
+<body>
+
+<div class="app">
+  <!-- ─── Header ──────────────────────────────────────────────── -->
+  <header class="header">
+    <h1>⚙️ Markdown <span>Compiler</span></h1>
+    <span style="font-size:0.78rem;color:var(--text-muted)">5-Phase Pipeline Visualizer</span>
+  </header>
+
+  <!-- ─── Phase Pipeline Bar ──────────────────────────────────── -->
+  <div class="pipeline" id="pipeline">
+    <div class="phase-step" data-phase="source" id="phase-source">
+      <span class="phase-num">S</span> Source
+    </div>
+    <span class="phase-arrow">→</span>
+    <div class="phase-step" data-phase="lexer" id="phase-lexer">
+      <span class="phase-num">1</span> Lexer
+    </div>
+    <span class="phase-arrow">→</span>
+    <div class="phase-step" data-phase="parser" id="phase-parser">
+      <span class="phase-num">2</span> Parser (AST)
+    </div>
+    <span class="phase-arrow">→</span>
+    <div class="phase-step" data-phase="semantic" id="phase-semantic">
+      <span class="phase-num">3</span> Semantic Analysis
+    </div>
+    <span class="phase-arrow">→</span>
+    <div class="phase-step" data-phase="ir" id="phase-ir">
+      <span class="phase-num">4</span> IR Generation
+    </div>
+    <span class="phase-arrow">→</span>
+    <div class="phase-step" data-phase="codegen" id="phase-codegen">
+      <span class="phase-num">5</span> Code Generation
+    </div>
+    <span class="phase-arrow">→</span>
+    <div class="phase-step" data-phase="preview" id="phase-preview">
+      <span class="phase-num">⬤</span> Preview
+    </div>
+  </div>
+
+  <!-- ─── Main Content ────────────────────────────────────────── -->
+  <div class="main">
+    <!-- Left Panel: Markdown Editor -->
+    <div class="panel panel-left">
+      <div class="panel-header">
+        <span>📝 Markdown Input</span>
+        <div style="display:flex;align-items:center;gap:8px">
+          <label class="upload-btn" for="file-upload" title="Upload .md file">
+            📂 Upload .md
+            <input type="file" id="file-upload" accept=".md" style="display:none" onchange="handleFileUpload(this)">
+          </label>
+          <span class="badge" id="char-count">0 chars</span>
+          <span class="badge" id="file-name" style="display:none"></span>
+        </div>
+      </div>
+      <div class="editor-wrap" id="editor-wrap">
+        <div class="drop-overlay" id="drop-overlay">
+          <div class="drop-overlay-inner">
+            <span style="font-size:2.5rem">📄</span>
+            <span>Drop your <strong>.md</strong> file here</span>
+          </div>
+        </div>
+        <textarea id="markdown-input" placeholder="Type or paste Markdown here..." spellcheck="false">{{ sample_markdown }}</textarea>
+      </div>
+      <div class="compile-bar">
+        <button id="compile-btn" onclick="compileMarkdown()">
+          <span class="spinner"></span>
+          ▶ Compile
+        </button>
+        <button id="download-btn" onclick="downloadHTML()" disabled title="Compile first, then download">
+          ⬇ Download HTML
+        </button>
+      </div>
+    </div>
+
+    <!-- Right Panel: Phase Outputs -->
+    <div class="panel panel-right">
+      <div class="tabs" id="tabs">
+        <div class="tab active" data-tab="lexer-tab" onclick="switchTab('lexer-tab', this)">🔤 Tokens</div>
+        <div class="tab" data-tab="ast-tab" onclick="switchTab('ast-tab', this)">🌳 AST Tree</div>
+        <div class="tab" data-tab="cst-tab" onclick="switchTab('cst-tab', this)">🌲 Parse Tree</div>
+        <div class="tab" data-tab="semantic-tab" onclick="switchTab('semantic-tab', this)">🔍 Semantic Analysis</div>
+        <div class="tab" data-tab="ir-tab" onclick="switchTab('ir-tab', this)">📦 JSON IR</div>
+        <div class="tab" data-tab="html-tab" onclick="switchTab('html-tab', this)">⚡ HTML</div>
+        <div class="tab" data-tab="preview-tab" onclick="switchTab('preview-tab', this)">👁 Preview</div>
+      </div>
+
+      <div class="tab-content" id="tab-content">
+        <!-- Lexer tokens -->
+        <div class="tab-pane active" id="lexer-tab">
+          <div id="lexer-empty" class="empty-state">
+            <div class="icon">🔤</div>
+            <h3>Lexer Output</h3>
+            <p>Click <strong>Compile</strong> to tokenize the Markdown source into a stream of tokens.</p>
+          </div>
+          <div id="lexer-content" class="token-table-wrap" style="display:none"></div>
+        </div>
+
+        <!-- AST Tree -->
+        <div class="tab-pane" id="ast-tab">
+          <div id="ast-empty" class="empty-state">
+            <div class="icon">🌳</div>
+            <h3>AST Visualization</h3>
+            <p>Click <strong>Compile</strong> to generate the Abstract Syntax Tree and watch it build node by node.</p>
+          </div>
+          <div id="ast-content" class="ast-container" style="display:none">
+            <div class="ast-controls">
+              <button onclick="resetASTZoom()" title="Reset zoom">⟲ Reset</button>
+              <button onclick="expandAllAST()" title="Expand all nodes">⊞ Expand All</button>
+              <button onclick="collapseAllAST()" title="Collapse all nodes">⊟ Collapse All</button>
+              <button onclick="replayAST()" title="Replay build animation">▶ Replay</button>
+            </div>
+            <div class="ast-speed">
+              <span>Speed:</span>
+              <input type="range" id="ast-speed" min="10" max="500" value="120" step="10">
+              <span id="speed-label">120ms</span>
+            </div>
+            <div class="ast-legend" id="ast-legend"></div>
+            <div class="ast-tooltip" id="ast-tooltip" style="display:none"></div>
+            <svg id="ast-svg" width="100%" height="100%"></svg>
+          </div>
+        </div>
+
+        <!-- CST Tree -->
+        <div class="tab-pane" id="cst-tab">
+          <div id="cst-empty" class="empty-state">
+            <div class="icon">🌲</div>
+            <h3>Formal Parse Tree</h3>
+            <p>Click <strong>Compile</strong> to generate the Leftmost Derivation Parse Tree strictly following the formal grammar.</p>
+          </div>
+          <div id="cst-content" class="ast-container" style="display:none">
+            <div class="ast-controls">
+              <button onclick="resetCSTZoom()" title="Reset zoom">⟲ Reset</button>
+              <button onclick="expandAllCST()" title="Expand all nodes">⊞ Expand All</button>
+              <button onclick="collapseAllCST()" title="Collapse all nodes">⊟ Collapse All</button>
+            </div>
+            <div class="ast-legend" id="cst-legend"></div>
+            <div class="ast-tooltip" id="cst-tooltip" style="display:none"></div>
+            <svg id="cst-svg" width="100%" height="100%"></svg>
+          </div>
+        </div>
+
+        <!-- Semantic Analysis -->
+        <div class="tab-pane" id="semantic-tab">
+          <div id="semantic-empty" class="empty-state">
+            <div class="icon">🔍</div>
+            <h3>Semantic Analysis</h3>
+            <p>Click <strong>Compile</strong> to validate the AST and see warnings, errors, and document statistics.</p>
+          </div>
+          <div id="semantic-content" class="analysis-wrap" style="display:none"></div>
+        </div>
+
+        <!-- JSON IR -->
+        <div class="tab-pane" id="ir-tab">
+          <div id="ir-empty" class="empty-state">
+            <div class="icon">📦</div>
+            <h3>JSON Intermediate Representation</h3>
+            <p>Click <strong>Compile</strong> to generate the JSON IR from the AST.</p>
+          </div>
+          <div id="ir-content" class="json-wrap" style="display:none"></div>
+        </div>
+
+        <!-- Generated HTML -->
+        <div class="tab-pane" id="html-tab">
+          <div id="html-empty" class="empty-state">
+            <div class="icon">⚡</div>
+            <h3>Generated HTML</h3>
+            <p>Click <strong>Compile</strong> to see the generated HTML code.</p>
+          </div>
+          <div id="html-content" class="html-output" style="display:none"></div>
+        </div>
+
+        <!-- Live Preview -->
+        <div class="tab-pane" id="preview-tab">
+          <div id="preview-empty" class="empty-state">
+            <div class="icon">👁</div>
+            <h3>Live Preview</h3>
+            <p>Click <strong>Compile</strong> to see the rendered HTML output.</p>
+          </div>
+          <iframe id="preview-frame" class="preview-frame" style="display:none" sandbox="allow-same-origin"></iframe>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ─── Global state ─────────────────────────────────────────────────
+let compileResult = null;
+let astTreeData = null;
+let astSvg, astG, astTooltip;
+let astAnimationTimer = null;
+
+let cstTreeData = null;
+let cstRoot = null;
+let cstTreeLayout = null;
+let cstZoom = null;
+let cstSvg, cstG, cstTooltip;
+let cstNodeIdCounter = 0;
+
+// ─── Character counter ───────────────────────────────────────────
+const mdInput = document.getElementById('markdown-input');
+const charCount = document.getElementById('char-count');
+mdInput.addEventListener('input', () => {
+  charCount.textContent = mdInput.value.length + ' chars';
+});
+charCount.textContent = mdInput.value.length + ' chars';
+
+// ─── Tab Switching ───────────────────────────────────────────────
+function switchTab(tabId, el) {
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+  el.classList.add('active');
+  document.getElementById(tabId).classList.add('active');
+
+  // Highlight corresponding pipeline phase
+  const phaseMap = {
+    'lexer-tab': 'lexer',
+    'ast-tab': 'parser',
+    'cst-tab': 'parser',
+    'semantic-tab': 'semantic',
+    'ir-tab': 'ir',
+    'html-tab': 'codegen',
+    'preview-tab': 'preview'
+  };
+  document.querySelectorAll('.phase-step').forEach(s => s.classList.remove('active'));
+  const phaseKey = phaseMap[tabId];
+  if (phaseKey) {
+    document.getElementById('phase-' + phaseKey)?.classList.add('active');
+  }
+}
+
+// ─── Compile ─────────────────────────────────────────────────────
+async function compileMarkdown() {
+  const btn = document.getElementById('compile-btn');
+  const md = mdInput.value;
+  if (!md.trim()) return;
+
+  btn.classList.add('loading');
+  btn.disabled = true;
+
+  // Reset pipeline
+  document.querySelectorAll('.phase-step').forEach(s => s.classList.remove('done', 'active'));
+  document.getElementById('phase-source').classList.add('done');
+
+  try {
+    const resp = await fetch('/compile', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ markdown: md })
+    });
+    const data = await resp.json();
+
+    if (data.error) {
+      alert('Compilation error: ' + data.error);
+      return;
+    }
+
+    compileResult = data.phases;
+
+    // Animate phases completing
+    await animatePhases();
+
+    // Render all outputs
+    renderTokens(compileResult.lexer);
+    renderAST(compileResult.parser.vis_tree);
+    if(compileResult.parser.cst_tree) {
+      renderCST(compileResult.parser.cst_tree);
+    }
+    renderSemanticAnalysis(compileResult.semantic);
+    renderIR(compileResult.ir);
+    renderHTML(compileResult.codegen.html);
+    renderPreview(compileResult.codegen.html);
+
+  } catch (e) {
+    alert('Error: ' + e.message);
+  } finally {
+    btn.classList.remove('loading');
+    btn.disabled = false;
+  }
+}
+
+async function animatePhases() {
+  const phases = ['lexer', 'parser', 'semantic', 'ir', 'codegen', 'preview'];
+  for (const p of phases) {
+    await sleep(200);
+    document.getElementById('phase-' + p).classList.add('done');
+  }
+}
+
+function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+// ─── 1. Render Tokens ────────────────────────────────────────────
+function renderTokens(data) {
+  document.getElementById('lexer-empty').style.display = 'none';
+  const wrap = document.getElementById('lexer-content');
+  wrap.style.display = 'block';
+
+  let html = `<table class="token-table">
+    <thead><tr><th>#</th><th>Line</th><th>Type</th><th>Value</th></tr></thead><tbody>`;
+  data.tokens.forEach((t, i) => {
+    const val = escapeHtml(t.value).replace(/\n/g, '↵');
+    const hasSubs = t.sub_tokens && t.sub_tokens.length > 0;
+    const expandClass = hasSubs ? 'expandable-row' : '';
+    const indicator = hasSubs ? '<span class="expand-indicator">▶</span> ' : '';
+    html += `<tr class="${expandClass}" ${hasSubs ? `data-token-idx="${i}"` : ''}>
+      <td>${i + 1}</td>
+      <td>${t.line}</td>
+      <td>${indicator}<span class="token-type ${t.type}">${t.type}</span></td>
+      <td class="token-value" title="${escapeHtml(t.value)}">${val || '(empty)'}</td>
+    </tr>`;
+    // Hidden sub-token rows
+    if (hasSubs) {
+      html += `<tr class="sub-token-container" id="sub-tokens-${i}" style="display:none">
+        <td colspan="4">
+          <div class="sub-tokens-wrap">
+            <table class="token-table sub-token-table">
+              <thead><tr><th>#</th><th>Type</th><th>Value</th></tr></thead><tbody>`;
+      t.sub_tokens.forEach((st, si) => {
+        const stVal = escapeHtml(st.value).replace(/\n/g, '↵');
+        html += `<tr>
+          <td>${si + 1}</td>
+          <td><span class="token-type ${st.type}">${st.type}</span></td>
+          <td class="token-value">${stVal || '(empty)'}</td>
+        </tr>`;
+      });
+      html += `</tbody></table></div></td></tr>`;
+    }
+  });
+  html += '</tbody></table>';
+  wrap.innerHTML = html;
+
+  // Add click handlers for expandable rows
+  wrap.querySelectorAll('.expandable-row').forEach(row => {
+    row.addEventListener('click', function() {
+      const idx = this.dataset.tokenIdx;
+      const subRow = document.getElementById('sub-tokens-' + idx);
+      const indicator = this.querySelector('.expand-indicator');
+      if (subRow.style.display === 'none') {
+        subRow.style.display = '';
+        indicator.textContent = '▼';
+        this.classList.add('expanded');
+      } else {
+        subRow.style.display = 'none';
+        indicator.textContent = '▶';
+        this.classList.remove('expanded');
+      }
+    });
+  });
+}
+
+// ─── 2. Render AST (D3.js Tree) — Collapsible ───────────────────
+let astRoot = null;
+let astTreeLayout = null;
+let astZoom = null;
+let astNodeIdCounter = 0;
+
+function renderAST(treeData) {
+  document.getElementById('ast-empty').style.display = 'none';
+  const container = document.getElementById('ast-content');
+  container.style.display = 'block';
+  astTreeData = treeData;
+
+  // Clear previous
+  d3.select('#ast-svg').selectAll('*').remove();
+  if (astAnimationTimer) clearInterval(astAnimationTimer);
+
+  const svgEl = document.getElementById('ast-svg');
+  const width = svgEl.clientWidth || 800;
+  const height = svgEl.clientHeight || 500;
+
+  astSvg = d3.select('#ast-svg');
+  astG = astSvg.append('g').attr('transform', `translate(60, 40)`);
+  astTooltip = document.getElementById('ast-tooltip');
+
+  // Zoom & pan
+  astZoom = d3.zoom()
+    .scaleExtent([0.1, 4])
+    .on('zoom', (event) => { astG.attr('transform', event.transform); });
+  astSvg.call(astZoom);
+  astSvg._zoom = astZoom;
+
+  // Tree layout
+  astTreeLayout = d3.tree().nodeSize([30, 200]);
+
+  // Build D3 hierarchy
+  astRoot = d3.hierarchy(treeData, d => d.children);
+  astRoot.x0 = height / 2;
+  astRoot.y0 = 0;
+  astNodeIdCounter = 0;
+
+  // Initially, collapsible nodes are already collapsed (children in _children)
+  // We need to initialize the D3 nodes to reflect this
+  function initCollapsible(d) {
+    if (d.data._children && !d.data.children) {
+      // This node is collapsed — mark it
+      d._collapsed_data = d.data._children;
+    }
+    if (d.children) {
+      d.children.forEach(initCollapsible);
+    }
+  }
+  initCollapsible(astRoot);
+
+  updateASTTree(astRoot);
+
+  // Build legend
+  const allNodes = astRoot.descendants();
+  buildLegend(allNodes);
+
+  // Center the tree
+  setTimeout(() => {
+    const bounds = astG.node().getBBox();
+    const dx = width / 2 - (bounds.x + bounds.width / 2);
+    const dy = height / 2 - (bounds.y + bounds.height / 2);
+    astSvg.transition().duration(500).call(
+      astZoom.transform,
+      d3.zoomIdentity.translate(dx, dy).scale(0.8)
+    );
+  }, 100);
+}
+
+function updateASTTree(source) {
+  const duration = 400;
+
+  // Compute new layout
+  astTreeLayout(astRoot);
+
+  const allNodes = astRoot.descendants();
+  const allLinks = astRoot.links();
+
+  // Assign unique IDs
+  allNodes.forEach(d => { if (!d.id) d.id = ++astNodeIdCounter; });
+
+  // ── Links ──
+  const linkSel = astG.selectAll('.ast-link').data(allLinks, d => d.target.id);
+
+  const linkEnter = linkSel.enter().append('path')
+    .attr('class', 'ast-link')
+    .attr('fill', 'none')
+    .attr('stroke', d => d.target.data.color || '#64748b')
+    .attr('stroke-width', 1.5)
+    .attr('stroke-opacity', 0.4)
+    .attr('d', () => {
+      const o = { x: source.x0 || 0, y: source.y0 || 0 };
+      return d3.linkHorizontal().x(d => d.y).y(d => d.x)({ source: o, target: o });
+    });
+
+  linkEnter.merge(linkSel).transition().duration(duration)
+    .attr('d', d3.linkHorizontal().x(d => d.y).y(d => d.x));
+
+  linkSel.exit().transition().duration(duration)
+    .attr('d', () => {
+      const o = { x: source.x, y: source.y };
+      return d3.linkHorizontal().x(d => d.y).y(d => d.x)({ source: o, target: o });
+    })
+    .remove();
+
+  // ── Nodes ──
+  const nodeSel = astG.selectAll('.ast-node').data(allNodes, d => d.id);
+
+  const nodeEnter = nodeSel.enter().append('g')
+    .attr('class', 'ast-node')
+    .attr('transform', `translate(${source.y0 || 0}, ${source.x0 || 0})`)
+    .attr('opacity', 0)
+    .style('cursor', d => isCollapsible(d) ? 'pointer' : 'default')
+    .on('click', (event, d) => {
+      event.stopPropagation();
+      if (isCollapsible(d)) {
+        toggleNode(d);
+        updateASTTree(d);
+      }
+    })
+    .on('mouseover', function(event, d) {
+      showTooltip(event, d.data);
+      d3.select(this).select('circle')
+        .transition().duration(200)
+        .attr('r', 10)
+        .attr('stroke-width', 3);
+    })
+    .on('mouseout', function() {
+      hideTooltip();
+      d3.select(this).select('circle')
+        .transition().duration(200)
+        .attr('r', 7)
+        .attr('stroke-width', 2);
+    });
+
+  // Circle
+  nodeEnter.append('circle')
+    .attr('r', 7)
+    .attr('fill', d => d.data.color || '#64748b')
+    .attr('stroke', d => d3.color(d.data.color || '#64748b').brighter(0.8))
+    .attr('stroke-width', 2);
+
+  // Collapse indicator (▶/▼)
+  nodeEnter.append('text')
+    .attr('class', 'collapse-indicator')
+    .attr('dy', '0.35em')
+    .attr('x', -18)
+    .attr('text-anchor', 'middle')
+    .attr('fill', '#94a3b8')
+    .attr('font-size', '0.6rem')
+    .text(d => {
+      if (!isCollapsible(d)) return '';
+      return d._collapsed_data ? '▶' : '▼';
+    });
+
+  // Label
+  nodeEnter.append('text')
+    .attr('class', 'node-label')
+    .attr('dy', '0.32em')
+    .attr('x', d => d.children || d._collapsed_data ? -24 : 14)
+    .attr('text-anchor', d => d.children || d._collapsed_data ? 'end' : 'start')
+    .attr('fill', '#e2e8f0')
+    .attr('font-size', '0.72rem')
+    .attr('font-family', 'var(--font-sans)')
+    .attr('font-weight', 500)
+    .text(d => getNodeLabel(d));
+
+  // ── Update existing + entered ──
+  const nodeUpdate = nodeEnter.merge(nodeSel);
+
+  nodeUpdate.transition().duration(duration)
+    .attr('transform', d => `translate(${d.y}, ${d.x})`)
+    .attr('opacity', 1);
+
+  // Update labels and indicators on existing nodes
+  nodeUpdate.select('.collapse-indicator')
+    .text(d => {
+      if (!isCollapsible(d)) return '';
+      return d._collapsed_data ? '▶' : '▼';
+    });
+
+  nodeUpdate.select('.node-label')
+    .text(d => getNodeLabel(d));
+
+  // ── Exit ──
+  nodeSel.exit().transition().duration(duration)
+    .attr('transform', `translate(${source.y}, ${source.x})`)
+    .attr('opacity', 0)
+    .remove();
+
+  // Save positions for transitions
+  allNodes.forEach(d => { d.x0 = d.x; d.y0 = d.y; });
+}
+
+function isCollapsible(d) {
+  return d.data.collapsible && (d._collapsed_data || d.children);
+}
+
+function getNodeLabel(d) {
+  // If collapsed and has raw_content, show the raw token text
+  if (d.data.collapsible && d._collapsed_data && d.data.raw_content) {
+    const raw = d.data.raw_content;
+    const preview = raw.length > 50 ? raw.substring(0, 50) + '…' : raw;
+    // Prefix with type for clarity
+    const prefix = d.data.type === 'heading' ? `H${d.data.attributes.level || ''}` : d.data.type;
+    return `${prefix}: "${preview}"`;
+  }
+  return d.data.name;
+}
+
+function toggleNode(d) {
+  if (d._collapsed_data) {
+    // Expand: convert _collapsed_data into real D3 children
+    d.data.children = d._collapsed_data;
+    delete d.data._children;
+    d._collapsed_data = null;
+    // Rebuild hierarchy children
+    if (d.data.children) {
+      d.children = d.data.children.map(childData => {
+        const child = d3.hierarchy(childData, c => c.children);
+        child.parent = d;
+        child.depth = d.depth + 1;
+        // Recursively set up _collapsed_data for nested collapsible nodes
+        initCollapsedState(child);
+        return child;
+      });
+    }
+  } else if (d.children) {
+    // Collapse: store children as _collapsed_data
+    d._collapsed_data = collectChildData(d);
+    d.data._children = d._collapsed_data;
+    delete d.data.children;
+    d.children = null;
+  }
+}
+
+function initCollapsedState(node) {
+  if (node.data._children && !node.data.children) {
+    node._collapsed_data = node.data._children;
+    node.children = null;
+  }
+  if (node.children) {
+    node.children.forEach(initCollapsedState);
+  }
+}
+
+function collectChildData(d) {
+  if (!d.children) return null;
+  return d.children.map(child => {
+    const data = { ...child.data };
+    if (child.children && child.children.length > 0) {
+      data.children = collectChildData(child);
+    }
+    if (child._collapsed_data) {
+      data._children = child._collapsed_data;
+    }
+    return data;
+  });
+}
+
+function buildLegend(nodes) {
+  const legendEl = document.getElementById('ast-legend');
+  const types = new Map();
+  nodes.forEach(n => {
+    if (!types.has(n.data.type)) {
+      types.set(n.data.type, n.data.color);
+    }
+  });
+  let html = '';
+  types.forEach((color, type) => {
+    html += `<div class="ast-legend-item">
+      <div class="ast-legend-color" style="background:${color}"></div>
+      <span>${type}</span>
+    </div>`;
+  });
+  legendEl.innerHTML = html;
+}
+
+function showTooltip(event, data) {
+  const tt = document.getElementById('ast-tooltip');
+  let html = `<div class="tt-type">${data.type}</div>`;
+  if (data.collapsible && data.raw_content) {
+    html += `<div class="tt-attr">raw: ${escapeHtml(data.raw_content)}</div>`;
+  }
+  if (data.attributes && Object.keys(data.attributes).length > 0) {
+    for (const [k, v] of Object.entries(data.attributes)) {
+      html += `<div class="tt-attr">${k}: ${escapeHtml(String(v))}</div>`;
+    }
+  }
+  if (data.collapsible) {
+    html += `<div class="tt-hint">Click to expand/collapse</div>`;
+  }
+  tt.innerHTML = html;
+  tt.style.display = 'block';
+  tt.style.left = (event.pageX + 15) + 'px';
+  tt.style.top = (event.pageY - 10) + 'px';
+}
+
+function hideTooltip() {
+  document.getElementById('ast-tooltip').style.display = 'none';
+}
+
+function resetASTZoom() {
+  if (!astSvg || !astG) return;
+  const svgEl = document.getElementById('ast-svg');
+  const width = svgEl.clientWidth || 800;
+  const height = svgEl.clientHeight || 500;
+  const bounds = astG.node().getBBox();
+  const dx = width / 2 - (bounds.x + bounds.width / 2);
+  const dy = height / 2 - (bounds.y + bounds.height / 2);
+  astSvg.transition().duration(500).call(
+    astSvg._zoom.transform,
+    d3.zoomIdentity.translate(dx, dy).scale(0.8)
+  );
+}
+
+function expandAllAST() {
+  if (!astRoot) return;
+  function expandRecursive(d) {
+    if (d._collapsed_data) {
+      toggleNode(d);
+    }
+    if (d.children) {
+      d.children.forEach(expandRecursive);
+    }
+  }
+  expandRecursive(astRoot);
+  updateASTTree(astRoot);
+}
+
+function collapseAllAST() {
+  if (!astRoot) return;
+  function collapseRecursive(d) {
+    if (d.children) {
+      d.children.forEach(collapseRecursive);
+    }
+    if (d.data.collapsible && d.children && !d._collapsed_data) {
+      toggleNode(d);
+    }
+  }
+  collapseRecursive(astRoot);
+  updateASTTree(astRoot);
+}
+
+function replayAST() {
+  if (astTreeData) renderAST(astTreeData);
+}
+
+// Speed control
+document.getElementById('ast-speed').addEventListener('input', function() {
+  document.getElementById('speed-label').textContent = this.value + 'ms';
+});
+
+
+// ─── 2b. Render CST — Vertical, Collapsible ──────────────────────
+function renderCST(treeData) {
+  document.getElementById('cst-empty').style.display = 'none';
+  const container = document.getElementById('cst-content');
+  container.style.display = 'block';
+  cstTreeData = treeData;
+
+  d3.select('#cst-svg').selectAll('*').remove();
+  const svgEl = document.getElementById('cst-svg');
+  const width = svgEl.clientWidth || 800;
+  const height = svgEl.clientHeight || 600;
+
+  cstSvg = d3.select('#cst-svg');
+  cstG = cstSvg.append('g').attr('transform', `translate(${width/2}, 40)`);
+
+  cstZoom = d3.zoom().scaleExtent([0.1, 4])
+    .on('zoom', ev => cstG.attr('transform', ev.transform));
+  cstSvg.call(cstZoom);
+  cstSvg._zoom = cstZoom;
+
+  // ── Vertical layout: swap x/y roles ──
+  cstTreeLayout = d3.tree().nodeSize([110, 65]);
+
+  cstRoot = d3.hierarchy(treeData, d => d.children);
+  cstRoot.x0 = 0;
+  cstRoot.y0 = 0;
+  cstNodeIdCounter = 0;
+
+  // Initialize collapse state based on data.collapsed flag
+  function collapseCSTNodes(d) {
+    if (d.children) {
+      d.children.forEach(collapseCSTNodes);
+      if (d.data.collapsed) {
+        d._cstHidden = d.children;
+        d.children = null;
+      }
+    }
+  }
+  collapseCSTNodes(cstRoot);
+
+  updateCSTTree(cstRoot);
+
+  buildCSTLegend(cstRoot.descendants());
+
+  setTimeout(() => {
+    const bounds = cstG.node().getBBox();
+    const dx = width / 2 - (bounds.x + bounds.width / 2);
+    const dy = 40;
+    cstSvg.transition().duration(500).call(
+      cstZoom.transform,
+      d3.zoomIdentity.translate(dx, dy).scale(0.75)
+    );
+  }, 120);
+}
+
+function cstToggle(d) {
+  if (d._cstHidden) {
+    d.children = d._cstHidden;
+    d._cstHidden = null;
+  } else if (d.children) {
+    d._cstHidden = d.children;
+    d.children = null;
+  }
+}
+
+function updateCSTTree(source) {
+  const dur = 350;
+  // ── Vertical: use d.x for horizontal position, d.y for depth ──
+  cstTreeLayout(cstRoot);
+  const nodes = cstRoot.descendants();
+  const links = cstRoot.links();
+  nodes.forEach(d => { if (!d.id) d.id = ++cstNodeIdCounter; });
+
+  const linkPath = d3.linkVertical().x(d => d.x).y(d => d.y);
+
+  const lSel = cstG.selectAll('.ast-link').data(links, d => d.target.id);
+  lSel.enter().append('path')
+    .attr('class', 'ast-link').attr('fill','none')
+    .attr('stroke', d => d.target.data.color || '#64748b')
+    .attr('stroke-width', 1.5).attr('stroke-opacity', 0.4)
+    .attr('d', () => linkPath({ source: {x: source.x0||0, y: source.y0||0}, target: {x: source.x0||0, y: source.y0||0} }))
+  .merge(lSel).transition().duration(dur).attr('d', linkPath);
+
+  lSel.exit().transition().duration(dur)
+    .attr('d', () => linkPath({ source: {x:source.x, y:source.y}, target: {x:source.x, y:source.y} }))
+    .remove();
+
+  // nodes
+  const nSel = cstG.selectAll('.ast-node').data(nodes, d => d.id);
+  const nEnter = nSel.enter().append('g')
+    .attr('class', 'ast-node')
+    .attr('transform', `translate(${source.x0||0},${source.y0||0})`)
+    .attr('opacity', 0)
+    .style('cursor', d => (d.children || d._cstHidden) ? 'pointer' : 'default')
+    .on('click', (ev, d) => {
+      ev.stopPropagation();
+      if (d.children || d._cstHidden) {
+        cstToggle(d);
+        updateCSTTree(d);
+      }
+    })
+    .on('mouseover', function(ev, d) {
+      d3.select(this).select('circle').transition().duration(150).attr('r',10).attr('stroke-width',3);
+      showCSTTooltip(ev, d.data);
+    })
+    .on('mouseout', function() {
+      d3.select(this).select('circle').transition().duration(150).attr('r',7).attr('stroke-width',2);
+      hideCSTTooltip();
+    });
+
+  nEnter.append('circle').attr('r',7)
+    .attr('fill', d => d.data.color||'#64748b')
+    .attr('stroke', d => d3.color(d.data.color||'#64748b').brighter(0.8))
+    .attr('stroke-width', 2);
+
+  // collapse indicator
+  nEnter.append('text').attr('class','collapse-indicator')
+    .attr('dy','0.35em').attr('x', 0).attr('y', -14)
+    .attr('text-anchor','middle').attr('fill','#94a3b8').attr('font-size','0.55rem')
+    .text(d => d._cstHidden ? '▼ expand' : '');
+
+  // label below node
+  nEnter.append('text').attr('class','node-label')
+    .attr('dy', '0.32em').attr('x', 0).attr('y', 14)
+    .attr('text-anchor','middle')
+    .attr('fill','#e2e8f0').attr('font-size','0.68rem')
+    .attr('font-family','var(--font-sans)').attr('font-weight',500)
+    .text(d => d.data.name);
+
+  const nUpdate = nEnter.merge(nSel);
+  nUpdate.transition().duration(dur)
+    .attr('transform', d => `translate(${d.x},${d.y})`).attr('opacity',1);
+
+  // update collapse indicator text on existing nodes too
+  nUpdate.select('.collapse-indicator').text(d => d._cstHidden ? '▼ expand' : '');
+
+  nSel.exit().transition().duration(dur)
+    .attr('transform', `translate(${source.x},${source.y})`).attr('opacity',0).remove();
+
+  nodes.forEach(d => { d.x0 = d.x; d.y0 = d.y; });
+}
+
+function buildCSTLegend(nodes) {
+  const legendEl = document.getElementById('cst-legend');
+  const types = new Map();
+  nodes.forEach(n => { if (!types.has(n.data.type)) types.set(n.data.type, n.data.color); });
+  let html = '';
+  types.forEach((color, type) => {
+    html += `<div class="ast-legend-item"><div class="ast-legend-color" style="background:${color}"></div><span>${type}</span></div>`;
+  });
+  legendEl.innerHTML = html;
+}
+
+function showCSTTooltip(event, data) {
+  const tt = document.getElementById('cst-tooltip');
+  let html = `<div class="tt-type">${data.name}</div>`;
+  if (data.attributes && Object.keys(data.attributes).length > 0)
+    for (const [k,v] of Object.entries(data.attributes))
+      html += `<div class="tt-attr">${k}: ${escapeHtml(String(v))}</div>`;
+  tt.innerHTML = html;
+  tt.style.display = 'block';
+  tt.style.left = (event.pageX+15)+'px';
+  tt.style.top  = (event.pageY-10)+'px';
+}
+function hideCSTTooltip() { document.getElementById('cst-tooltip').style.display = 'none'; }
+
+function resetCSTZoom() {
+  if (!cstSvg||!cstG) return;
+  const svgEl = document.getElementById('cst-svg');
+  const width = svgEl.clientWidth||800;
+  const bounds = cstG.node().getBBox();
+  const dx = width/2-(bounds.x+bounds.width/2);
+  cstSvg.transition().duration(500).call(cstSvg._zoom.transform, d3.zoomIdentity.translate(dx,40).scale(0.75));
+}
+
+function expandAllCST() {
+  if (!cstRoot) return;
+  function exp(d) {
+    if (d._cstHidden) cstToggle(d);
+    if (d.children) d.children.forEach(exp);
+  }
+  exp(cstRoot);
+  updateCSTTree(cstRoot);
+}
+function collapseAllCST() {
+  if (!cstRoot) return;
+  function col(d) {
+    if (d.children) { d.children.forEach(col); }
+    if (d.children && d !== cstRoot) { cstToggle(d); }
+  }
+  col(cstRoot);
+  updateCSTTree(cstRoot);
+}
+
+// ─── 3. Render Semantic Analysis ─────────────────────────────────
+function renderSemanticAnalysis(data) {
+  document.getElementById('semantic-empty').style.display = 'none';
+  const wrap = document.getElementById('semantic-content');
+  wrap.style.display = 'block';
+
+  let html = '';
+
+  // Issues — only show if there are actual issues
+  const issues = [...(data.errors || []), ...(data.warnings || [])];
+  if (issues.length > 0) {
+    html += '<div class="analysis-section"><h3>⚠️ Issues</h3>';
+    issues.forEach(issue => {
+      const cls = issue.severity || 'warning';
+      const icon = cls === 'error' ? '❌' : cls === 'warning' ? '⚠️' : 'ℹ️';
+      html += `<div class="analysis-item ${cls}">
+        <span class="analysis-icon">${icon}</span>
+        <span>${escapeHtml(issue.message)}</span>
+      </div>`;
+    });
+    html += '</div>';
+  }
+
+  // Stats — compact summary table + node breakdown in one view
+  if (data.stats) {
+    // Key metrics as a compact summary row
+    const metrics = [
+      { label: 'Nodes', value: data.stats.total_nodes },
+      { label: 'Headings', value: data.stats.heading_count },
+      { label: 'Paragraphs', value: data.stats.paragraph_count },
+      { label: 'Links', value: data.stats.link_count },
+      { label: 'Images', value: data.stats.image_count },
+      { label: 'Code Blocks', value: data.stats.code_block_count },
+      { label: 'Lists', value: data.stats.list_count },
+      { label: 'Tables', value: data.stats.table_count },
+    ].filter(m => m.value > 0);
+
+    html += '<div class="analysis-section"><h3>📊 Document Overview</h3>';
+    html += '<div class="stats-grid">';
+    metrics.forEach(m => {
+      html += `<div class="stat-card"><div class="stat-value">${m.value}</div><div class="stat-label">${m.label}</div></div>`;
+    });
+    html += '</div></div>';
+
+    // Node type breakdown as a compact table
+    if (data.stats.node_types) {
+      const sorted = Object.entries(data.stats.node_types).sort((a,b) => b[1] - a[1]);
+      html += '<div class="analysis-section"><h3>🏷 Syntax Node Types</h3>';
+      html += '<table class="token-table"><thead><tr><th>Type</th><th>Count</th></tr></thead><tbody>';
+      sorted.forEach(([type, count]) => {
+        html += `<tr><td><span class="token-type">${type}</span></td><td>${count}</td></tr>`;
+      });
+      html += '</tbody></table></div>';
+    }
+  }
+
+  // Semantic Check Success Message
+  const hasErrors = (data.errors && data.errors.length > 0);
+  if (!hasErrors) {
+    html += '<div class="analysis-section" style="margin-top:20px; text-align:center; padding: 20px; background: rgba(16, 185, 129, 0.1); border: 1px solid #10b981; border-radius: 8px;">';
+    html += '<h3 style="color: #10b981; margin: 0; font-size: 1.1rem;">✅ Semantic Check Passed</h3>';
+    html += '<p style="margin: 8px 0 0 0; color: #047857;">The tokens have successfully passed all semantic validations.</p>';
+    html += '</div>';
+  }
+
+  wrap.innerHTML = html;
+}
+
+// ─── 4. Render JSON IR ───────────────────────────────────────────
+function renderIR(data) {
+  document.getElementById('ir-empty').style.display = 'none';
+  const wrap = document.getElementById('ir-content');
+  wrap.style.display = 'block';
+
+  const jsonStr = JSON.stringify(data, null, 2);
+  wrap.innerHTML = '<pre>' + syntaxHighlightJSON(jsonStr) + '</pre>';
+}
+
+function syntaxHighlightJSON(json) {
+  return json.replace(
+    /("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)/g,
+    function(match) {
+      let cls = 'json-number';
+      if (/^"/.test(match)) {
+        if (/:$/.test(match)) {
+          cls = 'json-key';
+          match = match.slice(0, -1) + ':';
+        } else {
+          cls = 'json-string';
+        }
+      } else if (/true|false/.test(match)) {
+        cls = 'json-boolean';
+      } else if (/null/.test(match)) {
+        cls = 'json-null';
+      }
+      return `<span class="${cls}">${match}</span>`;
+    }
+  );
+}
+
+// ─── 5. Render HTML Output ───────────────────────────────────────
+function renderHTML(htmlStr) {
+  document.getElementById('html-empty').style.display = 'none';
+  const wrap = document.getElementById('html-content');
+  wrap.style.display = 'block';
+  wrap.textContent = htmlStr;
+}
+
+function renderPreview(htmlStr) {
+  document.getElementById('preview-empty').style.display = 'none';
+  const frame = document.getElementById('preview-frame');
+  frame.style.display = 'block';
+
+  const previewHTML = `<!DOCTYPE html><html><head>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js" crossorigin="anonymous"><${"/"}script>
+    <style>
+      body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+             line-height: 1.6; max-width: 800px; margin: 0 auto; padding: 2rem; color: #333; }
+      table { border-collapse: collapse; width: 100%; margin-bottom: 1rem; }
+      th, td { padding: 8px; border: 1px solid #ddd; text-align: left; }
+      th { background-color: #f4f4f4; }
+      pre { background: #f4f4f4; padding: 1rem; overflow-x: auto; }
+      code { font-family: Consolas, Monaco, monospace; background: #f4f4f4; padding: 2px 4px; border-radius: 4px; }
+      blockquote { border-left: 4px solid #ccc; margin-left: 0; padding-left: 1rem; color: #666; }
+      img { max-width: 100%; }
+      .math-display { overflow-x: auto; margin: 1em 0; text-align: center; }
+    </style>
+  </head><body>
+    ${htmlStr}
+    <script>
+      document.addEventListener("DOMContentLoaded", function() {
+        var maths = document.querySelectorAll('.math');
+        for (var i = 0; i < maths.length; i++) {
+          var el = maths[i];
+          var isDisplay = el.classList.contains('math-display');
+          var tex = el.textContent || el.innerText;
+          try {
+            katex.render(tex, el, { displayMode: isDisplay, throwOnError: false });
+          } catch(e) {
+            console.error(e);
+          }
+        }
+      });
+    <${"/"}script>
+  </body></html>`;
+
+  frame.srcdoc = previewHTML;
+}
+
+// ─── Utility ─────────────────────────────────────────────────────
+function escapeHtml(text) {
+  const div = document.createElement('div');
+  div.appendChild(document.createTextNode(text));
+  return div.innerHTML;
+}
+
+// ─── Keyboard shortcut: Ctrl/Cmd+Enter to compile ────────────────
+document.addEventListener('keydown', function(e) {
+  if ((e.metaKey || e.ctrlKey) && e.key === 'Enter') {
+    e.preventDefault();
+    compileMarkdown();
+  }
+});
+
+// Mark source as active initially
+document.getElementById('phase-source').classList.add('active');
+
+// ─── File Upload ─────────────────────────────────────────────────
+let currentFileName = 'output';
+
+function handleFileUpload(input) {
+  const file = input.files[0];
+  if (!file) return;
+  if (!file.name.toLowerCase().endsWith('.md')) {
+    alert('Please upload a .md file');
+    return;
+  }
+  currentFileName = file.name;
+
+  const formData = new FormData();
+  formData.append('file', file);
+
+  const btn = document.getElementById('compile-btn');
+  btn.classList.add('loading');
+  btn.disabled = true;
+
+  // Show filename badge
+  const fnBadge = document.getElementById('file-name');
+  fnBadge.textContent = '📄 ' + file.name;
+  fnBadge.style.display = 'inline-block';
+
+  // Reset pipeline
+  document.querySelectorAll('.phase-step').forEach(s => s.classList.remove('done', 'active'));
+  document.getElementById('phase-source').classList.add('done');
+
+  fetch('/upload', { method: 'POST', body: formData })
+    .then(r => r.json())
+    .then(async data => {
+      if (data.error) { alert('Upload error: ' + data.error); return; }
+
+      // Fill editor with uploaded content
+      mdInput.value = data.markdown;
+      charCount.textContent = data.markdown.length + ' chars';
+
+      compileResult = data.phases;
+
+      await animatePhases();
+
+      renderTokens(compileResult.lexer);
+      renderAST(compileResult.parser.vis_tree);
+      renderSemanticAnalysis(compileResult.semantic);
+      renderIR(compileResult.ir);
+      renderHTML(compileResult.codegen.html);
+      renderPreview(compileResult.codegen.html);
+
+      document.getElementById('download-btn').disabled = false;
+    })
+    .catch(e => alert('Upload failed: ' + e.message))
+    .finally(() => {
+      btn.classList.remove('loading');
+      btn.disabled = false;
+      input.value = ''; // reset so same file can be re-uploaded
+    });
+}
+
+// ─── Drag & Drop ─────────────────────────────────────────────────
+const editorWrap = document.getElementById('editor-wrap');
+const dropOverlay = document.getElementById('drop-overlay');
+let dragCounter = 0;
+
+editorWrap.addEventListener('dragenter', (e) => {
+  e.preventDefault();
+  dragCounter++;
+  dropOverlay.classList.add('visible');
+});
+editorWrap.addEventListener('dragleave', (e) => {
+  e.preventDefault();
+  dragCounter--;
+  if (dragCounter <= 0) { dropOverlay.classList.remove('visible'); dragCounter = 0; }
+});
+editorWrap.addEventListener('dragover', (e) => { e.preventDefault(); });
+editorWrap.addEventListener('drop', (e) => {
+  e.preventDefault();
+  dragCounter = 0;
+  dropOverlay.classList.remove('visible');
+  const file = e.dataTransfer.files[0];
+  if (!file) return;
+  if (!file.name.toLowerCase().endsWith('.md')) {
+    alert('Please drop a .md file');
+    return;
+  }
+  // Trigger upload
+  const dt = new DataTransfer();
+  dt.items.add(file);
+  document.getElementById('file-upload').files = dt.files;
+  handleFileUpload(document.getElementById('file-upload'));
+});
+
+// ─── Download HTML ───────────────────────────────────────────────
+async function downloadHTML() {
+  if (!compileResult || !compileResult.codegen) {
+    alert('Please compile first.');
+    return;
+  }
+  const btn = document.getElementById('download-btn');
+  btn.disabled = true;
+  btn.textContent = '⏳ Generating...';
+
+  try {
+    const resp = await fetch('/download', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        html: compileResult.codegen.html,
+        filename: currentFileName
+      })
+    });
+    const blob = await resp.blob();
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    const dlName = currentFileName.replace(/\.md$/i, '') + '.html';
+    a.href = url;
+    a.download = dlName;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(url);
+  } catch (e) {
+    alert('Download failed: ' + e.message);
+  } finally {
+    btn.disabled = false;
+    btn.textContent = '⬇ Download HTML';
+  }
+}
+
+// Enable download button after compile
+const _origCompile = compileMarkdown;
+compileMarkdown = async function() {
+  currentFileName = 'output';
+  await _origCompile();
+  if (compileResult) document.getElementById('download-btn').disabled = false;
+};
+</script>
+
+</body>
+</html>
