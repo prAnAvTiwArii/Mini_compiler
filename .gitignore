@@ -133,6 +133,9 @@ venv.bak/
 *.html
 !frontend/templates/*.html
 *.json
+<<<<<<< Updated upstream
 
 #mac
 .ds_store
+=======
+>>>>>>> Stashed changes
