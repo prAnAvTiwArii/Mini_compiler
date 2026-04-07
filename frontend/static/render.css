@@ -373,9 +373,19 @@ pre.mermaid {
   background-color: transparent;
   box-shadow: none;
   padding: 0;
+  margin: 2rem 0;
   text-align: center;
-  display: flex;
-  justify-content: center;
+  display: block;
+  overflow-x: auto;
+}
+
+pre.mermaid svg {
+  max-width: 100%;
+  height: auto;
+}
+
+pre.mermaid svg g {
+  enable-background: new;
 }
 
 /* ── KaTeX Display ──────────────────────────────────────── */

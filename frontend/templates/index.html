@@ -189,7 +189,7 @@
             <h3>Live Preview</h3>
             <p>Click <strong>Compile</strong> to see the rendered HTML output.</p>
           </div>
-          <iframe id="preview-frame" class="preview-frame" style="display:none" sandbox="allow-same-origin"></iframe>
+          <iframe id="preview-frame" class="preview-frame" style="display:none" sandbox="allow-same-origin allow-scripts"></iframe>
         </div>
       </div>
     </div>
@@ -378,8 +378,16 @@ function renderAST(treeData) {
   if (astAnimationTimer) clearInterval(astAnimationTimer);
 
   const svgEl = document.getElementById('ast-svg');
-  const width = svgEl.clientWidth || 800;
-  const height = svgEl.clientHeight || 500;
+  let width = svgEl.clientWidth;
+  let height = svgEl.clientHeight;
+  
+  // If dimensions are 0 (hidden tab), set explicit dimensions
+  if (width === 0 || height === 0) {
+    width = 800;
+    height = 500;
+    svgEl.setAttribute('width', width);
+    svgEl.setAttribute('height', height);
+  }
 
   astSvg = d3.select('#ast-svg');
   astG = astSvg.append('g').attr('transform', `translate(60, 40)`);
@@ -388,7 +396,11 @@ function renderAST(treeData) {
   // Zoom & pan
   astZoom = d3.zoom()
     .scaleExtent([0.1, 4])
-    .on('zoom', (event) => { astG.attr('transform', event.transform); });
+    .on('zoom', (event) => { 
+      if (event.transform && typeof event.transform.x === 'number' && typeof event.transform.y === 'number') {
+        astG.attr('transform', event.transform);
+      }
+    });
   astSvg.call(astZoom);
   astSvg._zoom = astZoom;
 
@@ -423,17 +435,24 @@ function renderAST(treeData) {
   // Center the tree
   setTimeout(() => {
     const bounds = astG.node().getBBox();
-    const dx = width / 2 - (bounds.x + bounds.width / 2);
-    const dy = height / 2 - (bounds.y + bounds.height / 2);
-    astSvg.transition().duration(500).call(
-      astZoom.transform,
-      d3.zoomIdentity.translate(dx, dy).scale(0.8)
-    );
+    let dx = width / 2 - (bounds.x + bounds.width / 2);
+    let dy = height / 2 - (bounds.y + bounds.height / 2);
+    if (!isNaN(dx) && !isNaN(dy)) {
+      astSvg.transition().duration(500).call(
+        astZoom.transform,
+        d3.zoomIdentity.translate(dx, dy).scale(0.8)
+      );
+    }
   }, 100);
 }
 
 function updateASTTree(source) {
   const duration = 400;
+
+  // Validate source
+  if (!source) source = astRoot;
+  if (!source.x0) source.x0 = 0;
+  if (!source.y0) source.y0 = 0;
 
   // Compute new layout
   astTreeLayout(astRoot);
@@ -443,6 +462,12 @@ function updateASTTree(source) {
 
   // Assign unique IDs
   allNodes.forEach(d => { if (!d.id) d.id = ++astNodeIdCounter; });
+
+  // Sanitize coordinates
+  allNodes.forEach(d => {
+    if (isNaN(d.x)) d.x = 0;
+    if (isNaN(d.y)) d.y = 0;
+  });
 
   // ── Links ──
   const linkSel = astG.selectAll('.ast-link').data(allLinks, d => d.target.id);
@@ -473,7 +498,7 @@ function updateASTTree(source) {
 
   const nodeEnter = nodeSel.enter().append('g')
     .attr('class', 'ast-node')
-    .attr('transform', `translate(${source.y0 || 0}, ${source.x0 || 0})`)
+    .attr('transform', `translate(${isNaN(source.y0) ? 0 : (source.y0 || 0)}, ${isNaN(source.x0) ? 0 : (source.x0 || 0)})`)
     .attr('opacity', 0)
     .style('cursor', d => isCollapsible(d) ? 'pointer' : 'default')
     .on('click', (event, d) => {
@@ -534,7 +559,7 @@ function updateASTTree(source) {
   const nodeUpdate = nodeEnter.merge(nodeSel);
 
   nodeUpdate.transition().duration(duration)
-    .attr('transform', d => `translate(${d.y}, ${d.x})`)
+    .attr('transform', d => `translate(${isNaN(d.y) ? 0 : d.y}, ${isNaN(d.x) ? 0 : d.x})`)
     .attr('opacity', 1);
 
   // Update labels and indicators on existing nodes
@@ -549,7 +574,7 @@ function updateASTTree(source) {
 
   // ── Exit ──
   nodeSel.exit().transition().duration(duration)
-    .attr('transform', `translate(${source.y}, ${source.x})`)
+    .attr('transform', `translate(${isNaN(source.y) ? 0 : source.y}, ${isNaN(source.x) ? 0 : source.x})`)
     .attr('opacity', 0)
     .remove();
 
@@ -671,12 +696,14 @@ function resetASTZoom() {
   const width = svgEl.clientWidth || 800;
   const height = svgEl.clientHeight || 500;
   const bounds = astG.node().getBBox();
-  const dx = width / 2 - (bounds.x + bounds.width / 2);
-  const dy = height / 2 - (bounds.y + bounds.height / 2);
-  astSvg.transition().duration(500).call(
-    astSvg._zoom.transform,
-    d3.zoomIdentity.translate(dx, dy).scale(0.8)
-  );
+  let dx = width / 2 - (bounds.x + bounds.width / 2);
+  let dy = height / 2 - (bounds.y + bounds.height / 2);
+  if (!isNaN(dx) && !isNaN(dy)) {
+    astSvg.transition().duration(500).call(
+      astSvg._zoom.transform,
+      d3.zoomIdentity.translate(dx, dy).scale(0.8)
+    );
+  }
 }
 
 function expandAllAST() {
@@ -733,7 +760,11 @@ function renderCST(treeData) {
   cstG = cstSvg.append('g').attr('transform', `translate(${width/2}, 40)`);
 
   cstZoom = d3.zoom().scaleExtent([0.1, 4])
-    .on('zoom', ev => cstG.attr('transform', ev.transform));
+    .on('zoom', ev => {
+      if (ev.transform && typeof ev.transform.x === 'number' && typeof ev.transform.y === 'number') {
+        cstG.attr('transform', ev.transform);
+      }
+    });
   cstSvg.call(cstZoom);
   cstSvg._zoom = cstZoom;
 
@@ -764,11 +795,12 @@ function renderCST(treeData) {
   setTimeout(() => {
     const bounds = cstG.node().getBBox();
     const dx = width / 2 - (bounds.x + bounds.width / 2);
-    const dy = 40;
-    cstSvg.transition().duration(500).call(
-      cstZoom.transform,
-      d3.zoomIdentity.translate(dx, dy).scale(0.75)
-    );
+    if (!isNaN(dx)) {
+      cstSvg.transition().duration(500).call(
+        cstZoom.transform,
+        d3.zoomIdentity.translate(dx, 40).scale(0.75)
+      );
+    }
   }, 120);
 }
 
@@ -889,7 +921,9 @@ function resetCSTZoom() {
   const width = svgEl.clientWidth||800;
   const bounds = cstG.node().getBBox();
   const dx = width/2-(bounds.x+bounds.width/2);
-  cstSvg.transition().duration(500).call(cstSvg._zoom.transform, d3.zoomIdentity.translate(dx,40).scale(0.75));
+  if (!isNaN(dx)) {
+    cstSvg.transition().duration(500).call(cstSvg._zoom.transform, d3.zoomIdentity.translate(dx,40).scale(0.75));
+  }
 }
 
 function expandAllCST() {
@@ -1032,20 +1066,15 @@ function renderPreview(htmlStr) {
     ${htmlStr}
     
     <script type="module">
-      import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
-      mermaid.initialize({ startOnLoad: false });
-      mermaid.run();
-      if (typeof mermaid.init === 'function') {
-        mermaid.init(undefined, document.querySelectorAll('.mermaid'));
-      }
+    import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
+    mermaid.initialize({ startOnLoad: true });
     <${"/"}script>
 
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js" onload="
       document.querySelectorAll('.math').forEach(function(el) {
         var isDisplay = el.classList.contains('math-display');
-        var tex = el.textContent || el.innerText;
         try {
-          katex.render(tex, el, {
+          katex.render(el.textContent, el, {
             displayMode: isDisplay,
             throwOnError: false
           });

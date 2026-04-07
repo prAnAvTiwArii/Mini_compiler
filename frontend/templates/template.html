@@ -12,14 +12,11 @@
 <body>
   __BODY_HTML__
 
+
   <!-- Mermaid diagrams -->
   <script type="module">
     import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
-    mermaid.initialize({ startOnLoad: false });
-    mermaid.run();
-    if (typeof mermaid.init === 'function') {
-      mermaid.init(undefined, document.querySelectorAll('.mermaid'));
-    }
+    mermaid.initialize({ startOnLoad: true });
   </script>
 
   <!-- KaTeX math rendering -->

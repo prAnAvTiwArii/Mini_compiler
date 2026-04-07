@@ -26,6 +26,16 @@ app = Flask(__name__,
             template_folder=os.path.join(BASE_DIR, 'frontend', 'templates'),
             static_folder=os.path.join(BASE_DIR, 'frontend', 'static'))
 
+# Disable static file caching during development so CSS/JS changes load immediately.
+app.config['SEND_FILE_MAX_AGE_DEFAULT'] = 0
+
+@app.after_request
+def set_no_cache_headers(response):
+    response.headers['Cache-Control'] = 'no-store, no-cache, must-revalidate, max-age=0'
+    response.headers['Pragma'] = 'no-cache'
+    response.headers['Expires'] = '0'
+    return response
+
 # Load default sample markdown
 SAMPLE_MD_PATH = os.path.join(BASE_DIR, "markdowns", "test.md")
 
