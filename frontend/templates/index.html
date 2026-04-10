@@ -390,7 +390,7 @@ function renderAST(treeData) {
   }
 
   astSvg = d3.select('#ast-svg');
-  astG = astSvg.append('g').attr('transform', `translate(60, 40)`);
+  astG = astSvg.append('g').attr('transform', `translate(${width/2}, 40)`);
   astTooltip = document.getElementById('ast-tooltip');
 
   // Zoom & pan
@@ -405,23 +405,24 @@ function renderAST(treeData) {
   astSvg._zoom = astZoom;
 
   // Tree layout
-  astTreeLayout = d3.tree().nodeSize([30, 200]);
+  astTreeLayout = d3.tree().nodeSize([110, 65]);
 
   // Build D3 hierarchy
   astRoot = d3.hierarchy(treeData, d => d.children);
-  astRoot.x0 = height / 2;
+  astRoot.x0 = 0;
   astRoot.y0 = 0;
   astNodeIdCounter = 0;
 
-  // Initially, collapsible nodes are already collapsed (children in _children)
-  // We need to initialize the D3 nodes to reflect this
+  // Initialize all nodes except the root as collapsed
   function initCollapsible(d) {
-    if (d.data._children && !d.data.children) {
-      // This node is collapsed — mark it
-      d._collapsed_data = d.data._children;
-    }
     if (d.children) {
       d.children.forEach(initCollapsible);
+    }
+    if (d !== astRoot && d.children) {
+      d._collapsed_data = collectChildData(d);
+      d.data._children = d._collapsed_data;
+      delete d.data.children;
+      d.children = null;
     }
   }
   initCollapsible(astRoot);
@@ -436,11 +437,10 @@ function renderAST(treeData) {
   setTimeout(() => {
     const bounds = astG.node().getBBox();
     let dx = width / 2 - (bounds.x + bounds.width / 2);
-    let dy = height / 2 - (bounds.y + bounds.height / 2);
-    if (!isNaN(dx) && !isNaN(dy)) {
+    if (!isNaN(dx)) {
       astSvg.transition().duration(500).call(
         astZoom.transform,
-        d3.zoomIdentity.translate(dx, dy).scale(0.8)
+        d3.zoomIdentity.translate(dx, 40).scale(0.8)
       );
     }
   }, 100);
@@ -480,16 +480,16 @@ function updateASTTree(source) {
     .attr('stroke-opacity', 0.4)
     .attr('d', () => {
       const o = { x: source.x0 || 0, y: source.y0 || 0 };
-      return d3.linkHorizontal().x(d => d.y).y(d => d.x)({ source: o, target: o });
+      return d3.linkVertical().x(d => d.x).y(d => d.y)({ source: o, target: o });
     });
 
   linkEnter.merge(linkSel).transition().duration(duration)
-    .attr('d', d3.linkHorizontal().x(d => d.y).y(d => d.x));
+    .attr('d', d3.linkVertical().x(d => d.x).y(d => d.y));
 
   linkSel.exit().transition().duration(duration)
     .attr('d', () => {
       const o = { x: source.x, y: source.y };
-      return d3.linkHorizontal().x(d => d.y).y(d => d.x)({ source: o, target: o });
+      return d3.linkVertical().x(d => d.x).y(d => d.y)({ source: o, target: o });
     })
     .remove();
 
@@ -498,7 +498,7 @@ function updateASTTree(source) {
 
   const nodeEnter = nodeSel.enter().append('g')
     .attr('class', 'ast-node')
-    .attr('transform', `translate(${isNaN(source.y0) ? 0 : (source.y0 || 0)}, ${isNaN(source.x0) ? 0 : (source.x0 || 0)})`)
+    .attr('transform', `translate(${isNaN(source.x0) ? 0 : (source.x0 || 0)}, ${isNaN(source.y0) ? 0 : (source.y0 || 0)})`)
     .attr('opacity', 0)
     .style('cursor', d => isCollapsible(d) ? 'pointer' : 'default')
     .on('click', (event, d) => {
@@ -534,21 +534,23 @@ function updateASTTree(source) {
   nodeEnter.append('text')
     .attr('class', 'collapse-indicator')
     .attr('dy', '0.35em')
-    .attr('x', -18)
+    .attr('x', 0)
+    .attr('y', -14)
     .attr('text-anchor', 'middle')
     .attr('fill', '#94a3b8')
     .attr('font-size', '0.6rem')
     .text(d => {
       if (!isCollapsible(d)) return '';
-      return d._collapsed_data ? '▶' : '▼';
+      return d._collapsed_data ? '▼ expand' : '';
     });
 
   // Label
   nodeEnter.append('text')
     .attr('class', 'node-label')
     .attr('dy', '0.32em')
-    .attr('x', d => d.children || d._collapsed_data ? -24 : 14)
-    .attr('text-anchor', d => d.children || d._collapsed_data ? 'end' : 'start')
+    .attr('x', 0)
+    .attr('y', 14)
+    .attr('text-anchor', 'middle')
     .attr('fill', '#e2e8f0')
     .attr('font-size', '0.72rem')
     .attr('font-family', 'var(--font-sans)')
@@ -559,14 +561,14 @@ function updateASTTree(source) {
   const nodeUpdate = nodeEnter.merge(nodeSel);
 
   nodeUpdate.transition().duration(duration)
-    .attr('transform', d => `translate(${isNaN(d.y) ? 0 : d.y}, ${isNaN(d.x) ? 0 : d.x})`)
+    .attr('transform', d => `translate(${isNaN(d.x) ? 0 : d.x}, ${isNaN(d.y) ? 0 : d.y})`)
     .attr('opacity', 1);
 
   // Update labels and indicators on existing nodes
   nodeUpdate.select('.collapse-indicator')
     .text(d => {
       if (!isCollapsible(d)) return '';
-      return d._collapsed_data ? '▶' : '▼';
+      return d._collapsed_data ? '▼ expand' : '';
     });
 
   nodeUpdate.select('.node-label')
@@ -574,7 +576,7 @@ function updateASTTree(source) {
 
   // ── Exit ──
   nodeSel.exit().transition().duration(duration)
-    .attr('transform', `translate(${isNaN(source.y) ? 0 : source.y}, ${isNaN(source.x) ? 0 : source.x})`)
+    .attr('transform', `translate(${isNaN(source.x) ? 0 : source.x}, ${isNaN(source.y) ? 0 : source.y})`)
     .attr('opacity', 0)
     .remove();
 
@@ -583,12 +585,12 @@ function updateASTTree(source) {
 }
 
 function isCollapsible(d) {
-  return d.data.collapsible && (d._collapsed_data || d.children);
+  return d._collapsed_data || (d.children && d.children.length > 0);
 }
 
 function getNodeLabel(d) {
   // If collapsed and has raw_content, show the raw token text
-  if (d.data.collapsible && d._collapsed_data && d.data.raw_content) {
+  if (d._collapsed_data && d.data.raw_content) {
     const raw = d.data.raw_content;
     const preview = raw.length > 50 ? raw.substring(0, 50) + '…' : raw;
     // Prefix with type for clarity
@@ -669,7 +671,7 @@ function buildLegend(nodes) {
 function showTooltip(event, data) {
   const tt = document.getElementById('ast-tooltip');
   let html = `<div class="tt-type">${data.type}</div>`;
-  if (data.collapsible && data.raw_content) {
+  if (data.raw_content) {
     html += `<div class="tt-attr">raw: ${escapeHtml(data.raw_content)}</div>`;
   }
   if (data.attributes && Object.keys(data.attributes).length > 0) {
@@ -677,7 +679,7 @@ function showTooltip(event, data) {
       html += `<div class="tt-attr">${k}: ${escapeHtml(String(v))}</div>`;
     }
   }
-  if (data.collapsible) {
+  if (data.children || data._children || data.has_children) {
     html += `<div class="tt-hint">Click to expand/collapse</div>`;
   }
   tt.innerHTML = html;
@@ -694,14 +696,12 @@ function resetASTZoom() {
   if (!astSvg || !astG) return;
   const svgEl = document.getElementById('ast-svg');
   const width = svgEl.clientWidth || 800;
-  const height = svgEl.clientHeight || 500;
   const bounds = astG.node().getBBox();
   let dx = width / 2 - (bounds.x + bounds.width / 2);
-  let dy = height / 2 - (bounds.y + bounds.height / 2);
-  if (!isNaN(dx) && !isNaN(dy)) {
+  if (!isNaN(dx)) {
     astSvg.transition().duration(500).call(
       astSvg._zoom.transform,
-      d3.zoomIdentity.translate(dx, dy).scale(0.8)
+      d3.zoomIdentity.translate(dx, 40).scale(0.8)
     );
   }
 }
@@ -726,7 +726,7 @@ function collapseAllAST() {
     if (d.children) {
       d.children.forEach(collapseRecursive);
     }
-    if (d.data.collapsible && d.children && !d._collapsed_data) {
+    if (d !== astRoot && d.children && !d._collapsed_data) {
       toggleNode(d);
     }
   }
