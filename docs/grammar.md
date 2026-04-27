@@ -1,12 +1,12 @@
 # Grammar Reference
 
-This document specifies the complete formal grammar of the Markdown dialect recognised by pyV, describes the parser strategy, and provides a YACC/PLY-compatible grammar file that captures the block and inline production rules.
+This document specifies the complete formal grammar of the Markdown dialect recognised by Mini_Compiler, describes the parser strategy, and provides a YACC/PLY-compatible grammar file that captures the block and inline production rules.
 
 ---
 
 ## Parser Type
 
-pyV uses a **hand-written, top-down, single-pass, shift-reduce-style parser** — not a generated parser (no YACC / LALR table). It is best described as an **incremental top-down parser with a "tip" cursor**.
+Mini_Compiler uses a **hand-written, top-down, single-pass** parser. It is best described as an **incremental top-down parser with a "tip" cursor**.
 
 Key properties:
 
@@ -18,7 +18,7 @@ Key properties:
 
 ---
 
-## Block Grammar (BNF)
+## Block Grammar
 
 The following BNF describes the block-level grammar. Terminal symbols correspond directly to `Token.type` constants.
 
@@ -73,7 +73,7 @@ html_block      ::= HTML_BLOCK (non-BLANK token)* BLANK
 
 ---
 
-## Inline Grammar (BNF)
+## Inline Grammar
 
 Inline content is stored in `node.string_content` during block parsing and then parsed by `InlineParser`. The inline grammar is:
 
@@ -135,10 +135,10 @@ text            ::= IL_TEXT                     /* plain text      */
 
 ## YACC / PLY Grammar File
 
-The following is a PLY (Python Lex-Yacc) compatible grammar that captures the block-level structure. It can be used to build a parse table with `yacc.yacc()`. Note that the actual pyV parser does not use YACC — this is provided as a formal specification.
+The following is a PLY (Python Lex-Yacc) compatible grammar that captures the block-level structure. It can be used to build a parse table with `yacc.yacc()`. Note that the actual Mini_Compiler parser does not use YACC — this is provided as a formal specification.
 
 ```python
-# pyV block grammar for PLY
+# Mini_Compiler block grammar for PLY
 # tokens list must include all terminal symbols below
 
 tokens = (
@@ -352,7 +352,7 @@ def p_error(p):
 
 ## Inline Grammar — YACC Representation
 
-Inline tokens are not processed by YACC in pyV (they are handled by `InlineParser`). The following is a formal representation for reference:
+Inline tokens are not processed by YACC in Mini_Compiler (they are handled by `InlineParser`). The following is a formal representation for reference:
 
 ```python
 inline_tokens = (

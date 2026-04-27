@@ -1,7 +1,3 @@
-"""
-Analytics Module — Generates JSON stats with deeper metrics.
-"""
-
 class AnalyticsGenerator:
     def generate_stats(self, tokens, ast_root):
         token_counts = {}
@@ -15,8 +11,6 @@ class AnalyticsGenerator:
         
         block_count = 0
         inline_count = 0
-        
-        # New deep metrics
         word_count = 0
         char_count = 0
         link_count = 0
@@ -41,7 +35,6 @@ class AnalyticsGenerator:
                 nonlocal inline_count
                 inline_count += 1
                 
-            # Compute specific metrics
             if node.type == 'text' and getattr(node, 'literal', None):
                 nonlocal word_count, char_count
                 txt = node.literal.strip()
@@ -106,8 +99,6 @@ class AnalyticsGenerator:
             "avg_depth": round(avg_depth, 2),
             "block_nodes": block_count,
             "inline_nodes": inline_count,
-            
-            # New metrics mapped to frontend
             "advanced": {
                 "word_count": word_count,
                 "char_count": char_count,

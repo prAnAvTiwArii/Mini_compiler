@@ -128,7 +128,7 @@ This document lists every HTML element that `HtmlRenderer` can emit, what AST no
 
 ## Math Rendering
 
-pyV does **not** render LaTeX itself. It emits semantic HTML that is intended to be picked up by a client-side math renderer such as **KaTeX** or **MathJax**.
+Mini_Compiler does **not** render LaTeX itself. It emits semantic HTML that is intended to be picked up by a client-side math renderer such as **KaTeX** or **MathJax**.
 
 ### Inline Math
 
@@ -171,7 +171,7 @@ $$
 
 ## Mermaid Diagrams
 
-pyV does **not** render Mermaid diagrams itself. It emits a `<pre class="mermaid">` block that **Mermaid.js** will pick up and replace with an SVG.
+Mini_Compiler does **not** render Mermaid diagrams itself. It emits a `<pre class="mermaid">` block that **Mermaid.js** will pick up and replace with an SVG.
 
 ### Syntax — Colon-fence style
 

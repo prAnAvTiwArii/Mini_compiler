@@ -1,7 +1,3 @@
-"""
-AST Visualizer Module — Generates D3.js-compatible tree data from the AST.
-"""
-
 NODE_COLORS = {
     'document':       '#6366f1',
     'heading':        '#f59e0b',

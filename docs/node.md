@@ -1,6 +1,6 @@
 # Node — AST Data Structure
 
-This document explains how pyV stores the parsed document as an in-memory tree, the fields on each node, the tree operations available, and the serialisation format. A worked example traces a real Markdown snippet from source to full AST.
+This document explains how Mini_Compiler stores the parsed document as an in-memory tree, the fields on each node, the tree operations available, and the serialisation format. A worked example traces a real Markdown snippet from source to full AST.
 
 ---
 

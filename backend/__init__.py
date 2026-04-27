@@ -1,7 +1,3 @@
-"""
-backend package — re-exports all compiler pipeline components plus visualizers.
-app.py should import from here exclusively.
-"""
 import sys
 import os
 

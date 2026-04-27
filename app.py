@@ -113,8 +113,37 @@ def _run_pipeline(md_input: str) -> dict:
         },
     }
 
+def _compile_doc_to_html(md_filename: str) -> str:
+    path = os.path.join(BASE_DIR, 'docs', md_filename)
+    try:
+        with open(path, encoding='utf-8') as f:
+            md = f.read()
+    except FileNotFoundError:
+        return "<h1>404 Not Found</h1>"
+        
+    parser = Parser()
+    ast = parser.parse(md)
+    ir_data = ast.to_dict()
+    renderer = HtmlRenderer()
+    return renderer.render(ir_data)
+
 @app.route('/')
-def index():
+def home():
+    html_content = _compile_doc_to_html('README.md')
+    llm_content = _compile_doc_to_html('LLM_CONTEXT.md')
+    combined = html_content + "<hr>" + llm_content
+    return render_template('doc.html', title="Home", content=combined)
+
+@app.route('/docs/<page>')
+def docs(page):
+    valid_pages = ['token', 'grammar', 'node', 'html_tags', 'LLM_CONTEXT']
+    if page not in valid_pages:
+        return "Page not found", 404
+    html_content = _compile_doc_to_html(page + '.md')
+    return render_template('doc.html', title=page.capitalize(), content=html_content)
+
+@app.route('/compiler')
+def compiler():
     sample = _load_sample()
     return render_template('index.html', sample_markdown=sample)
 
@@ -172,7 +201,16 @@ def download_endpoint():
     except FileNotFoundError:
         template = '<!DOCTYPE html><html><head><title>__TITLE__</title></head><body>__BODY_HTML__</body></html>'
 
+    try:
+        css_path = os.path.join(BASE_DIR, 'frontend', 'static', 'render.css')
+        with open(css_path, encoding='utf-8') as f:
+            css_content = f.read()
+    except FileNotFoundError:
+        css_content = ''
+
     full_html = template.replace('__TITLE__', filename).replace('__BODY_HTML__', body_html)
+    if css_content:
+        full_html = full_html.replace('<link rel="stylesheet" href="/static/render.css">', f'<style>\n{css_content}\n</style>')
 
     return Response(
         full_html,

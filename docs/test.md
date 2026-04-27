@@ -1,6 +1,6 @@
-# pyV Comprehensive Test Document
+# Mini_Compiler Comprehensive Test Document
 
-This file exercises every block-level and inline-level feature of the pyV Markdown compiler. Components are intentionally mixed in random order. Multimedia links point to real, publicly accessible resources.
+This file exercises every block-level and inline-level feature of the Mini_Compiler Markdown compiler. Components are intentionally mixed in random order. Multimedia links point to real, publicly accessible resources.
 
 ---
 

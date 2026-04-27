@@ -12,7 +12,6 @@ class HtmlRenderer:
         return text
 
     def _text_content(self, node: dict) -> str:
-        """Recursively extract plain text from a node subtree (used for alt attributes)."""
         if node.get("literal") is not None:
             return str(node["literal"])
         return "".join(self._text_content(c) for c in node.get("children", []))

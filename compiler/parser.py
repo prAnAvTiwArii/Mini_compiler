@@ -460,7 +460,6 @@ class Parser:
             self.tip = self.tip.parent
 
     def process_inlines(self, doc: Node) -> None:
-        """Walk the AST and expand string_content into inline child nodes."""
         for node, entering in doc.walker():
             if entering and node.type in ('paragraph', 'heading', 'table_cell',
                                           'table_header', 'def_term', 'details') \

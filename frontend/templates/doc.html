@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ title }} - Mini Compiler</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+
+    <!-- Render styles (for markdown content) -->
+    <link rel="stylesheet" href="/static/render.css">
+    <!-- Main styles (for layout/navbar colors) -->
+    <link rel="stylesheet" href="/static/style.css">
+
+    <!-- Highlight.js for code blocks -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+
+    <!-- KaTeX for Math -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js" onload="renderMath()"></script>
+
+    <style>
+        body {
+            overflow-y: auto;
+            /* allow scrolling on doc pages */
+            background: var(--bg-dark);
+            color: var(--text-main);
+        }
+
+        .nav-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 60px;
+            background: var(--bg-panel);
+            border-bottom: 1px solid var(--border);
+            padding: 0 24px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 24px;
+            align-items: center;
+        }
+
+        .nav-link {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            transition: 0.2s;
+        }
+
+        .nav-link:hover,
+        .nav-link.active {
+            color: var(--text-main);
+        }
+
+        .doc-container {
+            width: 95%;
+            max-width: 1600px;
+            margin: 40px auto;
+            padding: 0 24px 80px;
+        }
+
+        /* Overrides for markdown content inside dark theme */
+        .doc-container {
+            font-family: var(--font-sans);
+            line-height: 1.6;
+        }
+
+        .doc-container h1,
+        .doc-container h2,
+        .doc-container h3,
+        .doc-container h4 {
+            color: #fff;
+            margin-top: 1.5em;
+            margin-bottom: 0.5em;
+        }
+
+        .doc-container h1 {
+            font-size: 2em;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 0.3em;
+        }
+
+        .doc-container h2 {
+            font-size: 1.5em;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 0.3em;
+        }
+
+        .doc-container p {
+            margin-bottom: 1em;
+        }
+
+        .doc-container code {
+            font-family: var(--font-mono);
+            background: rgba(240, 246, 252, 0.1);
+            padding: 0.2em 0.4em;
+            border-radius: 4px;
+            font-size: 0.9em;
+        }
+
+        .doc-container pre {
+            background: var(--bg-panel) !important;
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 16px;
+            overflow-x: auto;
+            margin-bottom: 1em;
+        }
+
+        .doc-container pre code {
+            background: transparent;
+            padding: 0;
+            border-radius: 0;
+        }
+
+        .doc-container table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 1em;
+        }
+
+        .doc-container th,
+        .doc-container td {
+            border: 1px solid var(--border);
+            padding: 8px 12px;
+            text-align: left;
+        }
+
+        .doc-container th {
+            background: var(--bg-panel);
+            color: #fff;
+        }
+
+        .doc-container a {
+            color: var(--accent);
+            text-decoration: none;
+        }
+
+        .doc-container a:hover {
+            text-decoration: underline;
+        }
+
+        .doc-container hr {
+            border: none;
+            border-top: 1px solid var(--border);
+            margin: 2em 0;
+        }
+
+        .doc-container blockquote {
+            border-left: 4px solid var(--border-active);
+            color: var(--text-muted);
+            margin: 0 0 1em 0;
+            padding-left: 1em;
+        }
+    </style>
+</head>
+
+<body>
+
+    <header class="nav-header">
+        <a href="/" class="logo" style="text-decoration: none;">
+            <div class="logo-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                    stroke-width="2">
+                    <path d="M4 17l6-6-6-6 M12 19h8" />
+                </svg></div>
+            <div class="logo-text">Mini Compiler</div>
+        </a>
+
+        <div class="nav-links">
+            <a href="/docs/token" class="nav-link">Tokens</a>
+            <a href="/docs/grammar" class="nav-link">Grammar</a>
+            <a href="/docs/node" class="nav-link">Node</a>
+            <a href="/docs/html_tags" class="nav-link">HTML Tags</a>
+            <a href="/compiler" class="btn btn-primary" style="text-decoration: none; color: white;">Try It</a>
+        </div>
+    </header>
+
+    <main class="doc-container">
+        {{ content|safe }}
+    </main>
+
+    <script>
+        // Syntax highlighting
+        document.addEventListener('DOMContentLoaded', (event) => {
+            document.querySelectorAll('pre code').forEach((el) => {
+                hljs.highlightElement(el);
+            });
+
+            // Set active nav link
+            const currentPath = window.location.pathname;
+            document.querySelectorAll('.nav-link').forEach(link => {
+                if (link.getAttribute('href') === currentPath) {
+                    link.classList.add('active');
+                }
+            });
+        });
+
+        function renderMath() {
+            document.querySelectorAll('.math').forEach(function (el) {
+                try {
+                    katex.render(el.textContent, el, {
+                        displayMode: el.classList.contains('math-display'),
+                        throwOnError: false
+                    });
+                } catch (e) { }
+            });
+        }
+    </script>
+
+    <!-- Mermaid -->
+    <script type="module">
+        import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
+        mermaid.initialize({ startOnLoad: true, theme: 'dark' });
+    </script>
+</body>
+
+</html>

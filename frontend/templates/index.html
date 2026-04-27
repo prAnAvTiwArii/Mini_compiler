@@ -7,21 +7,18 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/static/style.css">
-    <!-- D3.js -->
     <script src="https://d3js.org/d3.v7.min.js"></script>
-    <!-- Highlight.js -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
 </head>
 <body>
 
 <div class="app-layout">
-    <!-- Top Pipeline -->
     <header class="top-bar panel">
-        <div class="logo">
+        <a href="/" class="logo" style="text-decoration: none;">
             <div class="logo-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 17l6-6-6-6 M12 19h8"/></svg></div>
             <div class="logo-text">Mini Compiler</div>
-        </div>
+        </a>
         <div class="pipeline-steps" id="pipeline-steps">
             <div class="step" data-step="0"><span class="step-num">0</span><span class="step-name">Source</span></div>
             <div class="step-divider"></div>
@@ -37,7 +34,6 @@
         </div>
     </header>
 
-    <!-- Main Workspace -->
     <main class="workspace">
         <!-- Left Panel: Input -->
         <section class="panel editor-panel">
@@ -169,7 +165,6 @@
 
     let currentPhases = null;
 
-    // --- Pipeline Animation ---
     const delay = ms => new Promise(res => setTimeout(res, ms));
 
     async function animatePipeline(phases) {
@@ -252,7 +247,6 @@
     }
 
     // --- Data Rendering ---
-
     function getTokenColor(type) {
         if (!type) return '#94a3b8';
         const t = type.toLowerCase();

@@ -1,8 +1,3 @@
-"""
-CST Visualizer Module — Generates D3.js-compatible JSON tree data.
-Uses right-recursive chaining patterns matching the restructured grammar.
-"""
-
 class CSTVisualizer:
     def __init__(self):
         self._id_counter = 0

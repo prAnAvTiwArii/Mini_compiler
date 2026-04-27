@@ -1,15 +1,15 @@
-# LLM Context — pyV Markdown-to-HTML Compiler
+# LLM Context — Mini_Compiler Markdown-to-HTML Compiler
 
-This document is a complete, self-contained description of the pyV project. Reading this file alone is sufficient to understand every design decision, data flow, data structure, and extension point in the codebase.
+This document is a complete, self-contained description of the Mini_Compiler project. Reading this file alone is sufficient to understand every design decision, data flow, data structure, and extension point in the codebase.
 
 ---
 
 ## 1. What the Project Does
 
-pyV is a single-pass, hand-written Markdown-to-HTML compiler. It takes a Markdown file as input and produces:
+Mini_Compiler is a single-pass, hand-written Markdown-to-HTML compiler that ships with a highly interactive **Web UI Visualizer**. It takes a Markdown file as input and produces:
 
-1. A full HTML page (`.html`) by injecting the rendered body into `template.html`.
-2. A JSON file (`.json`) containing the intermediate Abstract Syntax Tree (AST) in plain-dict form, useful for debugging or downstream tooling.
+1. A full HTML page rendered on the frontend.
+2. A JSON payload containing the intermediate Abstract Syntax Tree (AST), deep analytics, and lexer token arrays.
 
 The compiler supports standard CommonMark-style Markdown plus many extended features: tables, footnotes, definition lists, fenced math blocks ($$), Mermaid diagrams (:::mermaid), details/summary blocks (:::details), task checkboxes, custom heading IDs, inline math ($…$), subscript/superscript, highlight, underline, video embeds (@[…](…)), and audio embeds (&[…](…)).
 
@@ -243,16 +243,16 @@ Walks the full AST. For nodes of type `paragraph`, `heading`, `table_cell`, `tab
 
 ---
 
-### `compiler.py`
+### `app.py`
 
-**Purpose:** CLI entry point.
+**Purpose:** Web UI Server and API Entry point.
 
-1. Reads the `.md` file.
-2. Runs `Parser().parse(markdown_input)`.
-3. Calls `ast_root.to_dict()` to get the dict IR.
-4. Calls `HtmlRenderer().render(ir_data)` to get the HTML body.
-5. Loads `template.html`, replaces `__TITLE__` and `__BODY_HTML__`.
-6. Writes `.html` and `.json` output files.
+1. Hosts the Flask web server (`app.py`).
+2. Provides the `/compile` JSON API endpoint.
+3. Instantiates `Lexer()` and `Parser()` on incoming Markdown requests.
+4. Generates D3-compatible visual tree payloads via `ASTVisualizer` and `CSTVisualizer`.
+5. Calculates statistical data via `AnalyticsGenerator`.
+6. Renders final HTML output and serves the SPA via `index.html`.
 
 ---
 
