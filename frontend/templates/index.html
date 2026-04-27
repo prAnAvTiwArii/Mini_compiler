@@ -29,7 +29,7 @@
             <div class="step-divider"></div>
             <div class="step" data-step="2"><span class="step-num">2</span><span class="step-name">Parser</span></div>
             <div class="step-divider"></div>
-            <div class="step" data-step="3"><span class="step-num">3</span><span class="step-name">Analytics</span></div>
+            <div class="step" data-step="3"><span class="step-num">3</span><span class="step-name">Semantic</span></div>
             <div class="step-divider"></div>
             <div class="step" data-step="4"><span class="step-num">4</span><span class="step-name">IR</span></div>
             <div class="step-divider"></div>
@@ -46,7 +46,7 @@
                 <div class="actions">
                     <label class="btn btn-secondary" for="file-upload">Upload .md</label>
                     <input type="file" id="file-upload" accept=".md" style="display:none">
-                    <button id="btn-compile" class="btn btn-primary">Animate</button>
+                    <button id="btn-compile" class="btn btn-primary">Compile</button>
                     <button id="btn-download" class="btn btn-secondary" disabled>Download HTML</button>
                 </div>
             </div>
@@ -238,13 +238,12 @@
         const container = document.getElementById('tokens-container');
         container.innerHTML = '';
         
-        const inlineTypes = ['text', 'strong', 'emph', 'inline_code', 'link', 'image', 'soft_break', 'hard_break', 'inline_math', 'html_inline'];
         let currentBlock = null;
         let blockCounter = 0;
         let inlineCounter = 0;
         
         tokens.forEach(t => {
-            const isInline = inlineTypes.includes(t.type.toLowerCase());
+            const isInline = t.type.toLowerCase().startsWith('il_');
             if (!isInline || !currentBlock) {
                 blockCounter++;
                 inlineCounter = 0;
@@ -520,7 +519,7 @@
         } catch(e) {
             alert('Connection error');
         } finally {
-            btn.textContent = 'Animate';
+            btn.textContent = 'Compile';
             btn.disabled = false;
         }
     });

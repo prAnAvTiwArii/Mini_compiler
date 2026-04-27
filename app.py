@@ -47,10 +47,37 @@ def _load_sample() -> str:
 def _run_pipeline(md_input: str) -> dict:
     lexer = Lexer()
     tokens = lexer.tokenize(md_input)
-    token_list = [
-        {"type": getattr(t, "type", ""), "value": getattr(t, "value", ""), "line": getattr(t, "indent", 0)}
-        for t in tokens
-    ]
+    token_list = []
+    
+    for t in tokens:
+        t_type = getattr(t, "type", "")
+        token_list.append({
+            "type": t_type, 
+            "value": getattr(t, "value", ""), 
+            "line": getattr(t, "indent", 0)
+        })
+        
+        text_content = ""
+        if t_type == "PARAGRAPH":
+            text_content = getattr(t, "value", "")
+        elif t_type == "ATX_HEADING":
+            text_content = getattr(t, "meta", {}).get("content", "")
+        elif t_type == "TABLE_ROW":
+            text_content = " ".join(getattr(t, "meta", {}).get("cells", []))
+        elif t_type in ("BLOCKQUOTE", "ORDERED_LIST", "BULLET_LIST"):
+            text_content = getattr(t, "meta", {}).get("content", "")
+            
+        if text_content:
+            try:
+                inlines = lexer.tokenize_inline(text_content)
+                for it in inlines:
+                    token_list.append({
+                        "type": getattr(it, "type", ""),
+                        "value": getattr(it, "value", ""),
+                        "line": getattr(t, "indent", 0)
+                    })
+            except Exception:
+                pass
 
     parser = Parser()
     ast_root = parser.parse(md_input)
