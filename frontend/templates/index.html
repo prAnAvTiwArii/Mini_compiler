@@ -61,7 +61,7 @@
                 <button class="tab-btn active" data-target="pane-lexer">Tokens</button>
                 <button class="tab-btn" data-target="pane-ast">AST</button>
                 <button class="tab-btn" data-target="pane-cst">Parse Tree</button>
-                <button class="tab-btn" data-target="pane-analytics">Analytics</button>
+                <button class="tab-btn" data-target="pane-analytics">Semantic</button>
                 <button class="tab-btn" data-target="pane-ir">IR JSON</button>
                 <button class="tab-btn" data-target="pane-html">Gen HTML</button>
                 <button class="tab-btn tab-preview-btn" data-target="pane-preview">Preview</button>
@@ -82,7 +82,16 @@
                         <button class="btn btn-sm" onclick="vizExpandAll('ast-svg')">Expand All</button>
                         <button class="btn btn-sm" onclick="vizCollapseAll('ast-svg')">Collapse All</button>
                         <button class="btn btn-sm" onclick="vizReset('ast-svg')">Reset View</button>
-                        <div class="speed-control">
+                        
+                        <div class="viz-legend" style="margin-left: 12px; display: flex; gap: 8px; align-items: center; font-size: 11px;">
+                            <span style="color:#fbbf24">● Heading</span>
+                            <span style="color:#34d399">● Paragraph</span>
+                            <span style="color:#60a5fa">● Text</span>
+                            <span style="color:#a78bfa">● Code</span>
+                            <span style="color:#c084fc">● Lists</span>
+                        </div>
+
+                            <div class="speed-control">
                             <span>Smoothness/Speed:</span>
                             <input type="range" id="anim-speed-ast" min="100" max="1500" value="600">
                         </div>
@@ -96,7 +105,16 @@
                         <button class="btn btn-sm" onclick="vizExpandAll('cst-svg')">Expand All</button>
                         <button class="btn btn-sm" onclick="vizCollapseAll('cst-svg')">Collapse All</button>
                         <button class="btn btn-sm" onclick="vizReset('cst-svg')">Reset View</button>
-                        <div class="speed-control">
+                        
+                        <div class="viz-legend" style="margin-left: 12px; display: flex; gap: 8px; align-items: center; font-size: 11px;">
+                            <span style="color:#fbbf24">● Heading</span>
+                            <span style="color:#34d399">● Paragraph</span>
+                            <span style="color:#60a5fa">● Text</span>
+                            <span style="color:#a78bfa">● Code</span>
+                            <span style="color:#c084fc">● Lists</span>
+                        </div>
+
+                            <div class="speed-control">
                             <span>Smoothness/Speed:</span>
                             <input type="range" id="anim-speed-cst" min="100" max="1500" value="600">
                         </div>
@@ -234,6 +252,26 @@
     }
 
     // --- Data Rendering ---
+
+    function getTokenColor(type) {
+        if (!type) return '#94a3b8';
+        const t = type.toLowerCase();
+        if (t.includes('heading')) return '#fbbf24'; // amber
+        if (t.includes('paragraph')) return '#34d399'; // emerald
+        if (t.includes('text')) return '#60a5fa'; // blue
+        if (t.includes('strong')) return '#fb923c'; // orange
+        if (t.includes('emph')) return '#facc15'; // yellow
+        if (t.includes('code')) return '#a78bfa'; // purple
+        if (t.includes('link')) return '#38bdf8'; // sky
+        if (t.includes('image')) return '#f472b6'; // pink
+        if (t.includes('list')) return '#c084fc'; // purple
+        if (t.includes('item')) return '#f472b6'; // pink
+        if (t.includes('blank')) return '#64748b'; // slate
+        if (t.includes('document')) return '#f87171'; // red
+        if (t.includes('html')) return '#2dd4bf'; // teal
+        return '#94a3b8'; // default
+    }
+
     function renderLexer(tokens) {
         const container = document.getElementById('tokens-container');
         container.innerHTML = '';
@@ -254,7 +292,7 @@
                 summary.className = 'token-block-head';
                 
                 const valStr = t.value ? t.value.replace(/\n/g, '\\n').substring(0,40) : '';
-                summary.innerHTML = `<span class="token-marker">&#9654;</span> <span class="badge">${blockCounter}. ${t.type}</span> <span class="t-val">${valStr}</span>`;
+                summary.innerHTML = `<span class="token-marker">&#9654;</span> <span class="badge" style="color: ${getTokenColor(t.type)}">${blockCounter}. ${t.type}</span> <span class="t-val">${valStr}</span>`;
                 currentBlock.appendChild(summary);
                 
                 const inlineContainer = document.createElement('div');
@@ -268,7 +306,7 @@
                 const inlineEl = document.createElement('div');
                 inlineEl.className = 'token-inline-item';
                 const valStr = t.value ? t.value.replace(/\n/g, '\\n') : '';
-                inlineEl.innerHTML = `<span class="badge inline-badge">${blockCounter}.${inlineCounter} ${t.type}</span> <span class="t-val">${valStr}</span>`;
+                inlineEl.innerHTML = `<span class="badge inline-badge" style="color: ${getTokenColor(t.type)}">${blockCounter}.${inlineCounter} ${t.type}</span> <span class="t-val">${valStr}</span>`;
                 currentBlock.inlines.appendChild(inlineEl);
             }
         });
@@ -343,8 +381,8 @@
         const container = document.querySelector(selector);
         container.innerHTML = '';
         const width = container.clientWidth || 800;
-        const dx = isVertical ? 40 : 30;
-        const dy = isVertical ? width / 5 : 140;
+        const dx = isVertical ? 80 : 50;
+        const dy = isVertical ? width / 5 : 200;
 
         const root = d3.hierarchy(data);
         const svg = d3.select(selector).append("svg")
@@ -433,7 +471,7 @@
 
         nodeEnter.append("circle")
             .attr("r", 1e-6)
-            .style("fill", d => d._children ? "#6366f1" : (d.data.color || "#3b82f6"))
+            .style("fill", d => d._children ? "#cbd5e1" : getTokenColor(d.data.name))
             .style("stroke", "#0d1117")
             .style("stroke-width", "1.5px")
             .style("cursor", d => (d.children || d._children) ? "pointer" : "default");
