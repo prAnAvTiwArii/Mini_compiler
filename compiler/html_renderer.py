@@ -142,7 +142,7 @@ class HtmlRenderer:
                            if any(c.get("type") == "table_header"
                                   for c in r.get("children", []))]
             body_rows   = [r for r in children if r not in header_rows]
-            self.buffer.append("<table>\n")
+            self.buffer.append('<div class="table-wrapper">\n<table>\n')
             if header_rows:
                 self.buffer.append("<thead>\n")
                 for row in header_rows:
@@ -153,7 +153,7 @@ class HtmlRenderer:
                 for row in body_rows:
                     self._render_node(row)
                 self.buffer.append("</tbody>\n")
-            self.buffer.append("</table>\n")
+            self.buffer.append("</table>\n</div>\n")
             
         elif node_type == "table_row":
             self.buffer.append("<tr>\n")
@@ -207,9 +207,9 @@ class HtmlRenderer:
             self.buffer.append('</audio>\n')
             
         elif node_type == "mermaid_block":
-            self.buffer.append("<pre class=\"mermaid\">\n")
+            self.buffer.append('<div class="mermaid">\n')
             self.buffer.append(node.get("literal", ""))
-            self.buffer.append("</pre>\n")
+            self.buffer.append("</div>\n")
             
         elif node_type == "footnote_def":
             label = self.escape(node.get("label", ""))

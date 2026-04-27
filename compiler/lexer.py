@@ -174,7 +174,10 @@ class Lexer:
                 if re_table_sep.match(stripped):
                     tokens.append(Token(TABLE_SEP, stripped, indent=indent))
                 else:
-                    cells = [c.strip() for c in stripped.strip('|').split('|')]
+                    # Split on unescaped | only; unescape \| → | inside each cell
+                    import re as _re
+                    parts = _re.split(r'(?<!\\)\|', stripped)
+                    cells = [c.strip().replace('\\|', '|') for c in parts if c.strip()]
                     tokens.append(Token(TABLE_ROW, stripped,
                                         meta={'cells': cells}, indent=indent))
                 continue

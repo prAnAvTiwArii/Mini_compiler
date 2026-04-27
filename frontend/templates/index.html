@@ -1,1245 +1,503 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Markdown Compiler — Interactive Phase Visualizer</title>
-  <meta name="description" content="Interactive visualization of all 5 compiler phases: Lexer, Parser, Semantic Analysis, IR Generation, and Code Generation.">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="/static/style.css">
-  <script src="https://d3js.org/d3.v7.min.js"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mini Compiler Pipeline</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/static/style.css">
+    <!-- D3.js -->
+    <script src="https://d3js.org/d3.v7.min.js"></script>
+    <!-- Highlight.js -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
 </head>
 <body>
 
-<div class="app">
-  <!-- ─── Header ──────────────────────────────────────────────── -->
-  <header class="header">
-    <h1>⚙️ Markdown <span>Compiler</span></h1>
-    <span style="font-size:0.78rem;color:var(--text-muted)">5-Phase Pipeline Visualizer</span>
-  </header>
-
-  <!-- ─── Phase Pipeline Bar ──────────────────────────────────── -->
-  <div class="pipeline" id="pipeline">
-    <div class="phase-step" data-phase="source" id="phase-source">
-      <span class="phase-num">S</span> Source
-    </div>
-    <span class="phase-arrow">→</span>
-    <div class="phase-step" data-phase="lexer" id="phase-lexer">
-      <span class="phase-num">1</span> Lexer
-    </div>
-    <span class="phase-arrow">→</span>
-    <div class="phase-step" data-phase="parser" id="phase-parser">
-      <span class="phase-num">2</span> Parser (AST)
-    </div>
-    <span class="phase-arrow">→</span>
-    <div class="phase-step" data-phase="semantic" id="phase-semantic">
-      <span class="phase-num">3</span> Semantic Analysis
-    </div>
-    <span class="phase-arrow">→</span>
-    <div class="phase-step" data-phase="ir" id="phase-ir">
-      <span class="phase-num">4</span> IR Generation
-    </div>
-    <span class="phase-arrow">→</span>
-    <div class="phase-step" data-phase="codegen" id="phase-codegen">
-      <span class="phase-num">5</span> Code Generation
-    </div>
-    <span class="phase-arrow">→</span>
-    <div class="phase-step" data-phase="preview" id="phase-preview">
-      <span class="phase-num">⬤</span> Preview
-    </div>
-  </div>
-
-  <!-- ─── Main Content ────────────────────────────────────────── -->
-  <div class="main">
-    <!-- Left Panel: Markdown Editor -->
-    <div class="panel panel-left">
-      <div class="panel-header">
-        <span>📝 Markdown Input</span>
-        <div style="display:flex;align-items:center;gap:8px">
-          <label class="upload-btn" for="file-upload" title="Upload .md file">
-            📂 Upload .md
-            <input type="file" id="file-upload" accept=".md" style="display:none" onchange="handleFileUpload(this)">
-          </label>
-          <span class="badge" id="char-count">0 chars</span>
-          <span class="badge" id="file-name" style="display:none"></span>
+<div class="app-layout">
+    <!-- Top Pipeline -->
+    <header class="top-bar panel">
+        <div class="logo">
+            <div class="logo-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 17l6-6-6-6 M12 19h8"/></svg></div>
+            <div class="logo-text">Mini Compiler</div>
         </div>
-      </div>
-      <div class="editor-wrap" id="editor-wrap">
-        <div class="drop-overlay" id="drop-overlay">
-          <div class="drop-overlay-inner">
-            <span style="font-size:2.5rem">📄</span>
-            <span>Drop your <strong>.md</strong> file here</span>
-          </div>
+        <div class="pipeline-steps" id="pipeline-steps">
+            <div class="step" data-step="0"><span class="step-num">0</span><span class="step-name">Source</span></div>
+            <div class="step-divider"></div>
+            <div class="step" data-step="1"><span class="step-num">1</span><span class="step-name">Lexer</span></div>
+            <div class="step-divider"></div>
+            <div class="step" data-step="2"><span class="step-num">2</span><span class="step-name">Parser</span></div>
+            <div class="step-divider"></div>
+            <div class="step" data-step="3"><span class="step-num">3</span><span class="step-name">Analytics</span></div>
+            <div class="step-divider"></div>
+            <div class="step" data-step="4"><span class="step-num">4</span><span class="step-name">IR</span></div>
+            <div class="step-divider"></div>
+            <div class="step" data-step="5"><span class="step-num">5</span><span class="step-name">HTML</span></div>
         </div>
-        <textarea id="markdown-input" placeholder="Type or paste Markdown here..." spellcheck="false">{{ sample_markdown }}</textarea>
-      </div>
-      <div class="compile-bar">
-        <button id="compile-btn" onclick="compileMarkdown()">
-          <span class="spinner"></span>
-          ▶ Compile
-        </button>
-        <button id="download-btn" onclick="downloadHTML()" disabled title="Compile first, then download">
-          ⬇ Download HTML
-        </button>
-      </div>
-    </div>
+    </header>
 
-    <!-- Right Panel: Phase Outputs -->
-    <div class="panel panel-right">
-      <div class="tabs" id="tabs">
-        <div class="tab active" data-tab="lexer-tab" onclick="switchTab('lexer-tab', this)">🔤 Tokens</div>
-        <div class="tab" data-tab="ast-tab" onclick="switchTab('ast-tab', this)">🌳 AST Tree</div>
-        <div class="tab" data-tab="cst-tab" onclick="switchTab('cst-tab', this)">🌲 Parse Tree</div>
-        <div class="tab" data-tab="semantic-tab" onclick="switchTab('semantic-tab', this)">🔍 Semantic Analysis</div>
-        <div class="tab" data-tab="ir-tab" onclick="switchTab('ir-tab', this)">📦 JSON IR</div>
-        <div class="tab" data-tab="html-tab" onclick="switchTab('html-tab', this)">⚡ HTML</div>
-        <div class="tab" data-tab="preview-tab" onclick="switchTab('preview-tab', this)">👁 Preview</div>
-      </div>
-
-      <div class="tab-content" id="tab-content">
-        <!-- Lexer tokens -->
-        <div class="tab-pane active" id="lexer-tab">
-          <div id="lexer-empty" class="empty-state">
-            <div class="icon">🔤</div>
-            <h3>Lexer Output</h3>
-            <p>Click <strong>Compile</strong> to tokenize the Markdown source into a stream of tokens.</p>
-          </div>
-          <div id="lexer-content" class="token-table-wrap" style="display:none"></div>
-        </div>
-
-        <!-- AST Tree -->
-        <div class="tab-pane" id="ast-tab">
-          <div id="ast-empty" class="empty-state">
-            <div class="icon">🌳</div>
-            <h3>AST Visualization</h3>
-            <p>Click <strong>Compile</strong> to generate the Abstract Syntax Tree and watch it build node by node.</p>
-          </div>
-          <div id="ast-content" class="ast-container" style="display:none">
-            <div class="ast-controls">
-              <button onclick="resetASTZoom()" title="Reset zoom">⟲ Reset</button>
-              <button onclick="expandAllAST()" title="Expand all nodes">⊞ Expand All</button>
-              <button onclick="collapseAllAST()" title="Collapse all nodes">⊟ Collapse All</button>
-              <button onclick="replayAST()" title="Replay build animation">▶ Replay</button>
+    <!-- Main Workspace -->
+    <main class="workspace">
+        <!-- Left Panel: Input -->
+        <section class="panel editor-panel">
+            <div class="panel-header">
+                <h2>Input.md</h2>
+                <div class="actions">
+                    <button id="btn-compile" class="btn btn-primary">Compile</button>
+                </div>
             </div>
-            <div class="ast-speed">
-              <span>Speed:</span>
-              <input type="range" id="ast-speed" min="10" max="500" value="120" step="10">
-              <span id="speed-label">120ms</span>
+            <div class="editor-container">
+                <textarea id="markdown-input" class="editor-textarea" spellcheck="false" placeholder="Write markdown here...">{{ sample_markdown }}</textarea>
             </div>
-            <div class="ast-legend" id="ast-legend"></div>
-            <div class="ast-tooltip" id="ast-tooltip" style="display:none"></div>
-            <svg id="ast-svg" width="100%" height="100%"></svg>
-          </div>
-        </div>
+        </section>
 
-        <!-- CST Tree -->
-        <div class="tab-pane" id="cst-tab">
-          <div id="cst-empty" class="empty-state">
-            <div class="icon">🌲</div>
-            <h3>Formal Parse Tree</h3>
-            <p>Click <strong>Compile</strong> to generate the Leftmost Derivation Parse Tree strictly following the formal grammar.</p>
-          </div>
-          <div id="cst-content" class="ast-container" style="display:none">
-            <div class="ast-controls">
-              <button onclick="resetCSTZoom()" title="Reset zoom">⟲ Reset</button>
-              <button onclick="expandAllCST()" title="Expand all nodes">⊞ Expand All</button>
-              <button onclick="collapseAllCST()" title="Collapse all nodes">⊟ Collapse All</button>
+        <!-- Right Panel: Output -->
+        <section class="panel results-panel">
+            <div class="tabs-header" id="tabs-container">
+                <button class="tab-btn active" data-target="pane-lexer">Tokens</button>
+                <button class="tab-btn" data-target="pane-ast">AST</button>
+                <button class="tab-btn" data-target="pane-cst">Parse Tree</button>
+                <button class="tab-btn" data-target="pane-analytics">Analytics</button>
+                <button class="tab-btn" data-target="pane-ir">IR JSON</button>
+                <button class="tab-btn" data-target="pane-html">Gen HTML</button>
+                <button class="tab-btn tab-preview-btn" data-target="pane-preview">Preview</button>
             </div>
-            <div class="ast-legend" id="cst-legend"></div>
-            <div class="ast-tooltip" id="cst-tooltip" style="display:none"></div>
-            <svg id="cst-svg" width="100%" height="100%"></svg>
-          </div>
-        </div>
 
-        <!-- Semantic Analysis -->
-        <div class="tab-pane" id="semantic-tab">
-          <div id="semantic-empty" class="empty-state">
-            <div class="icon">🔍</div>
-            <h3>Semantic Analysis</h3>
-            <p>Click <strong>Compile</strong> to validate the AST and see warnings, errors, and document statistics.</p>
-          </div>
-          <div id="semantic-content" class="analysis-wrap" style="display:none"></div>
-        </div>
+            <div class="tabs-content">
+                
+                <!-- Tokens Tab -->
+                <div class="tab-pane active" id="pane-lexer">
+                    <div class="scroll-wrap padding-wrap" id="tokens-container">
+                        <div class="empty-state">Click Compile to view tokens</div>
+                    </div>
+                </div>
 
-        <!-- JSON IR -->
-        <div class="tab-pane" id="ir-tab">
-          <div id="ir-empty" class="empty-state">
-            <div class="icon">📦</div>
-            <h3>JSON Intermediate Representation</h3>
-            <p>Click <strong>Compile</strong> to generate the JSON IR from the AST.</p>
-          </div>
-          <div id="ir-content" class="json-wrap" style="display:none"></div>
-        </div>
+                <!-- AST Tab -->
+                <div class="tab-pane" id="pane-ast">
+                    <div class="viz-toolbar">
+                        <button class="btn btn-sm" onclick="vizExpandAll('ast-svg')">Expand All</button>
+                        <button class="btn btn-sm" onclick="vizCollapseAll('ast-svg')">Collapse All</button>
+                        <button class="btn btn-sm" onclick="vizReset('ast-svg')">Reset View</button>
+                        <div class="speed-control">
+                            <span>Anim Speed:</span>
+                            <input type="range" id="anim-speed" min="100" max="1500" value="400">
+                        </div>
+                    </div>
+                    <div class="tree-container" id="ast-svg"></div>
+                </div>
 
-        <!-- Generated HTML -->
-        <div class="tab-pane" id="html-tab">
-          <div id="html-empty" class="empty-state">
-            <div class="icon">⚡</div>
-            <h3>Generated HTML</h3>
-            <p>Click <strong>Compile</strong> to see the generated HTML code.</p>
-          </div>
-          <div id="html-content" class="html-output" style="display:none"></div>
-        </div>
+                <!-- CST Tab -->
+                <div class="tab-pane" id="pane-cst">
+                    <div class="viz-toolbar">
+                        <button class="btn btn-sm" onclick="vizExpandAll('cst-svg')">Expand All</button>
+                        <button class="btn btn-sm" onclick="vizCollapseAll('cst-svg')">Collapse All</button>
+                        <button class="btn btn-sm" onclick="vizReset('cst-svg')">Reset View</button>
+                    </div>
+                    <div class="tree-container" id="cst-svg"></div>
+                </div>
+                
+                <!-- Analytics Tab -->
+                <div class="tab-pane" id="pane-analytics">
+                    <div class="scroll-wrap padding-wrap" id="analytics-container">
+                        <div class="empty-state">Click Compile to view analytics</div>
+                    </div>
+                </div>
 
-        <!-- Live Preview -->
-        <div class="tab-pane" id="preview-tab">
-          <div id="preview-empty" class="empty-state">
-            <div class="icon">👁</div>
-            <h3>Live Preview</h3>
-            <p>Click <strong>Compile</strong> to see the rendered HTML output.</p>
-          </div>
-          <iframe id="preview-frame" class="preview-frame" style="display:none" sandbox="allow-same-origin allow-scripts"></iframe>
-        </div>
-      </div>
-    </div>
-  </div>
+                <!-- IR Tab -->
+                <div class="tab-pane" id="pane-ir">
+                    <div class="scroll-wrap padding-wrap">
+                        <div id="ir-output" class="json-tree"></div>
+                    </div>
+                </div>
+
+                <!-- HTML Gen Tab -->
+                <div class="tab-pane" id="pane-html">
+                    <div class="scroll-wrap padding-wrap">
+                        <pre><code class="language-html" id="html-output"></code></pre>
+                    </div>
+                </div>
+
+                <!-- Preview Tab -->
+                <div class="tab-pane" id="pane-preview">
+                    <iframe class="preview-frame" id="preview-frame" sandbox="allow-same-origin allow-scripts allow-popups"></iframe>
+                </div>
+
+            </div>
+        </section>
+    </main>
 </div>
 
 <script>
-// ─── Global state ─────────────────────────────────────────────────
-let compileResult = null;
-let astTreeData = null;
-let astSvg, astG, astTooltip;
-let astAnimationTimer = null;
-
-let cstTreeData = null;
-let cstRoot = null;
-let cstTreeLayout = null;
-let cstZoom = null;
-let cstSvg, cstG, cstTooltip;
-let cstNodeIdCounter = 0;
-
-// ─── Character counter ───────────────────────────────────────────
-const mdInput = document.getElementById('markdown-input');
-const charCount = document.getElementById('char-count');
-mdInput.addEventListener('input', () => {
-  charCount.textContent = mdInput.value.length + ' chars';
-});
-charCount.textContent = mdInput.value.length + ' chars';
-
-// ─── Tab Switching ───────────────────────────────────────────────
-function switchTab(tabId, el) {
-  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
-  document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
-  el.classList.add('active');
-  document.getElementById(tabId).classList.add('active');
-
-  // Highlight corresponding pipeline phase
-  const phaseMap = {
-    'lexer-tab': 'lexer',
-    'ast-tab': 'parser',
-    'cst-tab': 'parser',
-    'semantic-tab': 'semantic',
-    'ir-tab': 'ir',
-    'html-tab': 'codegen',
-    'preview-tab': 'preview'
-  };
-  document.querySelectorAll('.phase-step').forEach(s => s.classList.remove('active'));
-  const phaseKey = phaseMap[tabId];
-  if (phaseKey) {
-    document.getElementById('phase-' + phaseKey)?.classList.add('active');
-  }
-}
-
-// ─── Compile ─────────────────────────────────────────────────────
-async function compileMarkdown() {
-  const btn = document.getElementById('compile-btn');
-  const md = mdInput.value;
-  if (!md.trim()) return;
-
-  btn.classList.add('loading');
-  btn.disabled = true;
-
-  // Reset pipeline
-  document.querySelectorAll('.phase-step').forEach(s => s.classList.remove('done', 'active'));
-  document.getElementById('phase-source').classList.add('done');
-
-  try {
-    const resp = await fetch('/compile', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ markdown: md })
-    });
-    const data = await resp.json();
-
-    if (data.error) {
-      alert('Compilation error: ' + data.error);
-      return;
-    }
-
-    compileResult = data.phases;
-
-    // Animate phases completing
-    await animatePhases();
-
-    // Render all outputs
-    renderTokens(compileResult.lexer);
-    renderAST(compileResult.parser.vis_tree);
-    if(compileResult.parser.cst_tree) {
-      renderCST(compileResult.parser.cst_tree);
-    }
-    renderSemanticAnalysis(compileResult.semantic);
-    renderIR(compileResult.ir);
-    renderHTML(compileResult.codegen.html);
-    renderPreview(compileResult.codegen.html);
-
-  } catch (e) {
-    alert('Error: ' + e.message);
-  } finally {
-    btn.classList.remove('loading');
-    btn.disabled = false;
-  }
-}
-
-async function animatePhases() {
-  const phases = ['lexer', 'parser', 'semantic', 'ir', 'codegen', 'preview'];
-  for (const p of phases) {
-    await sleep(200);
-    document.getElementById('phase-' + p).classList.add('done');
-  }
-}
-
-function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
-
-// ─── 1. Render Tokens ────────────────────────────────────────────
-function renderTokens(data) {
-  document.getElementById('lexer-empty').style.display = 'none';
-  const wrap = document.getElementById('lexer-content');
-  wrap.style.display = 'block';
-
-  let html = `<table class="token-table">
-    <thead><tr><th>#</th><th>Line</th><th>Type</th><th>Value</th></tr></thead><tbody>`;
-  data.tokens.forEach((t, i) => {
-    const val = escapeHtml(t.value).replace(/\n/g, '↵');
-    const hasSubs = t.sub_tokens && t.sub_tokens.length > 0;
-    const expandClass = hasSubs ? 'expandable-row' : '';
-    const indicator = hasSubs ? '<span class="expand-indicator">▶</span> ' : '';
-    html += `<tr class="${expandClass}" ${hasSubs ? `data-token-idx="${i}"` : ''}>
-      <td>${i + 1}</td>
-      <td>${t.line}</td>
-      <td>${indicator}<span class="token-type ${t.type}">${t.type}</span></td>
-      <td class="token-value" title="${escapeHtml(t.value)}">${val || '(empty)'}</td>
-    </tr>`;
-    // Hidden sub-token rows
-    if (hasSubs) {
-      html += `<tr class="sub-token-container" id="sub-tokens-${i}" style="display:none">
-        <td colspan="4">
-          <div class="sub-tokens-wrap">
-            <table class="token-table sub-token-table">
-              <thead><tr><th>#</th><th>Type</th><th>Value</th></tr></thead><tbody>`;
-      t.sub_tokens.forEach((st, si) => {
-        const stVal = escapeHtml(st.value).replace(/\n/g, '↵');
-        html += `<tr>
-          <td>${si + 1}</td>
-          <td><span class="token-type ${st.type}">${st.type}</span></td>
-          <td class="token-value">${stVal || '(empty)'}</td>
-        </tr>`;
-      });
-      html += `</tbody></table></div></td></tr>`;
-    }
-  });
-  html += '</tbody></table>';
-  wrap.innerHTML = html;
-
-  // Add click handlers for expandable rows
-  wrap.querySelectorAll('.expandable-row').forEach(row => {
-    row.addEventListener('click', function() {
-      const idx = this.dataset.tokenIdx;
-      const subRow = document.getElementById('sub-tokens-' + idx);
-      const indicator = this.querySelector('.expand-indicator');
-      if (subRow.style.display === 'none') {
-        subRow.style.display = '';
-        indicator.textContent = '▼';
-        this.classList.add('expanded');
-      } else {
-        subRow.style.display = 'none';
-        indicator.textContent = '▶';
-        this.classList.remove('expanded');
-      }
-    });
-  });
-}
-
-// ─── 2. Render AST (D3.js Tree) — Collapsible ───────────────────
-let astRoot = null;
-let astTreeLayout = null;
-let astZoom = null;
-let astNodeIdCounter = 0;
-
-function renderAST(treeData) {
-  document.getElementById('ast-empty').style.display = 'none';
-  const container = document.getElementById('ast-content');
-  container.style.display = 'block';
-  astTreeData = treeData;
-
-  // Clear previous
-  d3.select('#ast-svg').selectAll('*').remove();
-  if (astAnimationTimer) clearInterval(astAnimationTimer);
-
-  const svgEl = document.getElementById('ast-svg');
-  let width = svgEl.clientWidth;
-  let height = svgEl.clientHeight;
-  
-  // If dimensions are 0 (hidden tab), set explicit dimensions
-  if (width === 0 || height === 0) {
-    width = 800;
-    height = 500;
-    svgEl.setAttribute('width', width);
-    svgEl.setAttribute('height', height);
-  }
-
-  astSvg = d3.select('#ast-svg');
-  astG = astSvg.append('g').attr('transform', `translate(${width/2}, 40)`);
-  astTooltip = document.getElementById('ast-tooltip');
-
-  // Zoom & pan
-  astZoom = d3.zoom()
-    .scaleExtent([0.1, 4])
-    .on('zoom', (event) => { 
-      if (event.transform && typeof event.transform.x === 'number' && typeof event.transform.y === 'number') {
-        astG.attr('transform', event.transform);
-      }
-    });
-  astSvg.call(astZoom);
-  astSvg._zoom = astZoom;
-
-  // Tree layout
-  astTreeLayout = d3.tree().nodeSize([110, 65]);
-
-  // Build D3 hierarchy
-  astRoot = d3.hierarchy(treeData, d => d.children);
-  astRoot.x0 = 0;
-  astRoot.y0 = 0;
-  astNodeIdCounter = 0;
-
-  // Initialize all nodes except the root as collapsed
-  function initCollapsible(d) {
-    if (d.children) {
-      d.children.forEach(initCollapsible);
-    }
-    if (d !== astRoot && d.children) {
-      d._collapsed_data = collectChildData(d);
-      d.data._children = d._collapsed_data;
-      delete d.data.children;
-      d.children = null;
-    }
-  }
-  initCollapsible(astRoot);
-
-  updateASTTree(astRoot);
-
-  // Build legend
-  const allNodes = astRoot.descendants();
-  buildLegend(allNodes);
-
-  // Center the tree
-  setTimeout(() => {
-    const bounds = astG.node().getBBox();
-    let dx = width / 2 - (bounds.x + bounds.width / 2);
-    if (!isNaN(dx)) {
-      astSvg.transition().duration(500).call(
-        astZoom.transform,
-        d3.zoomIdentity.translate(dx, 40).scale(0.8)
-      );
-    }
-  }, 100);
-}
-
-function updateASTTree(source) {
-  const duration = 400;
-
-  // Validate source
-  if (!source) source = astRoot;
-  if (!source.x0) source.x0 = 0;
-  if (!source.y0) source.y0 = 0;
-
-  // Compute new layout
-  astTreeLayout(astRoot);
-
-  const allNodes = astRoot.descendants();
-  const allLinks = astRoot.links();
-
-  // Assign unique IDs
-  allNodes.forEach(d => { if (!d.id) d.id = ++astNodeIdCounter; });
-
-  // Sanitize coordinates
-  allNodes.forEach(d => {
-    if (isNaN(d.x)) d.x = 0;
-    if (isNaN(d.y)) d.y = 0;
-  });
-
-  // ── Links ──
-  const linkSel = astG.selectAll('.ast-link').data(allLinks, d => d.target.id);
-
-  const linkEnter = linkSel.enter().append('path')
-    .attr('class', 'ast-link')
-    .attr('fill', 'none')
-    .attr('stroke', d => d.target.data.color || '#64748b')
-    .attr('stroke-width', 1.5)
-    .attr('stroke-opacity', 0.4)
-    .attr('d', () => {
-      const o = { x: source.x0 || 0, y: source.y0 || 0 };
-      return d3.linkVertical().x(d => d.x).y(d => d.y)({ source: o, target: o });
-    });
-
-  linkEnter.merge(linkSel).transition().duration(duration)
-    .attr('d', d3.linkVertical().x(d => d.x).y(d => d.y));
-
-  linkSel.exit().transition().duration(duration)
-    .attr('d', () => {
-      const o = { x: source.x, y: source.y };
-      return d3.linkVertical().x(d => d.x).y(d => d.y)({ source: o, target: o });
-    })
-    .remove();
-
-  // ── Nodes ──
-  const nodeSel = astG.selectAll('.ast-node').data(allNodes, d => d.id);
-
-  const nodeEnter = nodeSel.enter().append('g')
-    .attr('class', 'ast-node')
-    .attr('transform', `translate(${isNaN(source.x0) ? 0 : (source.x0 || 0)}, ${isNaN(source.y0) ? 0 : (source.y0 || 0)})`)
-    .attr('opacity', 0)
-    .style('cursor', d => isCollapsible(d) ? 'pointer' : 'default')
-    .on('click', (event, d) => {
-      event.stopPropagation();
-      if (isCollapsible(d)) {
-        toggleNode(d);
-        updateASTTree(d);
-      }
-    })
-    .on('mouseover', function(event, d) {
-      showTooltip(event, d.data);
-      d3.select(this).select('circle')
-        .transition().duration(200)
-        .attr('r', 10)
-        .attr('stroke-width', 3);
-    })
-    .on('mouseout', function() {
-      hideTooltip();
-      d3.select(this).select('circle')
-        .transition().duration(200)
-        .attr('r', 7)
-        .attr('stroke-width', 2);
-    });
-
-  // Circle
-  nodeEnter.append('circle')
-    .attr('r', 7)
-    .attr('fill', d => d.data.color || '#64748b')
-    .attr('stroke', d => d3.color(d.data.color || '#64748b').brighter(0.8))
-    .attr('stroke-width', 2);
-
-  // Collapse indicator (▶/▼)
-  nodeEnter.append('text')
-    .attr('class', 'collapse-indicator')
-    .attr('dy', '0.35em')
-    .attr('x', 0)
-    .attr('y', -14)
-    .attr('text-anchor', 'middle')
-    .attr('fill', '#94a3b8')
-    .attr('font-size', '0.6rem')
-    .text(d => {
-      if (!isCollapsible(d)) return '';
-      return d._collapsed_data ? '▼ expand' : '';
-    });
-
-  // Label
-  nodeEnter.append('text')
-    .attr('class', 'node-label')
-    .attr('dy', '0.32em')
-    .attr('x', 0)
-    .attr('y', 14)
-    .attr('text-anchor', 'middle')
-    .attr('fill', '#e2e8f0')
-    .attr('font-size', '0.72rem')
-    .attr('font-family', 'var(--font-sans)')
-    .attr('font-weight', 500)
-    .text(d => getNodeLabel(d));
-
-  // ── Update existing + entered ──
-  const nodeUpdate = nodeEnter.merge(nodeSel);
-
-  nodeUpdate.transition().duration(duration)
-    .attr('transform', d => `translate(${isNaN(d.x) ? 0 : d.x}, ${isNaN(d.y) ? 0 : d.y})`)
-    .attr('opacity', 1);
-
-  // Update labels and indicators on existing nodes
-  nodeUpdate.select('.collapse-indicator')
-    .text(d => {
-      if (!isCollapsible(d)) return '';
-      return d._collapsed_data ? '▼ expand' : '';
-    });
-
-  nodeUpdate.select('.node-label')
-    .text(d => getNodeLabel(d));
-
-  // ── Exit ──
-  nodeSel.exit().transition().duration(duration)
-    .attr('transform', `translate(${isNaN(source.x) ? 0 : source.x}, ${isNaN(source.y) ? 0 : source.y})`)
-    .attr('opacity', 0)
-    .remove();
-
-  // Save positions for transitions
-  allNodes.forEach(d => { d.x0 = d.x; d.y0 = d.y; });
-}
-
-function isCollapsible(d) {
-  return d._collapsed_data || (d.children && d.children.length > 0);
-}
-
-function getNodeLabel(d) {
-  // If collapsed and has raw_content, show the raw token text
-  if (d._collapsed_data && d.data.raw_content) {
-    const raw = d.data.raw_content;
-    const preview = raw.length > 50 ? raw.substring(0, 50) + '…' : raw;
-    // Prefix with type for clarity
-    const prefix = d.data.type === 'heading' ? `H${d.data.attributes.level || ''}` : d.data.type;
-    return `${prefix}: "${preview}"`;
-  }
-  return d.data.name;
-}
-
-function toggleNode(d) {
-  if (d._collapsed_data) {
-    // Expand: convert _collapsed_data into real D3 children
-    d.data.children = d._collapsed_data;
-    delete d.data._children;
-    d._collapsed_data = null;
-    // Rebuild hierarchy children
-    if (d.data.children) {
-      d.children = d.data.children.map(childData => {
-        const child = d3.hierarchy(childData, c => c.children);
-        child.parent = d;
-        child.depth = d.depth + 1;
-        // Recursively set up _collapsed_data for nested collapsible nodes
-        initCollapsedState(child);
-        return child;
-      });
-    }
-  } else if (d.children) {
-    // Collapse: store children as _collapsed_data
-    d._collapsed_data = collectChildData(d);
-    d.data._children = d._collapsed_data;
-    delete d.data.children;
-    d.children = null;
-  }
-}
-
-function initCollapsedState(node) {
-  if (node.data._children && !node.data.children) {
-    node._collapsed_data = node.data._children;
-    node.children = null;
-  }
-  if (node.children) {
-    node.children.forEach(initCollapsedState);
-  }
-}
-
-function collectChildData(d) {
-  if (!d.children) return null;
-  return d.children.map(child => {
-    const data = { ...child.data };
-    if (child.children && child.children.length > 0) {
-      data.children = collectChildData(child);
-    }
-    if (child._collapsed_data) {
-      data._children = child._collapsed_data;
-    }
-    return data;
-  });
-}
-
-function buildLegend(nodes) {
-  const legendEl = document.getElementById('ast-legend');
-  const types = new Map();
-  nodes.forEach(n => {
-    if (!types.has(n.data.type)) {
-      types.set(n.data.type, n.data.color);
-    }
-  });
-  let html = '';
-  types.forEach((color, type) => {
-    html += `<div class="ast-legend-item">
-      <div class="ast-legend-color" style="background:${color}"></div>
-      <span>${type}</span>
-    </div>`;
-  });
-  legendEl.innerHTML = html;
-}
-
-function showTooltip(event, data) {
-  const tt = document.getElementById('ast-tooltip');
-  let html = `<div class="tt-type">${data.type}</div>`;
-  if (data.raw_content) {
-    html += `<div class="tt-attr">raw: ${escapeHtml(data.raw_content)}</div>`;
-  }
-  if (data.attributes && Object.keys(data.attributes).length > 0) {
-    for (const [k, v] of Object.entries(data.attributes)) {
-      html += `<div class="tt-attr">${k}: ${escapeHtml(String(v))}</div>`;
-    }
-  }
-  if (data.children || data._children || data.has_children) {
-    html += `<div class="tt-hint">Click to expand/collapse</div>`;
-  }
-  tt.innerHTML = html;
-  tt.style.display = 'block';
-  tt.style.left = (event.pageX + 15) + 'px';
-  tt.style.top = (event.pageY - 10) + 'px';
-}
-
-function hideTooltip() {
-  document.getElementById('ast-tooltip').style.display = 'none';
-}
-
-function resetASTZoom() {
-  if (!astSvg || !astG) return;
-  const svgEl = document.getElementById('ast-svg');
-  const width = svgEl.clientWidth || 800;
-  const bounds = astG.node().getBBox();
-  let dx = width / 2 - (bounds.x + bounds.width / 2);
-  if (!isNaN(dx)) {
-    astSvg.transition().duration(500).call(
-      astSvg._zoom.transform,
-      d3.zoomIdentity.translate(dx, 40).scale(0.8)
-    );
-  }
-}
-
-function expandAllAST() {
-  if (!astRoot) return;
-  function expandRecursive(d) {
-    if (d._collapsed_data) {
-      toggleNode(d);
-    }
-    if (d.children) {
-      d.children.forEach(expandRecursive);
-    }
-  }
-  expandRecursive(astRoot);
-  updateASTTree(astRoot);
-}
-
-function collapseAllAST() {
-  if (!astRoot) return;
-  function collapseRecursive(d) {
-    if (d.children) {
-      d.children.forEach(collapseRecursive);
-    }
-    if (d !== astRoot && d.children && !d._collapsed_data) {
-      toggleNode(d);
-    }
-  }
-  collapseRecursive(astRoot);
-  updateASTTree(astRoot);
-}
-
-function replayAST() {
-  if (astTreeData) renderAST(astTreeData);
-}
-
-// Speed control
-document.getElementById('ast-speed').addEventListener('input', function() {
-  document.getElementById('speed-label').textContent = this.value + 'ms';
-});
-
-
-// ─── 2b. Render CST — Vertical, Collapsible ──────────────────────
-function renderCST(treeData) {
-  document.getElementById('cst-empty').style.display = 'none';
-  const container = document.getElementById('cst-content');
-  container.style.display = 'block';
-  cstTreeData = treeData;
-
-  d3.select('#cst-svg').selectAll('*').remove();
-  const svgEl = document.getElementById('cst-svg');
-  const width = svgEl.clientWidth || 800;
-  const height = svgEl.clientHeight || 600;
-
-  cstSvg = d3.select('#cst-svg');
-  cstG = cstSvg.append('g').attr('transform', `translate(${width/2}, 40)`);
-
-  cstZoom = d3.zoom().scaleExtent([0.1, 4])
-    .on('zoom', ev => {
-      if (ev.transform && typeof ev.transform.x === 'number' && typeof ev.transform.y === 'number') {
-        cstG.attr('transform', ev.transform);
-      }
-    });
-  cstSvg.call(cstZoom);
-  cstSvg._zoom = cstZoom;
-
-  // ── Vertical layout: swap x/y roles ──
-  cstTreeLayout = d3.tree().nodeSize([110, 65]);
-
-  cstRoot = d3.hierarchy(treeData, d => d.children);
-  cstRoot.x0 = 0;
-  cstRoot.y0 = 0;
-  cstNodeIdCounter = 0;
-
-  // Initialize collapse state based on data.collapsed flag
-  function collapseCSTNodes(d) {
-    if (d.children) {
-      d.children.forEach(collapseCSTNodes);
-      if (d.data.collapsed) {
-        d._cstHidden = d.children;
-        d.children = null;
-      }
-    }
-  }
-  collapseCSTNodes(cstRoot);
-
-  updateCSTTree(cstRoot);
-
-  buildCSTLegend(cstRoot.descendants());
-
-  setTimeout(() => {
-    const bounds = cstG.node().getBBox();
-    const dx = width / 2 - (bounds.x + bounds.width / 2);
-    if (!isNaN(dx)) {
-      cstSvg.transition().duration(500).call(
-        cstZoom.transform,
-        d3.zoomIdentity.translate(dx, 40).scale(0.75)
-      );
-    }
-  }, 120);
-}
-
-function cstToggle(d) {
-  if (d._cstHidden) {
-    d.children = d._cstHidden;
-    d._cstHidden = null;
-  } else if (d.children) {
-    d._cstHidden = d.children;
-    d.children = null;
-  }
-}
-
-function updateCSTTree(source) {
-  const dur = 350;
-  // ── Vertical: use d.x for horizontal position, d.y for depth ──
-  cstTreeLayout(cstRoot);
-  const nodes = cstRoot.descendants();
-  const links = cstRoot.links();
-  nodes.forEach(d => { if (!d.id) d.id = ++cstNodeIdCounter; });
-
-  const linkPath = d3.linkVertical().x(d => d.x).y(d => d.y);
-
-  const lSel = cstG.selectAll('.ast-link').data(links, d => d.target.id);
-  lSel.enter().append('path')
-    .attr('class', 'ast-link').attr('fill','none')
-    .attr('stroke', d => d.target.data.color || '#64748b')
-    .attr('stroke-width', 1.5).attr('stroke-opacity', 0.4)
-    .attr('d', () => linkPath({ source: {x: source.x0||0, y: source.y0||0}, target: {x: source.x0||0, y: source.y0||0} }))
-  .merge(lSel).transition().duration(dur).attr('d', linkPath);
-
-  lSel.exit().transition().duration(dur)
-    .attr('d', () => linkPath({ source: {x:source.x, y:source.y}, target: {x:source.x, y:source.y} }))
-    .remove();
-
-  // nodes
-  const nSel = cstG.selectAll('.ast-node').data(nodes, d => d.id);
-  const nEnter = nSel.enter().append('g')
-    .attr('class', 'ast-node')
-    .attr('transform', `translate(${source.x0||0},${source.y0||0})`)
-    .attr('opacity', 0)
-    .style('cursor', d => (d.children || d._cstHidden) ? 'pointer' : 'default')
-    .on('click', (ev, d) => {
-      ev.stopPropagation();
-      if (d.children || d._cstHidden) {
-        cstToggle(d);
-        updateCSTTree(d);
-      }
-    })
-    .on('mouseover', function(ev, d) {
-      d3.select(this).select('circle').transition().duration(150).attr('r',10).attr('stroke-width',3);
-      showCSTTooltip(ev, d.data);
-    })
-    .on('mouseout', function() {
-      d3.select(this).select('circle').transition().duration(150).attr('r',7).attr('stroke-width',2);
-      hideCSTTooltip();
-    });
-
-  nEnter.append('circle').attr('r',7)
-    .attr('fill', d => d.data.color||'#64748b')
-    .attr('stroke', d => d3.color(d.data.color||'#64748b').brighter(0.8))
-    .attr('stroke-width', 2);
-
-  // collapse indicator
-  nEnter.append('text').attr('class','collapse-indicator')
-    .attr('dy','0.35em').attr('x', 0).attr('y', -14)
-    .attr('text-anchor','middle').attr('fill','#94a3b8').attr('font-size','0.55rem')
-    .text(d => d._cstHidden ? '▼ expand' : '');
-
-  // label below node
-  nEnter.append('text').attr('class','node-label')
-    .attr('dy', '0.32em').attr('x', 0).attr('y', 14)
-    .attr('text-anchor','middle')
-    .attr('fill','#e2e8f0').attr('font-size','0.68rem')
-    .attr('font-family','var(--font-sans)').attr('font-weight',500)
-    .text(d => d.data.name);
-
-  const nUpdate = nEnter.merge(nSel);
-  nUpdate.transition().duration(dur)
-    .attr('transform', d => `translate(${d.x},${d.y})`).attr('opacity',1);
-
-  // update collapse indicator text on existing nodes too
-  nUpdate.select('.collapse-indicator').text(d => d._cstHidden ? '▼ expand' : '');
-
-  nSel.exit().transition().duration(dur)
-    .attr('transform', `translate(${source.x},${source.y})`).attr('opacity',0).remove();
-
-  nodes.forEach(d => { d.x0 = d.x; d.y0 = d.y; });
-}
-
-function buildCSTLegend(nodes) {
-  const legendEl = document.getElementById('cst-legend');
-  const types = new Map();
-  nodes.forEach(n => { if (!types.has(n.data.type)) types.set(n.data.type, n.data.color); });
-  let html = '';
-  types.forEach((color, type) => {
-    html += `<div class="ast-legend-item"><div class="ast-legend-color" style="background:${color}"></div><span>${type}</span></div>`;
-  });
-  legendEl.innerHTML = html;
-}
-
-function showCSTTooltip(event, data) {
-  const tt = document.getElementById('cst-tooltip');
-  let html = `<div class="tt-type">${data.name}</div>`;
-  if (data.attributes && Object.keys(data.attributes).length > 0)
-    for (const [k,v] of Object.entries(data.attributes))
-      html += `<div class="tt-attr">${k}: ${escapeHtml(String(v))}</div>`;
-  tt.innerHTML = html;
-  tt.style.display = 'block';
-  tt.style.left = (event.pageX+15)+'px';
-  tt.style.top  = (event.pageY-10)+'px';
-}
-function hideCSTTooltip() { document.getElementById('cst-tooltip').style.display = 'none'; }
-
-function resetCSTZoom() {
-  if (!cstSvg||!cstG) return;
-  const svgEl = document.getElementById('cst-svg');
-  const width = svgEl.clientWidth||800;
-  const bounds = cstG.node().getBBox();
-  const dx = width/2-(bounds.x+bounds.width/2);
-  if (!isNaN(dx)) {
-    cstSvg.transition().duration(500).call(cstSvg._zoom.transform, d3.zoomIdentity.translate(dx,40).scale(0.75));
-  }
-}
-
-function expandAllCST() {
-  if (!cstRoot) return;
-  function exp(d) {
-    if (d._cstHidden) cstToggle(d);
-    if (d.children) d.children.forEach(exp);
-  }
-  exp(cstRoot);
-  updateCSTTree(cstRoot);
-}
-function collapseAllCST() {
-  if (!cstRoot) return;
-  function col(d) {
-    if (d.children) { d.children.forEach(col); }
-    if (d.children && d !== cstRoot) { cstToggle(d); }
-  }
-  col(cstRoot);
-  updateCSTTree(cstRoot);
-}
-
-// ─── 3. Render Semantic Analysis ─────────────────────────────────
-function renderSemanticAnalysis(data) {
-  document.getElementById('semantic-empty').style.display = 'none';
-  const wrap = document.getElementById('semantic-content');
-  wrap.style.display = 'block';
-
-  let html = '';
-
-  // Issues — only show if there are actual issues
-  const issues = [...(data.errors || []), ...(data.warnings || [])];
-  if (issues.length > 0) {
-    html += '<div class="analysis-section"><h3>⚠️ Issues</h3>';
-    issues.forEach(issue => {
-      const cls = issue.severity || 'warning';
-      const icon = cls === 'error' ? '❌' : cls === 'warning' ? '⚠️' : 'ℹ️';
-      html += `<div class="analysis-item ${cls}">
-        <span class="analysis-icon">${icon}</span>
-        <span>${escapeHtml(issue.message)}</span>
-      </div>`;
-    });
-    html += '</div>';
-  }
-
-  // Stats — compact summary table + node breakdown in one view
-  if (data.stats) {
-    // Key metrics as a compact summary row
-    const metrics = [
-      { label: 'Nodes', value: data.stats.total_nodes },
-      { label: 'Headings', value: data.stats.heading_count },
-      { label: 'Paragraphs', value: data.stats.paragraph_count },
-      { label: 'Links', value: data.stats.link_count },
-      { label: 'Images', value: data.stats.image_count },
-      { label: 'Code Blocks', value: data.stats.code_block_count },
-      { label: 'Lists', value: data.stats.list_count },
-      { label: 'Tables', value: data.stats.table_count },
-    ].filter(m => m.value > 0);
-
-    html += '<div class="analysis-section"><h3>📊 Document Overview</h3>';
-    html += '<div class="stats-grid">';
-    metrics.forEach(m => {
-      html += `<div class="stat-card"><div class="stat-value">${m.value}</div><div class="stat-label">${m.label}</div></div>`;
-    });
-    html += '</div></div>';
-
-    // Node type breakdown as a compact table
-    if (data.stats.node_types) {
-      const sorted = Object.entries(data.stats.node_types).sort((a,b) => b[1] - a[1]);
-      html += '<div class="analysis-section"><h3>🏷 Syntax Node Types</h3>';
-      html += '<table class="token-table"><thead><tr><th>Type</th><th>Count</th></tr></thead><tbody>';
-      sorted.forEach(([type, count]) => {
-        html += `<tr><td><span class="token-type">${type}</span></td><td>${count}</td></tr>`;
-      });
-      html += '</tbody></table></div>';
-    }
-  }
-
-  // Semantic Check Success Message
-  const hasErrors = (data.errors && data.errors.length > 0);
-  if (!hasErrors) {
-    html += '<div class="analysis-section" style="margin-top:20px; text-align:center; padding: 20px; background: rgba(16, 185, 129, 0.1); border: 1px solid #10b981; border-radius: 8px;">';
-    html += '<h3 style="color: #10b981; margin: 0; font-size: 1.1rem;">✅ Semantic Check Passed</h3>';
-    html += '<p style="margin: 8px 0 0 0; color: #047857;">The tokens have successfully passed all semantic validations.</p>';
-    html += '</div>';
-  }
-
-  wrap.innerHTML = html;
-}
-
-// ─── 4. Render JSON IR ───────────────────────────────────────────
-function renderIR(data) {
-  document.getElementById('ir-empty').style.display = 'none';
-  const wrap = document.getElementById('ir-content');
-  wrap.style.display = 'block';
-
-  const jsonStr = JSON.stringify(data, null, 2);
-  wrap.innerHTML = '<pre>' + syntaxHighlightJSON(jsonStr) + '</pre>';
-}
-
-function syntaxHighlightJSON(json) {
-  return json.replace(
-    /("(\\u[a-zA-Z0-9]{4}|\\[^u]|[^\\"])*"(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d*)?(?:[eE][+\-]?\d+)?)/g,
-    function(match) {
-      let cls = 'json-number';
-      if (/^"/.test(match)) {
-        if (/:$/.test(match)) {
-          cls = 'json-key';
-          match = match.slice(0, -1) + ':';
-        } else {
-          cls = 'json-string';
-        }
-      } else if (/true|false/.test(match)) {
-        cls = 'json-boolean';
-      } else if (/null/.test(match)) {
-        cls = 'json-null';
-      }
-      return `<span class="${cls}">${match}</span>`;
-    }
-  );
-}
-
-// ─── 5. Render HTML Output ───────────────────────────────────────
-function renderHTML(htmlStr) {
-  document.getElementById('html-empty').style.display = 'none';
-  const wrap = document.getElementById('html-content');
-  wrap.style.display = 'block';
-  wrap.textContent = htmlStr;
-}
-
-function renderPreview(htmlStr) {
-  document.getElementById('preview-empty').style.display = 'none';
-  const frame = document.getElementById('preview-frame');
-  frame.style.display = 'block';
-
-  const previewHTML = `<!DOCTYPE html><html><head>
-    <base href="/">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
-    <link rel="stylesheet" href="/static/render.css">
-  </head><body>
-    ${htmlStr}
+    // --- UI Logic ---
+    const tabBtns = document.querySelectorAll('.tab-btn');
+    const tabPanes = document.querySelectorAll('.tab-pane');
     
-    <script type="module">
-    import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
-    mermaid.initialize({ startOnLoad: true });
-    <${"/"}script>
+    tabBtns.forEach(btn => {
+        btn.addEventListener('click', () => {
+            tabBtns.forEach(b => b.classList.remove('active'));
+            tabPanes.forEach(p => p.classList.remove('active'));
+            btn.classList.add('active');
+            document.getElementById(btn.dataset.target).classList.add('active');
+        });
+    });
 
-    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js" onload="
-      document.querySelectorAll('.math').forEach(function(el) {
-        var isDisplay = el.classList.contains('math-display');
+    let currentPhases = null;
+
+    // --- Pipeline Animation ---
+    const delay = ms => new Promise(res => setTimeout(res, ms));
+
+    async function animatePipeline(phases) {
+        const steps = document.querySelectorAll('.step');
+        steps.forEach(s => s.className = 'step');
+        
+        for(let i=0; i<steps.length; i++) {
+            steps[i].classList.add('active');
+            await delay(300);
+            steps[i].classList.remove('active');
+            steps[i].classList.add('done');
+            
+            if(i === 1) renderLexer(phases.lexer.tokens);
+            if(i === 2) {
+                renderTree('#ast-svg', phases.parser.vis_tree);
+                renderTree('#cst-svg', phases.parser.cst_tree, true);
+            }
+            if(i === 3) renderAnalytics(phases.analytics);
+            if(i === 4) renderJSONTree(phases.ir, document.getElementById('ir-output'));
+            if(i === 5) {
+                const codeBlock = document.getElementById('html-output');
+                codeBlock.textContent = phases.codegen.html;
+                delete codeBlock.dataset.highlighted;
+                hljs.highlightElement(codeBlock);
+                renderPreview(phases.codegen.html);
+            }
+        }
+    }
+
+    // --- JSON Renderer ---
+    function renderJSONTree(obj, container) {
+        container.innerHTML = '';
+        function createNode(key, val, isLast) {
+            const wrapper = document.createElement('div');
+            wrapper.className = 'json-node';
+            
+            const keyHtml = key !== null ? `<span class="json-key">"${key}"</span>: ` : '';
+            const comma = isLast ? '' : ',';
+
+            if (val === null) {
+                wrapper.innerHTML = `${keyHtml}<span class="json-null">null</span>${comma}`;
+            } else if (typeof val === 'string') {
+                wrapper.innerHTML = `${keyHtml}<span class="json-string">"${val.replace(/"/g, '\\"')}"</span>${comma}`;
+            } else if (typeof val === 'number' || typeof val === 'boolean') {
+                wrapper.innerHTML = `${keyHtml}<span class="json-number">${val}</span>${comma}`;
+            } else if (typeof val === 'object') {
+                const isArray = Array.isArray(val);
+                const openBracket = isArray ? '[' : '{';
+                const closeBracket = isArray ? ']' : '}';
+                const keys = Object.keys(val);
+                
+                if (keys.length === 0) {
+                    wrapper.innerHTML = `${keyHtml}${openBracket}${closeBracket}${comma}`;
+                } else {
+                    const details = document.createElement('details');
+                    details.open = true;
+                    const summary = document.createElement('summary');
+                    summary.innerHTML = `${keyHtml}<span class="json-bracket">${openBracket}</span>`;
+                    details.appendChild(summary);
+                    
+                    const childrenDiv = document.createElement('div');
+                    childrenDiv.className = 'json-children';
+                    keys.forEach((k, idx) => {
+                        childrenDiv.appendChild(createNode(isArray ? null : k, val[k], idx === keys.length - 1));
+                    });
+                    details.appendChild(childrenDiv);
+                    
+                    const closeDiv = document.createElement('div');
+                    closeDiv.innerHTML = `<span class="json-bracket">${closeBracket}</span>${comma}`;
+                    details.appendChild(closeDiv);
+                    wrapper.appendChild(details);
+                }
+            }
+            return wrapper;
+        }
+        container.appendChild(createNode(null, obj, true));
+    }
+
+    // --- Data Rendering ---
+    function renderLexer(tokens) {
+        const container = document.getElementById('tokens-container');
+        container.innerHTML = '';
+        
+        const inlineTypes = ['text', 'strong', 'emph', 'inline_code', 'link', 'image', 'soft_break', 'hard_break', 'inline_math', 'html_inline'];
+        let currentBlock = null;
+        
+        tokens.forEach(t => {
+            const isInline = inlineTypes.includes(t.type.toLowerCase());
+            if (!isInline || !currentBlock) {
+                currentBlock = document.createElement('details');
+                currentBlock.className = 'token-block';
+                const summary = document.createElement('summary');
+                summary.className = 'token-block-head';
+                summary.innerHTML = `<span class="badge">${t.type}</span> <span class="t-val">${t.value.substring(0,30)}</span>`;
+                currentBlock.appendChild(summary);
+                
+                const inlineContainer = document.createElement('div');
+                inlineContainer.className = 'token-inlines';
+                currentBlock.appendChild(inlineContainer);
+                currentBlock.inlines = inlineContainer;
+                
+                container.appendChild(currentBlock);
+            } else {
+                const inlineEl = document.createElement('div');
+                inlineEl.className = 'token-inline-item';
+                inlineEl.innerHTML = `<span class="badge">${t.type}</span> <span class="t-val">${t.value}</span>`;
+                currentBlock.inlines.appendChild(inlineEl);
+            }
+        });
+    }
+
+    function renderAnalytics(stats) {
+        const container = document.getElementById('analytics-container');
+        let html = '<div class="analytics-grid">';
+        
+        html += `<div class="stat-card"><h3>Tree Metrics</h3>
+            <div class="metrics-row">
+                <div class="metric"><span>Max Depth</span><strong>${stats.max_depth}</strong></div>
+                <div class="metric"><span>Avg Depth</span><strong>${stats.avg_depth}</strong></div>
+                <div class="metric"><span>Block Nodes</span><strong>${stats.block_nodes}</strong></div>
+                <div class="metric"><span>Inline Nodes</span><strong>${stats.inline_nodes}</strong></div>
+            </div>
+        </div>`;
+
+        html += '<div class="stat-card"><h3>Token Distribution</h3>';
+        html += `<div class="stat-subtitle">Total: ${stats.total_tokens}</div><div class="bars">`;
+        stats.tokens_breakdown.forEach(t => {
+            let pct = (t.value / stats.total_tokens) * 100;
+            html += `<div class="bar-row"><div class="bar-lbl">${t.name}</div><div class="bar-track"><div class="bar-fill" style="width:${pct}%"></div></div><div class="bar-val">${t.value}</div></div>`;
+        });
+        html += '</div></div>';
+
+        html += '<div class="stat-card"><h3>Node Distribution</h3>';
+        html += `<div class="stat-subtitle">Total: ${stats.total_nodes}</div><div class="bars">`;
+        stats.nodes_breakdown.forEach(n => {
+            let pct = (n.value / stats.total_nodes) * 100;
+            html += `<div class="bar-row"><div class="bar-lbl">${n.name}</div><div class="bar-track"><div class="bar-fill" style="width:${pct}%"></div></div><div class="bar-val">${n.value}</div></div>`;
+        });
+        html += '</div></div></div>';
+        
+        container.innerHTML = html;
+    }
+
+    function renderPreview(htmlContent) {
+        const frame = document.getElementById('preview-frame');
+        // Properly load mermaid as a module so it works reliably in srcdoc
+        const docHtml = `<!DOCTYPE html><html><head><base href="/">
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+        <link rel="stylesheet" href="/static/render.css">
+        </head><body>${htmlContent}
+        <script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/highlight.min.js"><\/script>
+        <script>document.querySelectorAll("pre code").forEach(function(b){hljs.highlightElement(b);});<\/script>
+        <script type="module">
+          import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
+          mermaid.initialize({startOnLoad: true, securityLevel: "loose"});
+        <\/script>
+        <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js" onload="document.querySelectorAll('.math').forEach(function(el){try{katex.render(el.textContent,el,{displayMode:el.classList.contains('math-display'),throwOnError:false});}catch(e){}});"><\/script>
+        </body></html>`;
+        frame.srcdoc = docHtml;
+    }
+
+    // --- D3.js Tree Rendering ---
+    const treeState = {};
+    
+    function getAnimSpeed() {
+        const val = document.getElementById('anim-speed');
+        return val ? parseInt(val.value) : 500;
+    }
+
+    function renderTree(selector, data, isVertical=false) {
+        const container = document.querySelector(selector);
+        container.innerHTML = '';
+        const width = container.clientWidth || 800;
+        const dx = isVertical ? 40 : 30;
+        const dy = isVertical ? width / 5 : 140;
+
+        const root = d3.hierarchy(data);
+        const svg = d3.select(selector).append("svg")
+            .attr("width", "100%")
+            .attr("height", "100%")
+            .style("user-select", "none");
+            
+        const g = svg.append("g");
+        const zoom = d3.zoom().on("zoom", (e) => g.attr("transform", e.transform));
+        svg.call(zoom);
+
+        const tree = d3.tree().nodeSize(isVertical ? [dx, dy] : [dx, dy]);
+        if(isVertical) tree.separation((a, b) => a.parent == b.parent ? 1 : 1.2);
+
+        treeState[selector] = { root, tree, g, isVertical, zoom, svg };
+        
+        root.x0 = isVertical ? width/2 : dy / 2;
+        root.y0 = 0;
+        
+        if (root.children) root.children.forEach(collapse);
+        updateTree(selector, root);
+        vizReset(selector);
+    }
+
+    function collapse(d) {
+        if(d.children) {
+            d._children = d.children;
+            d._children.forEach(collapse);
+            d.children = null;
+        }
+    }
+    
+    function expand(d) {
+        if(d._children) {
+            d.children = d._children;
+            d.children.forEach(expand);
+            d._children = null;
+        } else if (d.children) {
+            d.children.forEach(expand);
+        }
+    }
+
+    window.vizExpandAll = function(id) {
+        const s = treeState['#'+id];
+        if(!s) return;
+        expand(s.root);
+        updateTree('#'+id, s.root);
+    };
+
+    window.vizCollapseAll = function(id) {
+        const s = treeState['#'+id];
+        if(!s) return;
+        if(s.root.children) s.root.children.forEach(collapse);
+        updateTree('#'+id, s.root);
+        vizReset(id);
+    };
+
+    window.vizReset = function(id) {
+        const s = treeState[id.startsWith('#') ? id : '#'+id];
+        if(!s) return;
+        const transform = d3.zoomIdentity.translate(s.isVertical ? s.svg.node().clientWidth/2 : 60, 40).scale(1);
+        s.svg.transition().duration(getAnimSpeed()).call(s.zoom.transform, transform);
+    };
+
+    function updateTree(selector, source) {
+        const s = treeState[selector];
+        const { root, tree, g, isVertical } = s;
+        
+        tree(root);
+        const nodes = root.descendants();
+        const links = root.links();
+        
+        const duration = getAnimSpeed();
+        const transition = s.svg.transition().duration(duration);
+
+        const node = g.selectAll("g.node").data(nodes, d => d.id || (d.id = ++window._d3IdCounter || 1));
+
+        const nodeEnter = node.enter().append("g")
+            .attr("class", "node")
+            .attr("transform", d => `translate(${isVertical ? source.x0 : source.y0},${isVertical ? source.y0 : source.x0})`)
+            .on("click", (event, d) => {
+                if (d.children) { d._children = d.children; d.children = null; } 
+                else { d.children = d._children; d._children = null; }
+                updateTree(selector, d);
+            });
+
+        nodeEnter.append("circle")
+            .attr("r", 1e-6)
+            .style("fill", d => d._children ? "#6366f1" : (d.data.color || "#3b82f6"))
+            .style("stroke", "#0d1117")
+            .style("stroke-width", "1.5px")
+            .style("cursor", d => (d.children || d._children) ? "pointer" : "default");
+
+        nodeEnter.append("text")
+            .attr("dy", isVertical ? "1.5em" : ".35em")
+            .attr("x", d => isVertical ? 0 : (d.children || d._children ? -10 : 10))
+            .attr("text-anchor", d => isVertical ? "middle" : (d.children || d._children ? "end" : "start"))
+            .text(d => d.data.name)
+            .style("fill", "#c9d1d9")
+            .style("font-size", "11px")
+            .style("font-family", "JetBrains Mono")
+            .style("fill-opacity", 1e-6);
+
+        const nodeUpdate = nodeEnter.merge(node);
+
+        nodeUpdate.transition(transition)
+            .attr("transform", d => `translate(${isVertical ? d.x : d.y},${isVertical ? d.y : d.x})`);
+
+        nodeUpdate.select("circle").transition(transition).attr("r", 4.5);
+        nodeUpdate.select("text").transition(transition).style("fill-opacity", 1);
+
+        const nodeExit = node.exit().transition(transition)
+            .attr("transform", d => `translate(${isVertical ? source.x : source.y},${isVertical ? source.y : source.x})`)
+            .remove();
+
+        nodeExit.select("circle").attr("r", 1e-6);
+        nodeExit.select("text").style("fill-opacity", 1e-6);
+
+        const link = g.selectAll("path.link").data(links, d => d.target.id);
+
+        const linkEnter = link.enter().insert("path", "g")
+            .attr("class", "link")
+            .attr("d", d => {
+                const o = {x: source.x0, y: source.y0};
+                return diagonal(o, o, isVertical);
+            })
+            .style("fill", "none")
+            .style("stroke", "#30363d")
+            .style("stroke-width", "1.5px");
+
+        const linkUpdate = linkEnter.merge(link);
+
+        linkUpdate.transition(transition).attr("d", d => diagonal(d.source, d.target, isVertical));
+
+        link.exit().transition(transition)
+            .attr("d", d => {
+                const o = {x: source.x, y: source.y};
+                return diagonal(o, o, isVertical);
+            })
+            .remove();
+
+        nodes.forEach(d => { d.x0 = d.x; d.y0 = d.y; });
+    }
+
+    function diagonal(s, d, isVertical) {
+        if(isVertical) {
+            return `M ${s.x} ${s.y} C ${s.x} ${(s.y + d.y) / 2}, ${d.x} ${(s.y + d.y) / 2}, ${d.x} ${d.y}`;
+        }
+        return `M ${s.y} ${s.x} C ${(s.y + d.y) / 2} ${s.x}, ${(s.y + d.y) / 2} ${d.x}, ${d.y} ${d.x}`;
+    }
+
+    // --- API Interactions ---
+    document.getElementById('btn-compile').addEventListener('click', async () => {
+        const md = document.getElementById('markdown-input').value;
+        const btn = document.getElementById('btn-compile');
+        btn.textContent = 'Compiling...';
+        btn.disabled = true;
+
         try {
-          katex.render(el.textContent, el, {
-            displayMode: isDisplay,
-            throwOnError: false
-          });
-        } catch(e) { console.error('KaTeX:', e); }
-      });
-    "><${"/"}script>
-  </body></html>`;
-
-  frame.srcdoc = previewHTML;
-}
-
-// ─── Utility ─────────────────────────────────────────────────────
-function escapeHtml(text) {
-  const div = document.createElement('div');
-  div.appendChild(document.createTextNode(text));
-  return div.innerHTML;
-}
-
-// ─── Keyboard shortcut: Ctrl/Cmd+Enter to compile ────────────────
-document.addEventListener('keydown', function(e) {
-  if ((e.metaKey || e.ctrlKey) && e.key === 'Enter') {
-    e.preventDefault();
-    compileMarkdown();
-  }
-});
-
-// Mark source as active initially
-document.getElementById('phase-source').classList.add('active');
-
-// ─── File Upload ─────────────────────────────────────────────────
-let currentFileName = 'output';
-
-function handleFileUpload(input) {
-  const file = input.files[0];
-  if (!file) return;
-  if (!file.name.toLowerCase().endsWith('.md')) {
-    alert('Please upload a .md file');
-    return;
-  }
-  currentFileName = file.name;
-
-  const formData = new FormData();
-  formData.append('file', file);
-
-  const btn = document.getElementById('compile-btn');
-  btn.classList.add('loading');
-  btn.disabled = true;
-
-  // Show filename badge
-  const fnBadge = document.getElementById('file-name');
-  fnBadge.textContent = '📄 ' + file.name;
-  fnBadge.style.display = 'inline-block';
-
-  // Reset pipeline
-  document.querySelectorAll('.phase-step').forEach(s => s.classList.remove('done', 'active'));
-  document.getElementById('phase-source').classList.add('done');
-
-  fetch('/upload', { method: 'POST', body: formData })
-    .then(r => r.json())
-    .then(async data => {
-      if (data.error) { alert('Upload error: ' + data.error); return; }
-
-      // Fill editor with uploaded content
-      mdInput.value = data.markdown;
-      charCount.textContent = data.markdown.length + ' chars';
-
-      compileResult = data.phases;
-
-      await animatePhases();
-
-      renderTokens(compileResult.lexer);
-      renderAST(compileResult.parser.vis_tree);
-      renderSemanticAnalysis(compileResult.semantic);
-      renderIR(compileResult.ir);
-      renderHTML(compileResult.codegen.html);
-      renderPreview(compileResult.codegen.html);
-
-      document.getElementById('download-btn').disabled = false;
-    })
-    .catch(e => alert('Upload failed: ' + e.message))
-    .finally(() => {
-      btn.classList.remove('loading');
-      btn.disabled = false;
-      input.value = ''; // reset so same file can be re-uploaded
+            const res = await fetch('/compile', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({markdown: md})
+            });
+            const data = await res.json();
+            if(data.success) {
+                currentPhases = data.phases;
+                await animatePipeline(data.phases);
+            } else {
+                alert('Error: ' + data.error);
+            }
+        } catch(e) {
+            alert('Connection error');
+        } finally {
+            btn.textContent = 'Compile';
+            btn.disabled = false;
+        }
     });
-}
-
-// ─── Drag & Drop ─────────────────────────────────────────────────
-const editorWrap = document.getElementById('editor-wrap');
-const dropOverlay = document.getElementById('drop-overlay');
-let dragCounter = 0;
-
-editorWrap.addEventListener('dragenter', (e) => {
-  e.preventDefault();
-  dragCounter++;
-  dropOverlay.classList.add('visible');
-});
-editorWrap.addEventListener('dragleave', (e) => {
-  e.preventDefault();
-  dragCounter--;
-  if (dragCounter <= 0) { dropOverlay.classList.remove('visible'); dragCounter = 0; }
-});
-editorWrap.addEventListener('dragover', (e) => { e.preventDefault(); });
-editorWrap.addEventListener('drop', (e) => {
-  e.preventDefault();
-  dragCounter = 0;
-  dropOverlay.classList.remove('visible');
-  const file = e.dataTransfer.files[0];
-  if (!file) return;
-  if (!file.name.toLowerCase().endsWith('.md')) {
-    alert('Please drop a .md file');
-    return;
-  }
-  // Trigger upload
-  const dt = new DataTransfer();
-  dt.items.add(file);
-  document.getElementById('file-upload').files = dt.files;
-  handleFileUpload(document.getElementById('file-upload'));
-});
-
-// ─── Download HTML ───────────────────────────────────────────────
-async function downloadHTML() {
-  if (!compileResult || !compileResult.codegen) {
-    alert('Please compile first.');
-    return;
-  }
-  const btn = document.getElementById('download-btn');
-  btn.disabled = true;
-  btn.textContent = '⏳ Generating...';
-
-  try {
-    const resp = await fetch('/download', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        html: compileResult.codegen.html,
-        filename: currentFileName
-      })
-    });
-    const blob = await resp.blob();
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    const dlName = currentFileName.replace(/\.md$/i, '') + '.html';
-    a.href = url;
-    a.download = dlName;
-    document.body.appendChild(a);
-    a.click();
-    a.remove();
-    URL.revokeObjectURL(url);
-  } catch (e) {
-    alert('Download failed: ' + e.message);
-  } finally {
-    btn.disabled = false;
-    btn.textContent = '⬇ Download HTML';
-  }
-}
-
-// Enable download button after compile
-const _origCompile = compileMarkdown;
-compileMarkdown = async function() {
-  currentFileName = 'output';
-  await _origCompile();
-  if (compileResult) document.getElementById('download-btn').disabled = false;
-};
 </script>
-
 </body>
 </html>

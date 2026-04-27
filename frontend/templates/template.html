@@ -5,33 +5,50 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>__TITLE__</title>
+
+  <!-- KaTeX math -->
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+
+  <!-- Highlight.js syntax highlighting (github-dark theme) -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/styles/github-dark.min.css">
+
+  <!-- Page styles -->
   <link rel="stylesheet" href="/static/render.css">
 </head>
 
 <body>
   __BODY_HTML__
 
+  <!-- Highlight.js -->
+  <script src="https://cdn.jsdelivr.net/gh/highlightjs/cdn-release@11.9.0/build/highlight.min.js"></script>
+  <script>
+    document.querySelectorAll('pre code').forEach(function (b) { hljs.highlightElement(b); });
+  </script>
 
-  <!-- Mermaid diagrams -->
-  <script type="module">
-    import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
-    mermaid.initialize({ startOnLoad: true });
+  <!-- Mermaid: do NOT use startOnLoad — call run() explicitly after DOM is ready -->
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+  <script>
+    mermaid.initialize({ startOnLoad: false, securityLevel: 'loose', theme: 'default' });
+    function _mermaidRun() { mermaid.run({ querySelector: '.mermaid' }); }
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', _mermaidRun);
+    } else {
+      _mermaidRun();
+    }
   </script>
 
   <!-- KaTeX math rendering -->
   <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.js" onload="
-      document.querySelectorAll('.math').forEach(function(el) {
-        var isDisplay = el.classList.contains('math-display');
+      document.querySelectorAll('.math').forEach(function (el) {
         try {
           katex.render(el.textContent, el, {
-            displayMode: isDisplay,
+            displayMode: el.classList.contains('math-display'),
             throwOnError: false
           });
-        } catch(e) { console.error('KaTeX:', e); }
+        } catch (e) { console.error('KaTeX:', e); }
       });
     ">
-    </script>
+  </script>
 
 </body>
 

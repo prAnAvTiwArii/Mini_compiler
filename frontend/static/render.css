@@ -160,10 +160,18 @@ pre {
   border-radius: var(--radius);
   overflow-x: auto;
   margin: 2rem 0;
-  box-shadow: var(--shadow-sm);
+  box-shadow: var(--shadow-md);
   font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
   font-size: 0.9em;
   line-height: 1.6;
+}
+
+/* hljs sets background on pre — let it; just ensure correct radius/shadow */
+pre.hljs,
+pre code.hljs {
+  border-radius: var(--radius);
+  background: inherit;
+  padding: 0;
 }
 
 code {
@@ -229,14 +237,19 @@ input[type="checkbox"] {
 }
 
 /* ── Tables ─────────────────────────────────────────────── */
+.table-wrapper {
+  width: 100%;
+  overflow-x: auto;
+  margin: 2.5rem 0;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-sm);
+}
+
 table {
   width: 100%;
+  min-width: max-content;
   border-collapse: collapse;
-  margin: 2.5rem 0;
   font-size: 0.95em;
-  box-shadow: var(--shadow-sm);
-  border-radius: var(--radius);
-  overflow: hidden;
 }
 
 thead {
@@ -248,12 +261,24 @@ th {
   text-align: left;
   font-weight: 600;
   color: var(--text-heading);
-  padding: 1rem;
+  padding: 0.875rem 1rem;
+  white-space: nowrap;
 }
 
 td {
-  padding: 1rem;
+  padding: 0.875rem 1rem;
   border-bottom: 1px solid var(--border);
+  vertical-align: top;
+}
+
+td code {
+  white-space: pre-wrap;
+  word-break: break-all;
+}
+
+td pre {
+  margin: 0.5rem 0;
+  font-size: 0.85em;
 }
 
 tbody tr:last-child td {
@@ -369,23 +394,15 @@ hr {
 }
 
 /* ── Mermaid ────────────────────────────────────────────── */
-pre.mermaid {
+div.mermaid {
   background-color: transparent;
   box-shadow: none;
-  padding: 0;
-  margin: 2rem 0;
+  padding: 1rem 0;
   text-align: center;
-  display: block;
+  display: flex;
+  justify-content: center;
   overflow-x: auto;
-}
-
-pre.mermaid svg {
-  max-width: 100%;
-  height: auto;
-}
-
-pre.mermaid svg g {
-  enable-background: new;
+  margin: 2rem 0;
 }
 
 /* ── KaTeX Display ──────────────────────────────────────── */

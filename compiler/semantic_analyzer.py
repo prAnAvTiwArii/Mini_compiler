@@ -1,17 +1,4 @@
-"""
-Semantic Analyzer Module — Phase 3: Semantic Analysis
-Validates and enriches the AST after parsing.
-"""
-
-
 class SemanticAnalyzer:
-    """
-    Phase 3 — Semantic Analysis.
-    
-    Walks the AST to perform validation checks and enrich nodes
-    with additional metadata. Produces a list of warnings/errors.
-    """
-
     def __init__(self):
         self.warnings = []
         self.errors = []
@@ -20,10 +7,6 @@ class SemanticAnalyzer:
         self.heading_levels = []
 
     def analyze(self, ast_root):
-        """
-        Perform semantic analysis on the AST.
-        Returns a dict with 'warnings' and 'errors' lists.
-        """
         self.warnings = []
         self.errors = []
         self.footnote_refs = set()
@@ -42,7 +25,6 @@ class SemanticAnalyzer:
         }
 
     def _walk(self, node):
-        """Recursively walk the AST collecting information."""
         if node.type == 'heading':
             level = getattr(node, 'level', 1) or 1
             self.heading_levels.append(level)
@@ -82,7 +64,6 @@ class SemanticAnalyzer:
             child = child.next
 
     def _check_footnotes(self):
-        """Check that all footnote references have definitions and vice versa."""
         undefined = self.footnote_refs - self.footnote_defs
         unused = self.footnote_defs - self.footnote_refs
 
@@ -101,11 +82,9 @@ class SemanticAnalyzer:
             })
 
     def _check_heading_hierarchy(self):
-        """Check that heading levels don't skip (e.g. H1 → H3 without H2)."""
         if not self.heading_levels:
             return
 
-        # Check for skipped levels
         for i in range(1, len(self.heading_levels)):
             prev = self.heading_levels[i - 1]
             curr = self.heading_levels[i]
@@ -125,7 +104,6 @@ class SemanticAnalyzer:
             })
 
     def _collect_stats(self, ast_root):
-        """Collect document statistics by walking the AST."""
         stats = {
             "total_nodes": 0,
             "node_types": {},
@@ -141,7 +119,6 @@ class SemanticAnalyzer:
         return stats
 
     def _count_nodes(self, node, stats):
-        """Recursively count nodes by type."""
         stats["total_nodes"] += 1
         ntype = node.type
         stats["node_types"][ntype] = stats["node_types"].get(ntype, 0) + 1

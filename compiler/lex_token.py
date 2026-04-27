@@ -81,7 +81,7 @@ block_token_pattern = re.compile(
     r'(?P<atx_heading>^#{1,6}(?:[ \t]+|$))|'
     r'(?P<code_fence>^`{3,}(?!.*`)|^~{3,})|'
     r'(?P<math_fence>^\$\$[ \t]*$)|'
-    r'(?P<mermaid_fence>^:::[ \t]+mermaid[ \t]*$)|'
+    r'(?P<mermaid_fence>^:::[ \t]*mermaid[ \t]*$)|'
     r'(?P<details_fence>^:::[ \t]*details(?:[ \t]+(.*))?[ \t]*$)|'
     r'(?P<mermaid_close>^:::[ \t]*$)|'
     r'(?P<footnote_def>^\[\^([^\]]+)\]:[ \t]*(.*))|'
