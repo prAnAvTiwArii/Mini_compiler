@@ -44,7 +44,10 @@
             <div class="panel-header">
                 <h2>Input.md</h2>
                 <div class="actions">
-                    <button id="btn-compile" class="btn btn-primary">Compile</button>
+                    <label class="btn btn-secondary" for="file-upload">Upload .md</label>
+                    <input type="file" id="file-upload" accept=".md" style="display:none">
+                    <button id="btn-compile" class="btn btn-primary">Animate</button>
+                    <button id="btn-download" class="btn btn-secondary" disabled>Download HTML</button>
                 </div>
             </div>
             <div class="editor-container">
@@ -80,8 +83,8 @@
                         <button class="btn btn-sm" onclick="vizCollapseAll('ast-svg')">Collapse All</button>
                         <button class="btn btn-sm" onclick="vizReset('ast-svg')">Reset View</button>
                         <div class="speed-control">
-                            <span>Anim Speed:</span>
-                            <input type="range" id="anim-speed" min="100" max="1500" value="400">
+                            <span>Smoothness/Speed:</span>
+                            <input type="range" id="anim-speed-ast" min="100" max="1500" value="600">
                         </div>
                     </div>
                     <div class="tree-container" id="ast-svg"></div>
@@ -93,6 +96,10 @@
                         <button class="btn btn-sm" onclick="vizExpandAll('cst-svg')">Expand All</button>
                         <button class="btn btn-sm" onclick="vizCollapseAll('cst-svg')">Collapse All</button>
                         <button class="btn btn-sm" onclick="vizReset('cst-svg')">Reset View</button>
+                        <div class="speed-control">
+                            <span>Smoothness/Speed:</span>
+                            <input type="range" id="anim-speed-cst" min="100" max="1500" value="600">
+                        </div>
                     </div>
                     <div class="tree-container" id="cst-svg"></div>
                 </div>
@@ -170,16 +177,18 @@
                 delete codeBlock.dataset.highlighted;
                 hljs.highlightElement(codeBlock);
                 renderPreview(phases.codegen.html);
+                document.getElementById('btn-download').disabled = false;
             }
         }
     }
 
     // --- JSON Renderer ---
-    function renderJSONTree(obj, container) {
-        container.innerHTML = '';
-        function createNode(key, val, isLast) {
+    function renderJSONTree(obj, container, depth = 0) {
+        if(depth === 0) container.innerHTML = '';
+        
+        function createNode(key, val, isLast, curDepth) {
             const wrapper = document.createElement('div');
-            wrapper.className = 'json-node';
+            wrapper.className = `json-node depth-${curDepth % 4}`;
             
             const keyHtml = key !== null ? `<span class="json-key">"${key}"</span>: ` : '';
             const comma = isLast ? '' : ',';
@@ -202,17 +211,18 @@
                     const details = document.createElement('details');
                     details.open = true;
                     const summary = document.createElement('summary');
-                    summary.innerHTML = `${keyHtml}<span class="json-bracket">${openBracket}</span>`;
+                    summary.innerHTML = `<span class="json-marker">&#9654;</span>${keyHtml}<span class="json-bracket">${openBracket}</span>`;
                     details.appendChild(summary);
                     
                     const childrenDiv = document.createElement('div');
                     childrenDiv.className = 'json-children';
                     keys.forEach((k, idx) => {
-                        childrenDiv.appendChild(createNode(isArray ? null : k, val[k], idx === keys.length - 1));
+                        childrenDiv.appendChild(createNode(isArray ? null : k, val[k], idx === keys.length - 1, curDepth + 1));
                     });
                     details.appendChild(childrenDiv);
                     
                     const closeDiv = document.createElement('div');
+                    closeDiv.className = 'json-close';
                     closeDiv.innerHTML = `<span class="json-bracket">${closeBracket}</span>${comma}`;
                     details.appendChild(closeDiv);
                     wrapper.appendChild(details);
@@ -220,7 +230,7 @@
             }
             return wrapper;
         }
-        container.appendChild(createNode(null, obj, true));
+        if (depth === 0) container.appendChild(createNode(null, obj, true, 0));
     }
 
     // --- Data Rendering ---
@@ -230,15 +240,22 @@
         
         const inlineTypes = ['text', 'strong', 'emph', 'inline_code', 'link', 'image', 'soft_break', 'hard_break', 'inline_math', 'html_inline'];
         let currentBlock = null;
+        let blockCounter = 0;
+        let inlineCounter = 0;
         
         tokens.forEach(t => {
             const isInline = inlineTypes.includes(t.type.toLowerCase());
             if (!isInline || !currentBlock) {
+                blockCounter++;
+                inlineCounter = 0;
                 currentBlock = document.createElement('details');
                 currentBlock.className = 'token-block';
+                currentBlock.open = false;
                 const summary = document.createElement('summary');
                 summary.className = 'token-block-head';
-                summary.innerHTML = `<span class="badge">${t.type}</span> <span class="t-val">${t.value.substring(0,30)}</span>`;
+                
+                const valStr = t.value ? t.value.replace(/\n/g, '\\n').substring(0,40) : '';
+                summary.innerHTML = `<span class="token-marker">&#9654;</span> <span class="badge">${blockCounter}. ${t.type}</span> <span class="t-val">${valStr}</span>`;
                 currentBlock.appendChild(summary);
                 
                 const inlineContainer = document.createElement('div');
@@ -248,9 +265,11 @@
                 
                 container.appendChild(currentBlock);
             } else {
+                inlineCounter++;
                 const inlineEl = document.createElement('div');
                 inlineEl.className = 'token-inline-item';
-                inlineEl.innerHTML = `<span class="badge">${t.type}</span> <span class="t-val">${t.value}</span>`;
+                const valStr = t.value ? t.value.replace(/\n/g, '\\n') : '';
+                inlineEl.innerHTML = `<span class="badge inline-badge">${blockCounter}.${inlineCounter} ${t.type}</span> <span class="t-val">${valStr}</span>`;
                 currentBlock.inlines.appendChild(inlineEl);
             }
         });
@@ -260,12 +279,20 @@
         const container = document.getElementById('analytics-container');
         let html = '<div class="analytics-grid">';
         
-        html += `<div class="stat-card"><h3>Tree Metrics</h3>
+        html += `<div class="stat-card"><h3>Advanced Diagnostics</h3>
             <div class="metrics-row">
-                <div class="metric"><span>Max Depth</span><strong>${stats.max_depth}</strong></div>
                 <div class="metric"><span>Avg Depth</span><strong>${stats.avg_depth}</strong></div>
-                <div class="metric"><span>Block Nodes</span><strong>${stats.block_nodes}</strong></div>
-                <div class="metric"><span>Inline Nodes</span><strong>${stats.inline_nodes}</strong></div>
+                <div class="metric"><span>Avg Tokens/Block</span><strong>${stats.advanced.avg_tokens_per_block}</strong></div>
+                <div class="metric"><span>Word Count</span><strong>${stats.advanced.word_count}</strong></div>
+                <div class="metric"><span>Char Count</span><strong>${stats.advanced.char_count}</strong></div>
+                <div class="metric"><span>Paragraphs</span><strong>${stats.advanced.total_paragraphs}</strong></div>
+                <div class="metric"><span>Emphasis</span><strong>${stats.advanced.emphasis_count}</strong></div>
+                <div class="metric"><span>Images</span><strong>${stats.advanced.image_count}</strong></div>
+                <div class="metric"><span>Links</span><strong>${stats.advanced.link_count}</strong></div>
+                <div class="metric"><span>Max Heading</span><strong>${stats.advanced.max_heading_level}</strong></div>
+                <div class="metric"><span>Lists / Items</span><strong>${stats.advanced.list_count} / ${stats.advanced.item_count}</strong></div>
+                <div class="metric"><span>Code Blocks</span><strong>${stats.advanced.code_block_count}</strong></div>
+                <div class="metric"><span>Inline Code</span><strong>${stats.advanced.inline_code_count}</strong></div>
             </div>
         </div>`;
 
@@ -290,7 +317,6 @@
 
     function renderPreview(htmlContent) {
         const frame = document.getElementById('preview-frame');
-        // Properly load mermaid as a module so it works reliably in srcdoc
         const docHtml = `<!DOCTYPE html><html><head><base href="/">
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
         <link rel="stylesheet" href="/static/render.css">
@@ -309,9 +335,9 @@
     // --- D3.js Tree Rendering ---
     const treeState = {};
     
-    function getAnimSpeed() {
-        const val = document.getElementById('anim-speed');
-        return val ? parseInt(val.value) : 500;
+    function getAnimSpeed(selectorId) {
+        const input = document.getElementById('anim-speed-' + selectorId.replace('#', '').split('-')[0]);
+        return input ? parseInt(input.value) : 600;
     }
 
     function renderTree(selector, data, isVertical=false) {
@@ -381,7 +407,7 @@
         const s = treeState[id.startsWith('#') ? id : '#'+id];
         if(!s) return;
         const transform = d3.zoomIdentity.translate(s.isVertical ? s.svg.node().clientWidth/2 : 60, 40).scale(1);
-        s.svg.transition().duration(getAnimSpeed()).call(s.zoom.transform, transform);
+        s.svg.transition().duration(getAnimSpeed(id)).call(s.zoom.transform, transform);
     };
 
     function updateTree(selector, source) {
@@ -392,8 +418,8 @@
         const nodes = root.descendants();
         const links = root.links();
         
-        const duration = getAnimSpeed();
-        const transition = s.svg.transition().duration(duration);
+        const duration = getAnimSpeed(selector);
+        const transition = s.svg.transition().duration(duration).ease(d3.easeCubicInOut);
 
         const node = g.selectAll("g.node").data(nodes, d => d.id || (d.id = ++window._d3IdCounter || 1));
 
@@ -494,9 +520,42 @@
         } catch(e) {
             alert('Connection error');
         } finally {
-            btn.textContent = 'Compile';
+            btn.textContent = 'Animate';
             btn.disabled = false;
         }
+    });
+    
+    document.getElementById('file-upload').addEventListener('change', async (e) => {
+        if(!e.target.files.length) return;
+        const formData = new FormData();
+        formData.append('file', e.target.files[0]);
+        try {
+            const res = await fetch('/upload', { method: 'POST', body: formData });
+            const data = await res.json();
+            if(data.success) {
+                document.getElementById('markdown-input').value = data.markdown;
+                currentPhases = data.phases;
+                await animatePipeline(data.phases);
+            } else {
+                alert('Error: ' + data.error);
+            }
+        } catch(err) { alert('Upload error'); }
+        e.target.value = '';
+    });
+
+    document.getElementById('btn-download').addEventListener('click', async () => {
+        if(!currentPhases) return;
+        const res = await fetch('/download', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify({html: currentPhases.codegen.html, filename: 'export'})
+        });
+        const blob = await res.blob();
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'export.html';
+        a.click();
     });
 </script>
 </body>
